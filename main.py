@@ -27,6 +27,7 @@ CACHE_MESSAGE = []
 BANCHECK_UID = {}
 WSURL = SERVER_ADDR+":10540"
 HTTPURL = SERVER_ADDR+":10500"
+MC_MOTD_COLORFUL = re.compile(r"§.")
 isChatBypassOpened = False
 unicodeSymbolList = ["‍", "‌", "‭"]
 defaultConfig = {
@@ -178,8 +179,8 @@ def on_guild_message(ad):
         try:
             server = MinecraftServer.lookup(command_list[1]).status()
             aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
-            re.sub(re.compile(r"§."), "", server.description), server.players.online, server.players.max,
-            server.latency, re.sub(re.compile(r"§."), "", server.version.name), server.version.protocol)
+            re.sub(MC_MOTD_COLORFUL, "", server.description), server.players.online, server.players.max,
+            server.latency, re.sub(MC_MOTD_COLORFUL, "", server.version.name), server.version.protocol)
             aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
             aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
             if server.favicon is not None:
@@ -409,8 +410,8 @@ def on_message2(ws, message):
             try:
                 server = MinecraftServer.lookup(command_list[1]).status()
                 aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
-                    re.sub(re.compile(r"§."), "", server.description), server.players.online, server.players.max,
-                    server.latency, re.sub(re.compile(r"§."), "", server.version.name), server.version.protocol)
+                    re.sub(MC_MOTD_COLORFUL, "", server.description), server.players.online, server.players.max,
+                    server.latency, re.sub(MC_MOTD_COLORFUL, "", server.version.name), server.version.protocol)
                 aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
                 aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
                 if server.favicon is not None:
