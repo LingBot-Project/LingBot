@@ -304,12 +304,6 @@ def on_message2(ws, message):
         if message_text == "一语":
             sendGroupmsg(group_number, message_id, sender_qqnumber,
                          requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
-
-        # if message_text.find("$") != -1 & message_text.find("{") != -1 & message_text.find(":") != -1:
-        #     if ad["sender"]["permission"] not in ["OWNER", "ADMINISTRATOR"]:
-        #         sendGroupmsg(group_number, message_id, sender_qqnumber,"Anti Log4j:\n"+message_text.replace(":","："))
-        #         recall(message_id)
-        #         mutePerson(group_number, sender_qqnumber, 60)
         
         if message_text.find("[CQ:json,data=") != -1:
             message_text = message_text.replace("\\/", "/")
