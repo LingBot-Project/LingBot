@@ -260,7 +260,6 @@ def on_message2(ws, message):
         message_text = ""
         message_id = 0
         ad = a
-        # print(message)
         if ad["post_type"] == "message":
             if ad["message_type"] == "guild":
                 on_guild_message(ad)
