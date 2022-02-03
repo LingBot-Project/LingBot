@@ -292,6 +292,7 @@ def on_message2(ws, message):
         print("[{0}] {1}({2}) {3}".format(group_number, sender_name, sender_qqnumber, message_text))
 
         if sender_qqnumber in BLACK_LIST:
+            recall(message_id)
             return
 
         command_list = message_text.split(" ")
@@ -380,9 +381,19 @@ def on_message2(ws, message):
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
                 return
             if command_list[1] == "add":
+                if int(command_list[2]) in ADMIN_LIST:
+                    sendGroupmsg5(group_number, message_id, sender_qqnumber, "超管内已经有这个人了")
+                    return
                 ADMIN_LIST.append(int(command_list[2]))
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "操作成功")
             elif command_list[1] == "remove":
+                if int(command_list[2]) not in ADMIN_LIST:
+                    sendGroupmsg5(group_number, message_id, sender_qqnumber, "超管内没有这个人")
+                    return
+                elif int(command_list[2]) == 1584784496:
+                    sendGroupmsg5(group_number, message_id, sender_qqnumber, "由于您进行的操作过于敏感 已被拦截 并发送给Owner")
+                    sendGroupmsg2(868218262, "{}尝试把您(Owner)从超管列表删除".format(sender_qqnumber))
+                    return
                 ADMIN_LIST.remove(int(command_list[2]))
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "操作成功")
         
@@ -393,9 +404,19 @@ def on_message2(ws, message):
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
                 return
             if command_list[1] == "add":
+                if int(command_list[2]) in BLACK_LIST:
+                    sendGroupmsg5(group_number, message_id, sender_qqnumber, "黑名单内已经有这个人了")
+                    return
+                elif int(command_list[2]) == 1584784496:
+                    sendGroupmsg5(group_number, message_id, sender_qqnumber, "由于您进行的操作过于敏感 已被拦截 并发送给Owner")
+                    sendGroupmsg2(868218262, "{}尝试把您(Owner)添加进黑名单".format(sender_qqnumber))
+                    return
                 BLACK_LIST.append(int(command_list[2]))
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "操作成功")
             elif command_list[1] == "remove":
+                if int(command_list[2]) not in BLACK_LIST:
+                    sendGroupmsg5(group_number, message_id, sender_qqnumber, "黑名单内没有这个人")
+                    return
                 BLACK_LIST.remove(int(command_list[2]))
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "操作成功")
 
