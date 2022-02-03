@@ -81,8 +81,8 @@ def text2image(text):
     im = Image.new("RGB", (max_w+11, len(lines)*(fontSize+8)), (255, 255, 255))
     dr = ImageDraw.Draw(im)
     dr.text((1, 1), text, font=font, fill="#000000")
-    im.save(imageuid+"_cache.png")
-    with open(imageuid+".png", "rb") as f:
+    im.save(imageuid+".cache.png")
+    with open(imageuid+".cache.png", "rb") as f:
         return base64.b64encode(f.read()).decode()
 
 
@@ -742,7 +742,7 @@ def githubSub():
                 objectIDs.append(i["id"])
         print(objectIDs)
         newest = objectIDs[0]
-        sendGroupmsg2(523201000, "开始为本群监听 FDPClient 的 actions")
+        # sendGroupmsg2(523201000, "开始为本群监听 FDPClient 的 actions")
     except:
         print("github请求失败", url)
         print(traceback.format_exc())
