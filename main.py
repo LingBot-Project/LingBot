@@ -28,6 +28,7 @@ BANCHECK_UID = {}
 WSURL = SERVER_ADDR+":10540"
 HTTPURL = SERVER_ADDR+":10500"
 MC_MOTD_COLORFUL = re.compile(r"§.")
+ALLOWRUNNING = True
 isChatBypassOpened = False
 unicodeSymbolList = ["‍", "‌", "‭"]
 defaultConfig = {
@@ -528,7 +529,9 @@ def on_message2(ws, message):
 
         if command_list[0] == "#quit":
             if sender_qqnumber == 1584784496:
-                quit()
+                ALLOWRUNNING = False
+                sendGroupmsg3(group_number, sender_qqnumber,
+                                      "已尝试设置运行信号为False")
 
         if command_list[0] == "#fdpinfo":
             # https://bstats.org/api/v1/plugins/11076/charts/<Type>/data
@@ -791,6 +794,11 @@ def githubSub():
         time.sleep(60)
 
 
+def nickname_locker():
+    # TODO: 咕咕咕
+    pass
+
+
 def main():
     # TODO: 将所有函数分类
     # TODO: 添加BiliBili相关处理 (BiliUtils)
@@ -815,8 +823,9 @@ def main():
         t3.start()
         print("Starting... (4/4)")
         print("Bot Ready!")
-        while True:
-            time.sleep(20)
+        while ALLOWRUNNING:
+            time.sleep(1)
+        quit()
     except KeyboardInterrupt:
         quit()
     except Exception:
