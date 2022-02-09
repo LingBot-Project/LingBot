@@ -539,7 +539,7 @@ def on_message2(ws, message):
             if command_list[1] == "list":
                 temp1 = ""
                 for i in NICKNAME_LOCKED:
-                    temp1 += "{} 在群 {} 的名称被锁定为: {}\n".format(i[0], i[1], i[2])
+                    temp1 += "{} 在群 {} 的名称被锁定为: {}\n".format(i[1], i[0], i[2])
                 sendGroupmsg(group_number, message_id, sender_qqnumber, temp1)
             if command_list[1] == "add":
                 if len(command_list) < 5:
