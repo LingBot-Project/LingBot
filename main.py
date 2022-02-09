@@ -1,25 +1,23 @@
 # -*- coding: UTF-8 -*-
-from asyncore import read
 import base64
-from concurrent.futures import thread
 import json
+import os
 import random
 import re
-import os
+import sys
 import threading
 import time
 import traceback
+from io import BytesIO
+
 import client
-import sys
 import requests
 import websocket
 from mcstatus import MinecraftServer
-from PIL import Image,ImageFont,ImageDraw
-from io import BytesIO
-
+from PIL import Image, ImageDraw, ImageFont
 
 SERVER_ADDR = "127.0.0.1"
-ADMIN_LIST = []
+ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566]
 HYPBAN_COOKIE = None
 SEND_AD_LIST = {}
 BLACK_LIST = []
@@ -29,12 +27,9 @@ WSURL = SERVER_ADDR+":10540"
 HTTPURL = SERVER_ADDR+":10500"
 MC_MOTD_COLORFUL = re.compile(r"§.")
 ALLOWRUNNING = True
+NICKNAME_LOCKED = []
 isChatBypassOpened = False
 unicodeSymbolList = ["‍", "‌", "‭"]
-defaultConfig = {
-    "admin": [1790194105, 1584784496, 2734583, 2908331301, 3040438566],
-    "blacklist": [-1]
-}
 
 
 def readConfig():
@@ -45,8 +40,18 @@ def readConfig():
         f.close()
     f = open('config.json', 'r')
     s = json.loads(f.read())
-    ADMIN_LIST = s["admin"]
-    BLACK_LIST = s["blacklist"]
+    try:
+        ADMIN_LIST = s["admin"]
+    except:
+        pass
+    try:
+        BLACK_LIST = s["blacklist"]
+    except:
+        pass
+    try:
+        NICKNAME_LOCKED = s["nickname_locked"]
+    except:
+        pass
     f.close()
 
 
@@ -88,7 +93,6 @@ def text2image(text):
 
 
 def strQ2B(ustring):
-    """全角转半角"""
     rstring = ""
     for uchar in ustring:
         inside_code = ord(uchar)
@@ -526,6 +530,39 @@ def on_message2(ws, message):
                                       "已尝试在群 {} 禁言 {} {}分钟".format(command_list[1], command_list[2], command_list[3]))
             else:
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
+        
+        if command_list[0] == "#namelocker":
+            if sender_qqnumber not in ADMIN_LIST:
+                sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
+                return
+            if command_list[1] == "list":
+                temp1 = ""
+                for i in NICKNAME_LOCKED:
+                    temp1 += "{} 在群 {} 的名称被锁定为: {}\n".format(i[0], i[1], i[2])
+                sendGroupmsg(group_number, message_id, sender_qqnumber, temp1)
+            if command_list[1] == "add":
+                if len(command_list) < 5:
+                    sendGroupmsg5(group_number, message_id, sender_qqnumber, "正确用法: #namelocker add <群号 (或用this指代本群)> <QQ号> <名称>")
+                    return
+                command_list[2] = command_list[2].replace("this", group_number)
+                command_list[2] = int(command_list[2])
+                command_list[3] = int(command_list[3])
+                for i in range(len(NICKNAME_LOCKED)):
+                    if command_list[2] == i[0] and command_list[3] == i[1]:
+                        sendGroupmsg5(group_number, message_id, sender_qqnumber, "已存在该对象")
+                        return
+                NICKNAME_LOCKED.append([command_list(2), command_list[3], " ".join(command_list[4:])])
+                sendGroupmsg5(group_number, message_id, sender_qqnumber, "已尝试添加")
+            if command_list[1] == "remove":
+                command_list[2] = command_list[2].replace("this", group_number)
+                command_list[2] = int(command_list[2])
+                command_list[3] = int(command_list[3])
+                for i in range(len(NICKNAME_LOCKED)):
+                    if command_list[2] == i[0] and command_list[3] == i[1]:
+                        del NICKNAME_LOCKED[i]
+                        sendGroupmsg5(group_number, message_id, sender_qqnumber, "已尝试移除")
+                        return
+                sendGroupmsg5(group_number, message_id, sender_qqnumber, "找不到对象")
 
         if command_list[0] == "#quit":
             if sender_qqnumber == 1584784496:
@@ -703,6 +740,15 @@ def permCheck(groupID: int, target: int):
     return True
 
 
+def nickname(group:int, target:int, nick:str):
+    data1 = {
+        "group_id": group,
+        "user_id": target,
+        "card": nick
+    }
+    print(requests.post(url = "http/{}/set_group_card".format(HTTPURL), data=data1))
+
+
 # 定义一个用来接收监听数据的方法
 def on_message(ws, message):
     threading.Thread(target=on_message2, args=(ws, message)).start()
@@ -795,16 +841,21 @@ def githubSub():
 
 
 def nickname_locker():
-    # TODO: 咕咕咕
-    pass
+    while True:
+        for i in NICKNAME_LOCKED:
+            try:
+                nickname(i[0], i[1], i[2])
+            except Exception as e:
+                print(traceback.format_exc(e))
+        time.sleep(30)
 
 
 def main():
-    # TODO: 将所有函数分类
-    # TODO: 添加BiliBili相关处理 (BiliUtils)
+    # TODO: 将所有函数分类 (咕咕咕 咕咕咕)
     try:
+        print("Starting... (0/6)")
         readConfig()
-        print("Starting... (1/4)")
+        print("Starting... (1/6)")
         t1 = threading.Thread(target=updatet, args=("a"))
         t2 = threading.Thread(target=githubSub)
         ws = websocket.WebSocketApp("ws://" + WSURL + "/all?verifyKey=uThZyFeQwJbD&qq=3026726134",
@@ -813,15 +864,20 @@ def main():
                                     on_close=on_close,
                                     )
         t3 = threading.Thread(target=ws.run_forever)
+        t4 = threading.Thread(target=nickname_locker)
         t1.daemon = True
         t2.daemon = True
         t3.daemon = True
+        t4.daemon = True
+        print("Starting... (2/6)")
         t1.start()
-        print("Starting... (2/4)")
+        print("Starting... (3/6)")
         t2.start()
-        print("Starting... (3/4)")
+        print("Starting... (4/6)")
         t3.start()
-        print("Starting... (4/4)")
+        print("Starting... (5/6)")
+        t4.start()
+        print("Starting... (6/6)")
         print("Bot Ready!")
         while ALLOWRUNNING:
             time.sleep(1)
