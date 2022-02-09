@@ -544,7 +544,7 @@ def on_message2(ws, message):
                 if len(command_list) < 5:
                     sendGroupmsg5(group_number, message_id, sender_qqnumber, "正确用法: #namelocker add <群号 (或用this指代本群)> <QQ号> <名称>")
                     return
-                command_list[2] = command_list[2].replace("this", group_number)
+                command_list[2] = command_list[2].replace("this", str(group_number))
                 command_list[2] = int(command_list[2])
                 command_list[3] = int(command_list[3])
                 for i in range(len(NICKNAME_LOCKED)):
@@ -554,7 +554,7 @@ def on_message2(ws, message):
                 NICKNAME_LOCKED.append([command_list(2), command_list[3], " ".join(command_list[4:])])
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "已尝试添加")
             if command_list[1] == "remove":
-                command_list[2] = command_list[2].replace("this", group_number)
+                command_list[2] = command_list[2].replace("this", str(group_number))
                 command_list[2] = int(command_list[2])
                 command_list[3] = int(command_list[3])
                 for i in range(len(NICKNAME_LOCKED)):
