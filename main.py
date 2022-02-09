@@ -551,7 +551,7 @@ def on_message2(ws, message):
                     if command_list[2] == i[0] and command_list[3] == i[1]:
                         sendGroupmsg5(group_number, message_id, sender_qqnumber, "已存在该对象")
                         return
-                NICKNAME_LOCKED.append([command_list(2), command_list[3], " ".join(command_list[4:])])
+                NICKNAME_LOCKED.append([command_list[2], command_list[3], " ".join(command_list[4:])])
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "已尝试添加")
             if command_list[1] == "remove":
                 command_list[2] = command_list[2].replace("this", str(group_number))
