@@ -36,7 +36,7 @@ def readConfig():
     global ADMIN_LIST, BLACK_LIST
     if os.path.isfile('config.json') == False:
         f = open('config.json', 'w')
-        f.write(json.dumps(defaultConfig))
+        f.write("")
         f.close()
     f = open('config.json', 'r')
     s = json.loads(f.read())
