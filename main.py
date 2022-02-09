@@ -61,7 +61,8 @@ def saveConfig():
     f = open('config.json', 'w')
     s = {
         "admin": ADMIN_LIST,
-        "blacklist": BLACK_LIST
+        "blacklist": BLACK_LIST,
+        "nickname_locked": NICKNAME_LOCKED
     }
     f.write(json.dumps(s))
     f.close()
