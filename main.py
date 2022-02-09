@@ -853,7 +853,6 @@ def main():
         t1.daemon = True
         t2.daemon = True
         t3.daemon = True
-        t4.daemon = True
         print("Starting... (2/5)")
         t1.start()
         print("Starting... (3/5)")
