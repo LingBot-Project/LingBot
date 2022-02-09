@@ -27,7 +27,6 @@ WSURL = SERVER_ADDR+":10540"
 HTTPURL = SERVER_ADDR+":10500"
 MC_MOTD_COLORFUL = re.compile(r"§.")
 ALLOWRUNNING = True
-NICKNAME_LOCKED = []
 isChatBypassOpened = False
 unicodeSymbolList = ["‍", "‌", "‭"]
 
@@ -48,12 +47,7 @@ def readConfig():
         BLACK_LIST = s["blacklist"]
     except:
         pass
-    try:
-        NICKNAME_LOCKED = s["nickname_locked"]
-    except:
-        pass
     f.close()
-
 
 
 def saveConfig():
@@ -61,8 +55,7 @@ def saveConfig():
     f = open('config.json', 'w')
     s = {
         "admin": ADMIN_LIST,
-        "blacklist": BLACK_LIST,
-        "nickname_locked": NICKNAME_LOCKED
+        "blacklist": BLACK_LIST
     }
     f.write(json.dumps(s))
     f.close()
@@ -843,22 +836,12 @@ def githubSub():
         time.sleep(60)
 
 
-def nickname_locker():
-    while True:
-        for i in NICKNAME_LOCKED:
-            try:
-                nickname(i[0], i[1], i[2])
-            except Exception as e:
-                print(traceback.format_exc(e))
-        time.sleep(30)
-
-
 def main():
     # TODO: 将所有函数分类 (咕咕咕 咕咕咕)
     try:
-        print("Starting... (0/6)")
+        print("Starting... (0/5)")
         readConfig()
-        print("Starting... (1/6)")
+        print("Starting... (1/5)")
         t1 = threading.Thread(target=updatet, args=("a"))
         t2 = threading.Thread(target=githubSub)
         ws = websocket.WebSocketApp("ws://" + WSURL + "/all?verifyKey=uThZyFeQwJbD&qq=3026726134",
@@ -867,20 +850,17 @@ def main():
                                     on_close=on_close,
                                     )
         t3 = threading.Thread(target=ws.run_forever)
-        t4 = threading.Thread(target=nickname_locker)
         t1.daemon = True
         t2.daemon = True
         t3.daemon = True
         t4.daemon = True
-        print("Starting... (2/6)")
+        print("Starting... (2/5)")
         t1.start()
-        print("Starting... (3/6)")
+        print("Starting... (3/5)")
         t2.start()
-        print("Starting... (4/6)")
+        print("Starting... (4/5)")
         t3.start()
-        print("Starting... (5/6)")
-        # t4.start()
-        print("Starting... (6/6)")
+        print("Starting... (5/5)")
         print("Bot Ready!")
         while ALLOWRUNNING:
             time.sleep(1)
