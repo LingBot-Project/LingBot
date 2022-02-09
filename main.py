@@ -747,7 +747,7 @@ def nickname(group:int, target:int, nick:str):
         "user_id": target,
         "card": nick
     }
-    print(requests.post(url = "http://{}/set_group_card".format(HTTPURL), data=data1))
+    print(requests.get(url = "http://{}/set_group_card".format(HTTPURL), data=data1))
 
 
 # 定义一个用来接收监听数据的方法
