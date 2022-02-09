@@ -533,37 +533,39 @@ def on_message2(ws, message):
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
         
         if command_list[0] == "#namelocker":
-            if sender_qqnumber not in ADMIN_LIST:
-                sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
-                return
-            if command_list[1] == "list":
-                temp1 = ""
-                for i in NICKNAME_LOCKED:
-                    temp1 += "{} 在群 {} 的名称被锁定为: {}\n".format(i[1], i[0], i[2])
-                sendGroupmsg(group_number, message_id, sender_qqnumber, temp1)
-            if command_list[1] == "add":
-                if len(command_list) < 5:
-                    sendGroupmsg5(group_number, message_id, sender_qqnumber, "正确用法: #namelocker add <群号 (或用this指代本群)> <QQ号> <名称>")
-                    return
-                command_list[2] = command_list[2].replace("this", str(group_number))
-                command_list[2] = int(command_list[2])
-                command_list[3] = int(command_list[3])
-                for i in range(len(NICKNAME_LOCKED)):
-                    if command_list[2] == i[0] and command_list[3] == i[1]:
-                        sendGroupmsg5(group_number, message_id, sender_qqnumber, "已存在该对象")
-                        return
-                NICKNAME_LOCKED.append([command_list[2], command_list[3], " ".join(command_list[4:])])
-                sendGroupmsg5(group_number, message_id, sender_qqnumber, "已尝试添加")
-            if command_list[1] == "remove":
-                command_list[2] = command_list[2].replace("this", str(group_number))
-                command_list[2] = int(command_list[2])
-                command_list[3] = int(command_list[3])
-                for i in range(len(NICKNAME_LOCKED)):
-                    if command_list[2] == i[0] and command_list[3] == i[1]:
-                        del NICKNAME_LOCKED[i]
-                        sendGroupmsg5(group_number, message_id, sender_qqnumber, "已尝试移除")
-                        return
-                sendGroupmsg5(group_number, message_id, sender_qqnumber, "找不到对象")
+            sendGroupmsg5(group_number, message_id, sender_qqnumber, "恭喜你找到了一个彩蛋!")
+            # if sender_qqnumber not in ADMIN_LIST:
+            #     sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
+            #     return
+            # if command_list[1] == "list":
+            #     temp1 = ""
+            #     for i in NICKNAME_LOCKED:
+            #         temp1 += "{} 在群 {} 的名称被锁定为: {}\n".format(i[1], i[0], i[2])
+            #     sendGroupmsg(group_number, message_id, sender_qqnumber, temp1)
+            # if command_list[1] == "add":
+            #     if len(command_list) < 5:
+            #         sendGroupmsg5(group_number, message_id, sender_qqnumber, "正确用法: #namelocker add <群号 (或用this指代本群)> <QQ号> <名称>")
+            #         return
+            #     command_list[2] = command_list[2].replace("this", str(group_number))
+            #     command_list[2] = int(command_list[2])
+            #     command_list[3] = int(command_list[3])
+            #     for i in range(len(NICKNAME_LOCKED)):
+            #         if command_list[2] == i[0] and command_list[3] == i[1]:
+            #             sendGroupmsg5(group_number, message_id, sender_qqnumber, "已存在该对象")
+            #             return
+            #     NICKNAME_LOCKED.append([command_list[2], command_list[3], " ".join(command_list[4:])])
+            #     sendGroupmsg5(group_number, message_id, sender_qqnumber, "已尝试添加")
+            # if command_list[1] == "remove":
+            #     command_list[2] = command_list[2].replace("this", str(group_number))
+            #     command_list[2] = int(command_list[2])
+            #     command_list[3] = int(command_list[3])
+            #     for i in range(len(NICKNAME_LOCKED)):
+            #         if command_list[2] == i[0] and command_list[3] == i[1]:
+            #             del NICKNAME_LOCKED[i]
+            #             sendGroupmsg5(group_number, message_id, sender_qqnumber, "已尝试移除")
+            #             return
+            #     sendGroupmsg5(group_number, message_id, sender_qqnumber, "找不到对象")
+            return
 
         if command_list[0] == "#quit":
             if sender_qqnumber == 1584784496:
@@ -865,11 +867,11 @@ def main():
                                     on_close=on_close,
                                     )
         t3 = threading.Thread(target=ws.run_forever)
-        t4 = threading.Thread(target=nickname_locker)
+        # t4 = threading.Thread(target=nickname_locker)
         t1.daemon = True
         t2.daemon = True
         t3.daemon = True
-        t4.daemon = True
+        # t4.daemon = True
         print("Starting... (2/6)")
         t1.start()
         print("Starting... (3/6)")
@@ -877,7 +879,7 @@ def main():
         print("Starting... (4/6)")
         t3.start()
         print("Starting... (5/6)")
-        t4.start()
+        # t4.start()
         print("Starting... (6/6)")
         print("Bot Ready!")
         while ALLOWRUNNING:
