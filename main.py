@@ -27,6 +27,11 @@ WSURL = SERVER_ADDR+":10540"
 HTTPURL = SERVER_ADDR+":10500"
 MC_MOTD_COLORFUL = re.compile(r"§.")
 ALLOWRUNNING = True
+ALL_MESSAGE = 0
+MESSAGE_PRE_MINUTE = [0, 0]
+ALL_AD = 0
+timePreMessage = 0
+recordTime = int(time.time())
 isChatBypassOpened = False
 unicodeSymbolList = ["‍", "‌", "‭"]
 
@@ -66,6 +71,11 @@ def quit():
     saveConfig()
     sys.exit(0)
 
+
+def getRuntime():
+    nowtime = int(time.time())
+    return "{}秒".format(int(nowtime - recordTime))
+    
 
 def text2image(text):
     imageuid = str(random.randint(10000000,9999999999))
@@ -109,6 +119,11 @@ def on_guild_message(ad):
     sender_name = ad["sender"]["nickname"]
     if message_text == "":
         return
+    if time.time() - MESSAGE_PRE_MINUTE[0] >= 60:
+        MESSAGE_PRE_MINUTE = [time.time(), 1]
+    else:
+        MESSAGE_PRE_MINUTE[1] += 1
+    ALL_MESSAGE += 1
     command_list = message_text.split(" ")
     if message_text == "#test":
         sendGuildmsg(guild_id, channel_id, message_id, sender_id, "Hello!")
@@ -253,7 +268,7 @@ def on_guild_message(ad):
 
 
 def on_message2(ws, message):
-    global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE
+    global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD
     try:
         a = json.loads(message)
         message_text = ""
@@ -277,17 +292,23 @@ def on_message2(ws, message):
         message_id = ad["message_id"]
         if message_text == "":
             return
+        if time.time() - MESSAGE_PRE_MINUTE[0] >= 60:
+            MESSAGE_PRE_MINUTE = [time.time(), 1]
+        else:
+            MESSAGE_PRE_MINUTE[1] += 1
+        ALL_MESSAGE += 1
+        print("[{0}] {1}({2}) {3}".format(group_number, sender_name, sender_qqnumber, message_text))
         reScan = re.search(
-            "加群(:)[0-9]{5,10}|.*内部|\\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*(L|l)auncher|.*(公益)配置",
-            message_text.replace(" ", "").replace(".", "").replace("\n", ""))
+            "加群(:)[0-9]{5,10}|.*内部|\\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*公益|.*配置",
+            message_text.replace(" ", "").replace(".", "").replace("\n", "").lower())
         if len(message_text) > 35 and reScan != None:
             if sender_qqnumber in ADMIN_LIST:
                 return
             time.sleep(1)
             mutePerson(group_number, sender_qqnumber, 600)
             recall(message_id)
-        
-        print("[{0}] {1}({2}) {3}".format(group_number, sender_name, sender_qqnumber, message_text))
+            ALL_AD  += 1
+            return
 
         if sender_qqnumber in BLACK_LIST:
             recall(message_id)
@@ -295,10 +316,10 @@ def on_message2(ws, message):
 
         command_list = message_text.split(" ")
         if message_text == "#test":
-            sendGroupmsg(group_number, message_id, sender_qqnumber, "Hello!")
+            sendGroupmsg(group_number, message_id, sender_qqnumber, "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(ALL_MESSAGE, getRuntime(), timePreMessage, ALL_AD, (ALL_AD/ALL_MESSAGE)*100))
             
         if command_list[0] == "#help":
-            sendGroupmsg(group_number, message_id, sender_qqnumber, "请访问: https://newbotdoc.guimc.ltd/")
+            sendGroupmsg(group_number, message_id, sender_qqnumber, "请访问: https://lingbot.guimc.ltd/")
 
         if message_text == "一语":
             sendGroupmsg(group_number, message_id, sender_qqnumber,
@@ -310,7 +331,6 @@ def on_message2(ws, message):
                 str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',requests.get(json.loads(re.findall(r"\[CQ:json,data=.*\]",message_text)[0].replace("[CQ:json,data=","").replace("&#44;",",")[:-1])["meta"]["news"]["jumpUrl"].replace("&amp;", "&")).text)[0].replace(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
                 if str1["code"] != 0:
                     print("查询失败")
-                    sys.exit(1)
                 str1 = str1["data"]
                 response = requests.get(str1["pic"])
                 im_vl = Image.open(BytesIO(response.content))
@@ -527,6 +547,7 @@ def on_message2(ws, message):
         
         if command_list[0] == "#namelocker":
             sendGroupmsg5(group_number, message_id, sender_qqnumber, "恭喜你找到了一个彩蛋!")
+            # 这东西给我整不会了了 陌生人能不能帮帮我
             # if sender_qqnumber not in ADMIN_LIST:
             #     sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
             #     return
@@ -559,6 +580,14 @@ def on_message2(ws, message):
             #             return
             #     sendGroupmsg5(group_number, message_id, sender_qqnumber, "找不到对象")
             return
+        
+        if command_list[0] == "#search":
+            if sender_qqnumber not in ADMIN_LIST:
+                sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
+                return
+            sendGroupmsg5(group_number, message_id, sender_qqnumber, "正在从机器人所有加入的群搜索此人")
+            a = search_user(int(command_list[1]))
+            sendGroupmsg5(group_number, message_id, sender_qqnumber, "搜索完成:\n{}".format(a))
 
         if command_list[0] == "#quit":
             if sender_qqnumber == 1584784496:
@@ -745,9 +774,33 @@ def nickname(group:int, target:int, nick:str):
     print(requests.get(url = "http://{}/set_group_card".format(HTTPURL), data=data1))
 
 
+def search_user(uid):
+    groups = []
+    for i in getGroups():
+        if uid in getGroupUser(i):
+            groups.append(i)
+        time.sleep(random.randint(35,65)/100)
+    return groups
+
+
+def temps_message(ws, message):
+    global timePreMessage
+    a = time.time()
+    try:
+        on_message2(ws, message)
+    except:
+        pass
+    b = time.time()
+    sflTime = b-a
+    if timePreMessage == 0:
+        timePreMessage = sflTime
+    else:
+        timePreMessage = (timePreMessage+sflTime)/2
+
+
 # 定义一个用来接收监听数据的方法
 def on_message(ws, message):
-    threading.Thread(target=on_message2, args=(ws, message)).start()
+    threading.Thread(target=temps_message, args=(ws, message)).start()
 
 
 # 定义一个用来处理错误的方法
@@ -763,36 +816,7 @@ def on_close(ws, a, b):
 
 def updatet(a):
     # print("s1")
-    while True:
-        try:
-            if time.strftime("%H:%M:%S", time.localtime()) == "23:00:00":
-                sendGroupmsg2("523201000",
-                              "夜深了,好好休息一下吧!\n\n" + requests.get("http://api.muxiuge.cn/API/society.php").json()[
-                                  "text"] + "\n" + requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
-                              requests.get("http://open.iciba.com/dsapi/").json()["note"])
-            if time.strftime("%H:%M:%S", time.localtime()) == "8:00:00":
-                sendGroupmsg2("523201000", "王⑧抄们的早上好!\n\n" + requests.get("http://api.muxiuge.cn/API/society.php").json()[
-                    "text"] + "\n" + requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
-                          requests.get("http://open.iciba.com/dsapi/").json()["note"])
-            if time.strftime("%H:%M:%S", time.localtime()) == "21:35:00":
-                sendGroupmsg2("523201000",
-                              "王⑧抄们的每日Ban快报:\n" + requests.get("http://api.xgstudio.xyz/hypban.php?type=bans") + "\n\n" +
-                              requests.get("http://api.muxiuge.cn/API/society.php").json()["text"] + "\n" +
-                              requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
-                              requests.get("http://open.iciba.com/dsapi/").json()["note"])
-            if time.strftime("%H:%M:%S", time.localtime()) == "7:00:05":
-                sendGroupmsg2("523201000", "来一份涩图开始美好的一天吧!")
-                sendGroupmsgImg("523201000", "0", "2734583",
-                            base64.b64encode(requests.get("http://www.xgstudio.xyz/api").content).decode())
-            if time.strftime("%H:%M:%S", time.localtime()) == "12:00:00":
-                sendGroupmsg2("523201000", "王⑧抄们的中午好!\n\n" + requests.get("http://api.muxiuge.cn/API/society.php").json()[
-                    "text"] + "\n" + requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
-                              requests.get("http://open.iciba.com/dsapi/").json()["note"])
-        except KeyboardInterrupt:
-            quit()
-        except:
-            pass
-        time.sleep(0.1)
+    pass
 
 
 def githubSub():
