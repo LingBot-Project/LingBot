@@ -30,6 +30,7 @@ ALLOWRUNNING = True
 ALL_MESSAGE = 0
 MESSAGE_PRE_MINUTE = [0, 0]
 ALL_AD = 0
+BILI_BV_RE = re.compile(r"BV([a-z|A-Z|0-9]{10})")
 timePreMessage = 0
 recordTime = int(time.time())
 isChatBypassOpened = False
@@ -299,10 +300,11 @@ def on_message2(ws, message):
         ALL_MESSAGE += 1
         print("[{0}] {1}({2}) {3}".format(group_number, sender_name, sender_qqnumber, message_text))
         reScan = re.search(
-            "加群(:)[0-9]{5,10}|.*内部|\\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*公益|.*配置",
+            "加群(:)[0-9]{5,10}|.*内部|\\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺",
             message_text.replace(" ", "").replace(".", "").replace("\n", "").lower())
         if len(message_text) > 35 and reScan != None:
             if sender_qqnumber in ADMIN_LIST:
+                sendGroupmsg2(868218262, "{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(sender_qqnumber, message_text))
                 return
             time.sleep(1)
             mutePerson(group_number, sender_qqnumber, 600)
@@ -326,11 +328,12 @@ def on_message2(ws, message):
                          requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
         
         if message_text.find("[CQ:json,data=") != -1:
-            message_text = message_text.replace("\\/", "/")
+            message_text = message_text.replace("\\", "")
             if message_text.find('"jumpUrl":"https://b23.tv/') != -1:
                 str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',requests.get(json.loads(re.findall(r"\[CQ:json,data=.*\]",message_text)[0].replace("[CQ:json,data=","").replace("&#44;",",")[:-1])["meta"]["news"]["jumpUrl"].replace("&amp;", "&")).text)[0].replace(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
                 if str1["code"] != 0:
                     print("查询失败")
+                    return
                 str1 = str1["data"]
                 response = requests.get(str1["pic"])
                 im_vl = Image.open(BytesIO(response.content))
@@ -346,13 +349,13 @@ def on_message2(ws, message):
                 else:
                     s = "未曾设想的投稿类型: {}  (不是转载也不是自制?)".format(str1["copyright"])
                 text = """标题: {}
-    UP主: {} ({})
-    投稿分区: {} ({})
-    投稿类型: {}
-    视频链接: https://www.bilibili.com/video/{}/
-    播放量: {}
-    简介:
-    {}""".format(str1["title"], str1["owner"]["name"], str1["owner"]["mid"],
+UP主: {} ({})
+投稿分区: {} ({})
+投稿类型: {}
+视频链接: https://www.bilibili.com/video/{}/
+播放量: {}
+简介:
+{}""".format(str1["title"], str1["owner"]["name"], str1["owner"]["mid"],
             str1["tname"], str1["tid"], s, str1["bvid"], str1["stat"]["view"], str1["desc"])
                 lines = text.split('\n')
                 # print(len(lines))
@@ -369,7 +372,7 @@ def on_message2(ws, message):
                 dr = ImageDraw.Draw(im)
                 dr.text((1, 280), text, font=font, fill="#000000")
                 im.save(imageuid+"_cache.png")
-                with open(imageuid+".png", "rb") as f:
+                with open(imageuid+"_cache.png", "rb") as f:
                     sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+base64.b64encode(f.read()).decode()+"]")
         
         if message_text == "一英":
@@ -657,6 +660,53 @@ def on_message2(ws, message):
                                  "Version: {}\n".format(a["name"])+"\n".join(files))
             except Exception as e:
                 getError(group_number, message_id, sender_qqnumber, traceback.format_exc())
+                
+        BVID = re.match(BILI_BV_RE, message_text)
+        if BVID != None:
+            str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(BVID.group(0))).json()
+            if str1["code"] != 0:
+                print("查询失败")
+                return
+            str1 = str1["data"]
+            response = requests.get(str1["pic"])
+            im_vl = Image.open(BytesIO(response.content))
+            im_v = im_vl.resize((430, 270), Image.ANTIALIAS)
+            imageuid = str(random.randint(10000000,9999999999))
+            fontSize = 22
+            max_w = 0
+            s = ""
+            if str1["copyright"] == 1:
+                s = "自制"
+            elif str1["copyright"] == 2:
+                s = "转载"
+            else:
+                s = "未曾设想的投稿类型: {}  (不是转载也不是自制?)".format(str1["copyright"])
+            text = """标题: {}
+UP主: {} ({})
+投稿分区: {} ({})
+投稿类型: {}
+视频链接: https://www.bilibili.com/video/{}/
+播放量: {}
+简介:
+{}""".format(str1["title"], str1["owner"]["name"], str1["owner"]["mid"],
+        str1["tname"], str1["tid"], s, str1["bvid"], str1["stat"]["view"], str1["desc"])
+            lines = text.split('\n')
+            # print(len(lines))
+            fontPath = r"a.ttf"
+            font = ImageFont.truetype(fontPath, fontSize)
+            for i in lines:
+                try:
+                    if max_w <= font.getmask(i).getbbox()[2]:
+                        max_w = font.getmask(i).getbbox()[2]
+                except:
+                    pass
+            im = Image.new("RGB", (max_w+11, (len(lines)*(fontSize+8))+280), (255, 255, 255))
+            im.paste(im_v, (0,0))
+            dr = ImageDraw.Draw(im)
+            dr.text((1, 280), text, font=font, fill="#000000")
+            im.save(imageuid+"_cache.png")
+            with open(imageuid+"_cache.png", "rb") as f:
+                sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+base64.b64encode(f.read()).decode()+"]")
     except Exception as e:
         print(traceback.format_exc())
 
@@ -735,6 +785,7 @@ def getError(a1, a2, a3, errorText):
 
 
 def sendTempMsg(target1, target2, text):
+    # 会风控
     print(text)
 
 
