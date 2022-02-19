@@ -87,8 +87,11 @@ def text2image(text):
     fontPath = r"a.ttf"
     font = ImageFont.truetype(fontPath, fontSize)
     for i in lines:
-        if max_w <= font.getmask(i).getbbox()[2]:
-            max_w = font.getmask(i).getbbox()[2]
+        try:
+            if max_w <= font.getmask(i).getbbox()[2]:
+                max_w = font.getmask(i).getbbox()[2]
+        except:
+            pass
     im = Image.new("RGB", (max_w+11, len(lines)*(fontSize+8)), (255, 255, 255))
     dr = ImageDraw.Draw(im)
     dr.text((1, 1), text, font=font, fill="#000000")
@@ -108,6 +111,15 @@ def strQ2B(ustring):
 
         rstring += chr(inside_code)
     return rstring
+
+
+def acg_img():
+    try:
+        a = "https://www.dmoe.cc/random.php?return=json"
+        a1 = requests.get(url=a).json()
+        return base64.b64encode(requests.get(url=a1["imgurl"]).contect).decode()
+    except Exception as e:
+        return text2image("获取图片失败\n"+traceback.format_exc())
     
     
 def on_guild_message(ad):
@@ -382,7 +394,7 @@ UP主: {} ({})
 
         if message_text == "二次元":
             sendGroupmsgImg(group_number, message_id, sender_qqnumber,
-                            base64.b64encode(requests.get("http://www.xgstudio.xyz/api").content).decode())
+                            acg_img())
 
         if message_text == "必应壁纸":
             sendGroupmsgImg(group_number, message_id, sender_qqnumber,
