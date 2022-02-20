@@ -521,8 +521,7 @@ UP主: {} ({})
                 all_req = re.match(REQ_TEXT, msg1)
                 print(all_req)
                 if all_req != None:
-                    for i in all_req.groups():
-                        msg1 = msg1.replace(i, urlget(i.replace("get±", "").replace("±", "")))
+                    msg1 = msg1.replace(all_req.group(0), urlget(all_req.group(0).replace("get±", "").replace("±", "")))
                 if command_list[1] == "all":
                     s = getGroups()
                     sendGroupmsg(group_number, message_id, sender_qqnumber, "正在群发... 目标:{}个群".format(len(s)))
