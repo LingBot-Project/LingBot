@@ -519,7 +519,7 @@ UP主: {} ({})
             if sender_qqnumber in ADMIN_LIST:
                 msg1 = " ".join(command_list[2:])
                 all_req = re.match(REQ_TEXT, msg1)
-                if all_rep != None:
+                if all_req != None:
                     for i in all_req.groups():
                         msg1 = msg1.replace(i, urlget(i.replace("get±", "").replace("±", "")))
                 if command_list[1] == "all":
