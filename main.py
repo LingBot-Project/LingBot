@@ -31,6 +31,7 @@ ALL_MESSAGE = 0
 MESSAGE_PRE_MINUTE = [0, 0]
 ALL_AD = 0
 BILI_BV_RE = re.compile(r"BV([a-z|A-Z|0-9]{10})")
+REQ_TEXT = re.compile(r"get±.*±")
 timePreMessage = 0
 recordTime = int(time.time())
 isChatBypassOpened = False
@@ -516,15 +517,20 @@ UP主: {} ({})
 
         if command_list[0] == "#send":
             if sender_qqnumber in ADMIN_LIST:
+                msg1 = " ".join(command_list[2:])
+                all_req = re.match(REQ_TEXT, msg1)
+                if all_rep != None:
+                    for i in all_req.groups():
+                        msg1 = msg1.replace(i, urlget(i.replace("get±", "").replace("±", "")))
                 if command_list[1] == "all":
                     s = getGroups()
                     sendGroupmsg(group_number, message_id, sender_qqnumber, "正在群发... 目标:{}个群".format(len(s)))
                     for i in s:
-                        sendGroupmsg2(i, " ".join(command_list[2:]))
+                        sendGroupmsg2(i, msg1)
                         time.sleep(random.randint(500, 800)/1000)
                     sendGroupmsg(group_number, message_id, sender_qqnumber, "群发完成")
                 else:
-                    sendGroupmsg2(command_list[1], " ".join(command_list[2:]))
+                    sendGroupmsg2(command_list[1], msg1)
             else:
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
 
