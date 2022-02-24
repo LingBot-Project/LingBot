@@ -122,164 +122,6 @@ def acg_img():
     except Exception as e:
         return text2image("获取图片失败\n"+traceback.format_exc())
     
-    
-def on_guild_message(ad):
-    global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE
-    guild_id = ad["guild_id"]
-    channel_id = ad["channel_id"]
-    message_id = ad["message_id"]
-    message_text = ad["message"]
-    sender_id = ad["sender"]["user_id"]
-    sender_name = ad["sender"]["nickname"]
-    if message_text == "":
-        return
-    if time.time() - MESSAGE_PRE_MINUTE[0] >= 60:
-        MESSAGE_PRE_MINUTE = [time.time(), 1]
-    else:
-        MESSAGE_PRE_MINUTE[1] += 1
-    ALL_MESSAGE += 1
-    command_list = message_text.split(" ")
-    if message_text == "#test":
-        sendGuildmsg(guild_id, channel_id, message_id, sender_id, "Hello!")
-            
-    if command_list[0] == "#help":
-        sendGuildmsg(guild_id, channel_id, message_id, sender_id, "请访问: https://lingbot.guimc.ltd/")
-    
-    if message_text == "一语":
-        sendGuildmsg(guild_id, channel_id, message_id, sender_id, requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
-    if command_list[0] in ["#hypban", "!hypban", "#hyp", "#ban"]:
-        try:
-            if len(command_list)<=2:
-                sendGuildmsg(guild_id, channel_id, message_id, sender_id, "正确格式:#hypban <USERNAME> <BANID>")
-            else:
-                if sender_id not in BANCHECK_UID:
-                    BANCHECK_UID[sender_id] = time.time()
-                elif time.time() - BANCHECK_UID[sender_id] <= 60:
-                    sendGuildmsg(guild_id, channel_id, message_id, sender_id, "进入冷却时间 可在{}秒后使用".format(round(60.0 - (time.time() - BANCHECK_UID[sender_id]), 2)))
-                    return
-                sendGuildmsg(guild_id, channel_id, message_id, sender_id, "请稍等 正在向远程服务器发送请求")
-                userName = command_list[1]
-                BanID = command_list[2].replace("#", "")
-                # mutePerson(group_number,sender_qqnumber,5)
-                if userName.find("$") != -1 & userName.find("{") != -1:
-                    sendGuildmsg(guild_id, channel_id, message_id, sender_id, "Firewall defense")
-                    back=False
-                else:
-                    if BanID.find("$") != -1 & BanID.find("{") != -1:
-                        sendGuildmsg(guild_id, channel_id, message_id, sender_id, "Firewall defense")
-                        back=False
-                    else:
-                        a = ""
-                        c = 1
-                        while True:
-                            print("Username:{} BanID:{}".format(userName, BanID))
-                            a = client.ban(userName, BanID)
-                            if a.find("too many request") == -1:
-                                break
-                            else:
-                                # sendGroupmsg(group_number,message_id,sender_qqnumber,a)
-                                if c == 1:
-                                    sendGuildmsg(guild_id, channel_id, message_id, sender_id, "请稍等 我们正在自动重新请求 将在请求成功后返回")
-                                    c = 0
-                            time.sleep(3)
-                        print(a)
-                        # a+="查ban冷却5秒"
-                        # 没有意义 :(((
-                        if a.find("ERR|") != -1:
-                            sendGuildmsg(guild_id, channel_id, message_id, sender_id, a)
-                        else:
-                            BANCHECK_UID[sender_id] = time.time()
-                            sendGuildmsg(guild_id, channel_id, message_id, sender_id, "[CQ:image,file=base64://"+text2image(a)+"]")
-        except:
-            sendGuildmsg(guild_id, channel_id, message_id, sender_id, "由于不明原因 执行失败")
-            print(traceback.format_exc())
-    if message_text == "一话":
-        sendGuildmsg(guild_id, channel_id, message_id, sender_id, "[CQ:image,file=base64://"+text2image(
-                     requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])+"]")
-        sendGuildmsg(guild_id, channel_id, message_id, sender_id, "[CQ:image,file=base64://"+text2image(
-                     requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
-                     requests.get("http://open.iciba.com/dsapi/").json()["note"])+"]")
-    if message_text == "一英":
-        sendGuildmsg(guild_id, channel_id, message_id, sender_id, "[CQ:image,file=base64://"+text2image(
-                     requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
-                     requests.get("http://open.iciba.com/dsapi/").json()["note"])+"]")
-    if command_list[0] == "/mcping":
-        try:
-            server = MinecraftServer.lookup(command_list[1]).status()
-            aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
-            re.sub(MC_MOTD_COLORFUL, "", server.description), server.players.online, server.players.max,
-            server.latency, re.sub(MC_MOTD_COLORFUL, "", server.version.name), server.version.protocol)
-            aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
-            aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
-            if server.favicon is not None:
-                aaa = aaa + "\n[CQ:image,file="+server.favicon.replace("data:image/png;base64,", "base64://")+"]"
-            sendGuildmsg(guild_id, channel_id, message_id, sender_id, aaa)
-        except Exception as e:
-            sendGuildmsg(guild_id, channel_id, message_id, sender_id, "[CQ:image,file=base64://"+text2image("由于不明原因 执行失败")+"]")
-            print(traceback.format_exc())
-    if command_list[0] == "#fdpinfo":
-        # https://bstats.org/api/v1/plugins/11076/charts/<Type>/data
-        try:
-            if command_list[1] == "online":
-                url = "https://bstats.org/api/v1/plugins/11076/charts/minecraftVersion/data"
-                a = requests.get(url=url).json()
-                onlinePlayer = 0
-                for i in a:
-                    onlinePlayer += i["y"]
-                sendGuildmsg(guild_id, channel_id, message_id, sender_id, "[CQ:image,file=base64://"+text2image("OnlinePlayers: {}".format(onlinePlayer))+"]")
-            elif command_list[1] == "versions":
-                url = "https://bstats.org/api/v1/plugins/11076/charts/pluginVersion/data"
-                a = requests.get(url=url).json()
-                onlineVersion = []
-                for i in a:
-                    onlineVersion.append("{}: {}".format(i["name"], i["y"]))
-                sendGuildmsg(guild_id, channel_id, message_id, sender_id,
-                             "[CQ:image,file=base64://"+text2image("OnlineVersionsInfo:\n{}".format("\n".join(onlineVersion)))+"]")
-            elif command_list[1] == "systems":
-                url = "https://bstats.org/api/v1/plugins/11076/charts/os/data"
-                a = requests.get(url=url).json()
-                onlineSystem = []
-                for i in a["seriesData"]:
-                    onlineSystem.append("{}: {}".format(i["name"], i["y"]))
-                sendGuildmsg(guild_id, channel_id, message_id, sender_id,
-                             "[CQ:image,file=base64://"+text2image("OnlineSystms:\n{}".format("\n".join(onlineSystem)))+"]")
-            elif command_list[1] == "countries":
-                url = "https://bstats.org/api/v1/plugins/11076/charts/location/data"
-                a = requests.get(url=url).json()
-                onlineCountry = []
-                for i in a:
-                    onlineCountry.append("{}: {}".format(i["name"], i["y"]))
-                sendGuildmsg(guild_id, channel_id, message_id, sender_id,
-                             "[CQ:image,file=base64://"+text2image("OnlineCountrys:\n{}".format("\n".join(onlineCountry)))+"]")
-            elif command_list[1] == "beta":
-                sendGuildmsg(guild_id, channel_id, message_id, sender_id, "Please wait...")
-                url = "https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs"
-                a = requests.get(url=url).json()
-                objectIDs = []
-                for i in a["workflow_runs"]:
-                    if i["name"] == "build":
-                        objectIDs.append(i["id"])
-                actionInfo = requests.get(url="https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs/{}".format(objectIDs[0])).json()
-                updTime = actionInfo["head_commit"]["timestamp"]
-                updMsg = actionInfo["head_commit"]["message"]
-                updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"], actionInfo["head_commit"]["author"]["email"])
-                sendGuildmsg(guild_id, channel_id, message_id, sender_id,
-                             "Update Time:{}\n"
-                             "Update Message:{}\n"
-                             "Author:{}\n"
-                             "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(updTime, updMsg, updAuthor, objectIDs[0]))
-            elif command_list[1] == "release":
-                url = "https://api.github.com/repos/UnlegitMC/FDPClient/releases/latest"
-                a = requests.get(url=url).json()
-                files = []
-                for i in a["assets"]:
-                    files.append("{}: {}".format(i["name"], i["browser_download_url"].replace("github.com", "hub.fastgit.org")))
-                sendGuildmsg(guild_id, channel_id, message_id, sender_id,
-                             "Version: {}\n".format(a["name"])+"\n".join(files))
-        except Exception as e:
-            sendGuildmsg(guild_id, channel_id, message_id, sender_id, "由于不明原因 执行失败")
-            print(traceback.format_exc())
-
 
 def on_message2(ws, message):
     global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD
@@ -289,10 +131,7 @@ def on_message2(ws, message):
         message_id = 0
         ad = a
         if ad["post_type"] == "message":
-            if ad["message_type"] == "guild":
-                on_guild_message(ad)
-                return
-            elif ad["message_type"] != "group":
+            if ad["message_type"] != "group":
                 return
         else:
             return
@@ -569,37 +408,6 @@ UP主: {} ({})
         if command_list[0] == "#namelocker":
             sendGroupmsg5(group_number, message_id, sender_qqnumber, "恭喜你找到了一个彩蛋!")
             # 这东西给我整不会了了 陌生人能不能帮帮我
-            # if sender_qqnumber not in ADMIN_LIST:
-            #     sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
-            #     return
-            # if command_list[1] == "list":
-            #     temp1 = ""
-            #     for i in NICKNAME_LOCKED:
-            #         temp1 += "{} 在群 {} 的名称被锁定为: {}\n".format(i[1], i[0], i[2])
-            #     sendGroupmsg(group_number, message_id, sender_qqnumber, temp1)
-            # if command_list[1] == "add":
-            #     if len(command_list) < 5:
-            #         sendGroupmsg5(group_number, message_id, sender_qqnumber, "正确用法: #namelocker add <群号 (或用this指代本群)> <QQ号> <名称>")
-            #         return
-            #     command_list[2] = command_list[2].replace("this", str(group_number))
-            #     command_list[2] = int(command_list[2])
-            #     command_list[3] = int(command_list[3])
-            #     for i in range(len(NICKNAME_LOCKED)):
-            #         if command_list[2] == i[0] and command_list[3] == i[1]:
-            #             sendGroupmsg5(group_number, message_id, sender_qqnumber, "已存在该对象")
-            #             return
-            #     NICKNAME_LOCKED.append([command_list[2], command_list[3], " ".join(command_list[4:])])
-            #     sendGroupmsg5(group_number, message_id, sender_qqnumber, "已尝试添加")
-            # if command_list[1] == "remove":
-            #     command_list[2] = command_list[2].replace("this", str(group_number))
-            #     command_list[2] = int(command_list[2])
-            #     command_list[3] = int(command_list[3])
-            #     for i in range(len(NICKNAME_LOCKED)):
-            #         if command_list[2] == i[0] and command_list[3] == i[1]:
-            #             del NICKNAME_LOCKED[i]
-            #             sendGroupmsg5(group_number, message_id, sender_qqnumber, "已尝试移除")
-            #             return
-            #     sendGroupmsg5(group_number, message_id, sender_qqnumber, "找不到对象")
             return
         
         if command_list[0] == "#search":
