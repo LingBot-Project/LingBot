@@ -537,8 +537,8 @@ def request_and_print(url, data, pre_mode=GET):
     return
 
 def mutePerson(group, qqnumber, mutetime):
-    if mutetime >= 43200:
-        mutetime = 43199
+    if mutetime > (43199*60):
+        mutetime = 43199*60
     data1 = {
         "group_id": int(group),
         "user_id": int(qqnumber),
