@@ -39,7 +39,6 @@ GET, POST = (0, 1)
 
 
 def readConfig():
-    # TODO: Use SQLite
     global ADMIN_LIST, BLACK_LIST
     if os.path.isfile('config.json') == False:
         f = open('config.json', 'w')
@@ -59,15 +58,15 @@ def readConfig():
 
 
 def saveConfig():
-    # TODO: Use SQLite
     global ADMIN_LIST, BLACK_LIST
     f = open('config.json', 'w')
     s = {
         "admin": ADMIN_LIST,
         "blacklist": BLACK_LIST
     }
-    f.write(json.dumps(s))
-    f.close()
+    json_str = json.dumps(s, indent=4)
+    with open('config.json', 'w') as json_file:
+        json_file.write(json_str)
 
 
 def quit():
