@@ -738,6 +738,15 @@ def goodnoon():
         time.sleep(random.randint(700, 1100)/1000)
 
 
+def goodnig():
+    a = requests.get("http://api.muxiuge.cn/API/society.php").json()
+    msg1 = "很晚了!该睡了! \n{}".format(a["text"])
+    s = getGroups()
+    for i in s:
+        sendGroupmsg2(i, msg1)
+        time.sleep(random.randint(700, 1100)/1000)
+
+
 def main():
     try:
         print("Starting... (0/5)")
@@ -757,6 +766,7 @@ def main():
         sched.add_job(goodmor, 'cron', hour=6, minute=30)
         sched.add_job(goodmor2, 'cron', hour=8)
         sched.add_job(goodnoon, 'cron', hour=12)
+        sched.add_job(goodnig, 'cron', hour=22, minute=30)
         t1 = threading.Thread(target=sched.start)
         t1.deamon = True
         t1.start()
