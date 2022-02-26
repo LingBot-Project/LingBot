@@ -60,8 +60,8 @@ def saveConfig():
     global ADMIN_LIST, BLACK_LIST
     config = configparser.ConfigParser()
     config["DEFAULT"] = {
-        "admin": ",".join(ADMIN_LIST),
-        "blacklist": ",".join(BLACK_LIST)
+        "admin": ",".join('%s' %id for id in ADMIN_LIST),
+        "blacklist": ",".join('%s' %id for id in BLACK_LIST)
     }
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
