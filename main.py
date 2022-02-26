@@ -50,10 +50,6 @@ def readConfig():
         ADMIN_LIST = s["admin"]
     except:
         pass
-    try:
-        BLACK_LIST = s["blacklist"]
-    except:
-        pass
 
 
 def saveConfig():
