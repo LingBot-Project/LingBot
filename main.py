@@ -47,7 +47,11 @@ def readConfig():
     config.read("config.ini")
     s = config["DEFAULT"]
     try:
-        ADMIN_LIST = s["admin"]
+        ADMIN_LIST = [int(i) for i in s["admin"].split(",")]
+    except:
+        pass
+    try:
+        BLACK_LIST = [int(i) for i in s["blacklist"].split(",")]
     except:
         pass
 
@@ -56,8 +60,8 @@ def saveConfig():
     global ADMIN_LIST, BLACK_LIST
     config = configparser.ConfigParser()
     config["DEFAULT"] = {
-        "admin": ADMIN_LIST,
-        "blacklist": BLACK_LIST
+        "admin": ",".join(ADMIN_LIST),
+        "blacklist": ",".join(BLACK_LIST)
     }
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
