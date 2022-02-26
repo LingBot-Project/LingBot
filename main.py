@@ -333,7 +333,7 @@ UP主: {} ({})
                             c = 1
                             while True:
                                 print("Username:{} BanID:{}".format(userName, BanID))
-                                a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, banID), headers={'Host': 'api.getfdp.today'}).text
+                                a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, BanID), headers={'Host': 'api.getfdp.today'}).text
                                 if a.find("too many request") == -1:
                                     break
                                 else:
