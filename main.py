@@ -35,6 +35,7 @@ timePreMessage = 0
 recordTime = int(time.time())
 isChatBypassOpened = False
 unicodeSymbolList = ["‍", "‌", "‭"]
+GET, POST = (0, 1)
 
 
 def readConfig():
@@ -528,13 +529,22 @@ UP主: {} ({})
         getError(group_number, message_id, sender_qqnumber, traceback.format_exc())
 
 
+def request_and_print(url, data, pre_mode=GET):
+    if pre_mode == GET:
+        print(requests.get(url, data=data).text)
+    elif pre_mode == POST:
+        print(requests.post(url, data=data).text)
+    else:
+        throw Exception("Not supported mode")
+    return
+
 def mutePerson(group, qqnumber, mutetime):
     data1 = {
         "group_id": int(group),
         "user_id": int(qqnumber),
         "duration": int(mutetime)
     }
-    print(requests.post("http://" + HTTPURL + "/set_group_ban", data=data1).text)
+    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/set_group_ban", data=data1, pre_mode=POST)).start()
 
 
 def unmutePerson(group, qqnumber):
@@ -545,7 +555,7 @@ def recall(msgid):
     data1 = {
         "message_id": int(msgid)
     }
-    print(requests.post("http://" + HTTPURL + "/delete_msg", data=data1).text)
+    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/delete_msg", data=data1, pre_mode=POST)).start()
 
 
 def sendGroupmsg2(target1, text):
@@ -554,7 +564,7 @@ def sendGroupmsg2(target1, text):
         "message": text
     }
     print("[Bot -> Group]{}".format(text))
-    print(requests.post("http://" + HTTPURL + "/send_group_msg", data=data1).text)
+    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/delete_msg", data=data1, pre_mode=POST)).start()
 
 
 def sendGroupmsg3(target1, senderqq, text):
@@ -630,7 +640,7 @@ def nickname(group:int, target:int, nick:str):
         "user_id": target,
         "card": nick
     }
-    print(requests.get(url = "http://{}/set_group_card".format(HTTPURL), data=data1))
+    threading.Thread(target=request_and_print, args=(url = "http://{}/set_group_card".format(HTTPURL), data=data1, pre_mode=POST)).start()
 
 
 def search_user(uid):
