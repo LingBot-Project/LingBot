@@ -38,6 +38,7 @@ isChatBypassOpened = False
 unicodeSymbolList = ["‍", "‌", "‭"]
 GET, POST = (0, 1)
 ANTISPAMMER = {}
+IGNORE_GROUP = [1079822858]
 
 
 def readConfig():
@@ -362,8 +363,9 @@ UP主: {} ({})
                     s = getGroups()
                     sendGroupmsg(group_number, message_id, sender_qqnumber, "正在群发... 目标:{}个群".format(len(s)))
                     for i in s:
-                        sendGroupmsg2(i, msg1)
-                        time.sleep(random.randint(500, 800)/1000)
+                        if i not in IGNORE_GROUP:
+                            sendGroupmsg2(i, msg1)
+                            time.sleep(random.randint(500, 800)/1000)
                     sendGroupmsg(group_number, message_id, sender_qqnumber, "群发完成")
                 else:
                     sendGroupmsg2(command_list[1], msg1)
