@@ -684,7 +684,7 @@ def githubSub():
                 objectIDs.append(i["id"])
         print(objectIDs)
         newest = objectIDs[0]
-        # sendGroupmsg2(523201000, "开始为本群监听 FDPClient 的 actions")
+        # sendGroupmsg2(628715712, "开始为本群监听 FDPClient 的 actions")
     except:
         print("github请求失败", url)
         print(traceback.format_exc())
@@ -701,7 +701,7 @@ def githubSub():
                 updTime = actionInfo["head_commit"]["timestamp"]
                 updMsg = actionInfo["head_commit"]["message"]
                 updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"], actionInfo["head_commit"]["author"]["email"])
-                sendGroupmsg2(523201000,
+                sendGroupmsg2(628715712,
                              "监听到 FDPClient 的 actions 有新的任务\nUpdate Time:{}\n"
                              "Update Message:{}\n"
                              "Author:{}\n"
