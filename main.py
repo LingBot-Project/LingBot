@@ -716,7 +716,6 @@ def githubSub():
 
 
 def main():
-    # TODO: 将所有函数分类 (咕咕咕 咕咕咕)
     try:
         print("Starting... (0/5)")
         readConfig()
