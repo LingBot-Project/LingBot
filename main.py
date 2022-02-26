@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+import configparser
 import base64
 import json
 import os
@@ -41,12 +42,9 @@ ANTISPAMMER = {}
 
 def readConfig():
     global ADMIN_LIST, BLACK_LIST
-    if os.path.isfile('config.json') == False:
-        f = open('config.json', 'w')
-        f.write("{}")
-        f.close()
-    f = open('config.json', 'r')
-    s = json.loads(f.read())
+    config = configparser.ConfigParser()
+    config.read("config.ini")
+    s = config["DEFAULT"]
     try:
         ADMIN_LIST = s["admin"]
     except:
@@ -55,19 +53,17 @@ def readConfig():
         BLACK_LIST = s["blacklist"]
     except:
         pass
-    f.close()
 
 
 def saveConfig():
     global ADMIN_LIST, BLACK_LIST
-    f = open('config.json', 'w')
-    s = {
+    config = configparser.ConfigParser()
+    config["DEFAULT"] = {
         "admin": ADMIN_LIST,
         "blacklist": BLACK_LIST
     }
-    json_str = json.dumps(s, indent=4)
-    with open('config.json', 'w') as json_file:
-        json_file.write(json_str)
+    with open('config.ini', 'w') as configfile:
+        config.write(configfile)
 
 
 def quit():
