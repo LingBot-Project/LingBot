@@ -80,7 +80,7 @@ def SpammerChecker(group, user):
     global ANTISPAMMER
     if group not in ANTISPAMMER:
         ANTISPAMMER[group] = {}
-    if user not in ANTISPAMMER:
+    if user not in ANTISPAMMER[group]:
         ANTISPAMMER[group][user] = [0, 0]
     if time.time()-ANTISPAMMER[group][user][0] <= 20:
         ANTISPAMMER[group][user][1] = ANTISPAMMER[group][user][1]+1
