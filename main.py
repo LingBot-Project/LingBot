@@ -74,6 +74,7 @@ def quit():
     print("Try to Quit...")
     saveConfig()
     ALLOWRUNNING = False
+    sys.exit(0)
 
 def SpammerChecker(group, user):
     global ANTISPAMMER
@@ -438,7 +439,7 @@ UP主: {} ({})
 
         if command_list[0] == "#quit":
             if sender_qqnumber == 1584784496:
-                ALLOWRUNNING = False
+                quit()
                 sendGroupmsg3(group_number, sender_qqnumber,
                                       "已尝试设置运行信号为False")
 
