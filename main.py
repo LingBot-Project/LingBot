@@ -338,35 +338,18 @@ UP主: {} ({})
                 sendGroupmsg(group_number,message_id,sender_qqnumber,"请稍等 正在向远程服务器发送请求")
                 userName = command_list[1]
                 BanID = command_list[2].replace("#", "")
-                # mutePerson(group_number,sender_qqnumber,5)
-                if userName.find("$") != -1 & userName.find("{") != -1:
-                    sendGroupmsg(group_number,message_id,sender_qqnumber,"Firewall defense")
-                    back=False
+                while True:
+                    print("Username:{} BanID:{}".format(userName, BanID))
+                    a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, BanID), headers={'Host': 'api.getfdp.today'}).text
+                    if a.find("too many request") == -1:
+                        break
+                    time.sleep(3)
+                print(a)
+                if a.find("ERR|") != -1:
+                    sendGroupmsg5(group_number, message_id, sender_qqnumber, a)
                 else:
-                    if BanID.find("$") != -1 & BanID.find("{") != -1:
-                        sendGroupmsg(group_number,message_id,sender_qqnumber,"Firewall defense")
-                        return
-                        a = ""
-                        c = 1
-                    while True:
-                        print("Username:{} BanID:{}".format(userName, BanID))
-                        a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, BanID), headers={'Host': 'api.getfdp.today'}).text
-                        if a.find("too many request") == -1:
-                            break
-                        else:
-                            # sendGroupmsg(group_number,message_id,sender_qqnumber,a)
-                            if c == 1:
-                                sendGroupmsg(group_number, message_id, sender_qqnumber, "请稍等 我们正在自动重新请求 将在请求成功后返回")
-                                c = 0
-                        time.sleep(3)
-                    print(a)
-                    # a+="查ban冷却5秒"
-                    # 没有意义 :(((
-                    if a.find("ERR|") != -1:
-                        sendGroupmsg5(group_number, message_id, sender_qqnumber, a)
-                    else:
-                        BANCHECK_UID[sender_qqnumber] = time.time()
-                        sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+text2image(a)+"]")
+                    BANCHECK_UID[sender_qqnumber] = time.time()
+                    sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+text2image(a)+"]")
 
         if command_list[0] == "#send":
             if sender_qqnumber in ADMIN_LIST:
