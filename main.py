@@ -77,6 +77,7 @@ def quit():
 
 def SpammerChecker(group, user):
     global ANTISPAMMER
+    print(ANTISPAMMER)
     if group not in ANTISPAMMER:
         ANTISPAMMER[group] = {}
     if user not in ANTISPAMMER:
