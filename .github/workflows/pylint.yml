@@ -20,7 +20,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint --exit-zero -v ./main.py
-    - name: list file
-      run: |
-        ls
+        pylint ./main.py
