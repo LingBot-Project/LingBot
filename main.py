@@ -519,6 +519,7 @@ UP主: {} ({})
 
 
 def request_and_print(url, data1, pre_mode=GET):
+    print("test")
     if pre_mode == GET:
         print(requests.get(url, data=data1).text)
     elif pre_mode == POST:
