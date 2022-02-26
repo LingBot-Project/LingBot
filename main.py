@@ -529,11 +529,11 @@ UP主: {} ({})
         getError(group_number, message_id, sender_qqnumber, traceback.format_exc())
 
 
-def request_and_print(url, data, pre_mode=GET):
+def request_and_print(url, data1, pre_mode=GET):
     if pre_mode == GET:
-        print(requests.get(url, data=data).text)
+        print(requests.get(url, data=data1).text)
     elif pre_mode == POST:
-        print(requests.post(url, data=data).text)
+        print(requests.post(url, data=data1).text)
     return
 
 def mutePerson(group, qqnumber, mutetime):
