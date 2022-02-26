@@ -181,10 +181,13 @@ def on_message2(ws, message):
             ALL_AD  += 1
             return
         
-        if SpammerChecker(group_number, sender_qqnumber):
-            mutePerson(group_number, sender_qqnumber, 600)
-            recall(message_id)
-            sendGroupmsg2(group_number, "不要刷屏哟~~")
+        try:
+            if SpammerChecker(group_number, sender_qqnumber):
+                mutePerson(group_number, sender_qqnumber, 600)
+                recall(message_id)
+                sendGroupmsg2(group_number, "不要刷屏哟~~")
+        except:
+            pass
 
         if sender_qqnumber in BLACK_LIST:
             recall(message_id)
