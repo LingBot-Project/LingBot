@@ -559,20 +559,14 @@ def sendGroupmsg2(target1, text):
 
 
 def sendGroupmsg3(target1, senderqq, text):
-    if senderqq in BLACK_LIST:
-        return
     sendGroupmsg2(target1, "[CQ:at,qq={}]{}".format(senderqq, text))
 
 
 def sendGroupmsg(target1, msgid, senderqq, text):
-    if senderqq in BLACK_LIST:
-        return
     sendGroupmsg2(target1, "[CQ:reply,id={}][CQ:at,qq={}]{}".format(msgid, senderqq, text))
 
 
 def sendGroupmsg5(target1, msgid, senderqq, text):
-    if senderqq in BLACK_LIST:
-        return
     sendGroupmsg(target1, msgid, senderqq, text)
 
 
