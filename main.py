@@ -640,7 +640,7 @@ def nickname(group:int, target:int, nick:str):
         "user_id": target,
         "card": nick
     }
-    threading.Thread(target=request_and_print, args=(url = "http://{}/set_group_card".format(HTTPURL), data1, POST)).start()
+    threading.Thread(target=request_and_print, args=("http://{}/set_group_card".format(HTTPURL), data1, POST)).start()
 
 
 def search_user(uid):
