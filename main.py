@@ -296,64 +296,58 @@ UP主: {} ({})
 
 
         if command_list[0] == "/mcping":
-            try:
-                server = MinecraftServer.lookup(command_list[1]).status()
-                aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
-                    re.sub(MC_MOTD_COLORFUL, "", server.description), server.players.online, server.players.max,
-                    server.latency, re.sub(MC_MOTD_COLORFUL, "", server.version.name), server.version.protocol)
-                aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
-                aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
-                if server.favicon is not None:
-                    aaa = aaa + "\n[CQ:image,file="+server.favicon.replace("data:image/png;base64,", "base64://")+"]"
-                sendGroupmsg(group_number, message_id, sender_qqnumber, aaa)
-            except Exception as e:
-                getError(group_number, message_id, sender_qqnumber, traceback.format_exc())
+            server = MinecraftServer.lookup(command_list[1]).status()
+            aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
+                re.sub(MC_MOTD_COLORFUL, "", server.description), server.players.online, server.players.max,
+                server.latency, re.sub(MC_MOTD_COLORFUL, "", server.version.name), server.version.protocol)
+            aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
+            aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
+            if server.favicon is not None:
+                aaa = aaa + "\n[CQ:image,file="+server.favicon.replace("data:image/png;base64,", "base64://")+"]"
+            sendGroupmsg(group_number, message_id, sender_qqnumber, aaa)
                 
         if command_list[0] in ["#hypban", "!hypban", "#hyp", "#ban"]:
-            try:
-                if len(command_list)<=2:
-                    sendGroupmsg(group_number,message_id,sender_qqnumber,"正确格式:#hypban <USERNAME> <BANID>")
+            if len(command_list)<=2:
+                sendGroupmsg(group_number,message_id,sender_qqnumber,"正确格式:#hypban <USERNAME> <BANID>")
+            else:
+                if sender_qqnumber not in BANCHECK_UID or sender_qqnumber in ADMIN_LIST:
+                    BANCHECK_UID[sender_qqnumber] = time.time()
+                elif time.time() - BANCHECK_UID[sender_qqnumber] <= 60:
+                    sendGroupmsg(group_number,message_id,sender_qqnumber,"进入冷却时间 可在{}秒后使用".format(round(60.0 - (time.time() - BANCHECK_UID[sender_qqnumber]), 2)))
+                    return
+                sendGroupmsg(group_number,message_id,sender_qqnumber,"请稍等 正在向远程服务器发送请求")
+                userName = command_list[1]
+                BanID = command_list[2].replace("#", "")
+                # mutePerson(group_number,sender_qqnumber,5)
+                if userName.find("$") != -1 & userName.find("{") != -1:
+                    sendGroupmsg(group_number,message_id,sender_qqnumber,"Firewall defense")
+                    back=False
                 else:
-                    if sender_qqnumber not in BANCHECK_UID or sender_qqnumber in ADMIN_LIST:
-                        BANCHECK_UID[sender_qqnumber] = time.time()
-                    elif time.time() - BANCHECK_UID[sender_qqnumber] <= 60:
-                        sendGroupmsg(group_number,message_id,sender_qqnumber,"进入冷却时间 可在{}秒后使用".format(round(60.0 - (time.time() - BANCHECK_UID[sender_qqnumber]), 2)))
-                        return
-                    sendGroupmsg(group_number,message_id,sender_qqnumber,"请稍等 正在向远程服务器发送请求")
-                    userName = command_list[1]
-                    BanID = command_list[2].replace("#", "")
-                    # mutePerson(group_number,sender_qqnumber,5)
-                    if userName.find("$") != -1 & userName.find("{") != -1:
+                    if BanID.find("$") != -1 & BanID.find("{") != -1:
                         sendGroupmsg(group_number,message_id,sender_qqnumber,"Firewall defense")
                         back=False
                     else:
-                        if BanID.find("$") != -1 & BanID.find("{") != -1:
-                            sendGroupmsg(group_number,message_id,sender_qqnumber,"Firewall defense")
-                            back=False
-                        else:
-                            a = ""
-                            c = 1
-                            while True:
-                                print("Username:{} BanID:{}".format(userName, BanID))
-                                a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, BanID), headers={'Host': 'api.getfdp.today'}).text
-                                if a.find("too many request") == -1:
-                                    break
-                                else:
-                                    # sendGroupmsg(group_number,message_id,sender_qqnumber,a)
-                                    if c == 1:
-                                        sendGroupmsg(group_number, message_id, sender_qqnumber, "请稍等 我们正在自动重新请求 将在请求成功后返回")
-                                        c = 0
-                                time.sleep(3)
-                            print(a)
-                            # a+="查ban冷却5秒"
-                            # 没有意义 :(((
-                            if a.find("ERR|") != -1:
-                                sendGroupmsg5(group_number, message_id, sender_qqnumber, a)
+                        a = ""
+                        c = 1
+                        while True:
+                            print("Username:{} BanID:{}".format(userName, BanID))
+                            a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, BanID), headers={'Host': 'api.getfdp.today'}).text
+                            if a.find("too many request") == -1:
+                                break
                             else:
-                                BANCHECK_UID[sender_qqnumber] = time.time()
-                                sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+text2image(a)+"]")
-            except Exception as e:
-                getError(group_number, message_id, sender_qqnumber, traceback.format_exc())
+                                # sendGroupmsg(group_number,message_id,sender_qqnumber,a)
+                                if c == 1:
+                                    sendGroupmsg(group_number, message_id, sender_qqnumber, "请稍等 我们正在自动重新请求 将在请求成功后返回")
+                                    c = 0
+                            time.sleep(3)
+                        print(a)
+                        # a+="查ban冷却5秒"
+                        # 没有意义 :(((
+                        if a.find("ERR|") != -1:
+                            sendGroupmsg5(group_number, message_id, sender_qqnumber, a)
+                        else:
+                            BANCHECK_UID[sender_qqnumber] = time.time()
+                            sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+text2image(a)+"]")
 
         if command_list[0] == "#send":
             if sender_qqnumber in ADMIN_LIST:
@@ -426,67 +420,63 @@ UP主: {} ({})
                                       "已尝试设置运行信号为False")
 
         if command_list[0] == "#fdpinfo":
-            # https://bstats.org/api/v1/plugins/11076/charts/<Type>/data
-            try:
-                if command_list[1] == "online":
-                    url = "https://bstats.org/api/v1/plugins/11076/charts/minecraftVersion/data"
-                    a = requests.get(url=url).json()
-                    onlinePlayer = 0
-                    for i in a:
-                        onlinePlayer += i["y"]
-                    sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+text2image("OnlinePlayers: {}".format(onlinePlayer))+"]")
-                elif command_list[1] == "versions":
-                    url = "https://bstats.org/api/v1/plugins/11076/charts/pluginVersion/data"
-                    a = requests.get(url=url).json()
-                    onlineVersion = []
-                    for i in a:
-                        onlineVersion.append("{}: {}".format(i["name"], i["y"]))
-                    sendGroupmsg(group_number, message_id, sender_qqnumber, 
-                                 "[CQ:image,file=base64://"+text2image("OnlineVersionsInfo:\n{}".format("\n".join(onlineVersion)))+"]")
-                elif command_list[1] == "systems":
-                    url = "https://bstats.org/api/v1/plugins/11076/charts/os/data"
-                    a = requests.get(url=url).json()
-                    onlineSystem = []
-                    for i in a["seriesData"]:
-                        onlineSystem.append("{}: {}".format(i["name"], i["y"]))
-                    sendGroupmsg(group_number, message_id, sender_qqnumber,
-                                 "[CQ:image,file=base64://"+text2image("OnlineSystms:\n{}".format("\n".join(onlineSystem)))+"]")
-                elif command_list[1] == "countries":
-                    url = "https://bstats.org/api/v1/plugins/11076/charts/location/data"
-                    a = requests.get(url=url).json()
-                    onlineCountry = []
-                    for i in a:
-                        onlineCountry.append("{}: {}".format(i["name"].replace("Hong Kong", "Hong Kong, China").replace("Taiwan", "Taiwan, China"),
-                            i["y"]))
-                    sendGroupmsg(group_number, message_id, sender_qqnumber,
-                                 "[CQ:image,file=base64://"+text2image("OnlineCountrys:\n{}".format("\n".join(onlineCountry)))+"]")
-                elif command_list[1] == "beta":
-                    sendGroupmsg(group_number, message_id, sender_qqnumber, "Please wait...")
-                    url = "https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs"
-                    a = requests.get(url=url).json()
-                    objectIDs = []
-                    for i in a["workflow_runs"]:
-                        if i["name"] == "build":
-                            objectIDs.append(i["id"])
-                    actionInfo = requests.get(url="https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs/{}".format(objectIDs[0])).json()
-                    updTime = actionInfo["head_commit"]["timestamp"]
-                    updMsg = actionInfo["head_commit"]["message"]
-                    updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"], actionInfo["head_commit"]["author"]["email"])
-                    sendGroupmsg(group_number, message_id, sender_qqnumber,
-                                 "Update Time:{}\n"
-                                 "Update Message:{}\n"
-                                 "Author:{}\n"
-                                 "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(updTime, updMsg, updAuthor, objectIDs[0]))
-                elif command_list[1] == "release":
-                    url = "https://api.github.com/repos/UnlegitMC/FDPClient/releases/latest"
-                    a = requests.get(url=url).json()
-                    files = []
-                    for i in a["assets"]:
-                        files.append("{}: {}".format(i["name"], i["browser_download_url"].replace("github.com", "hub.fastgit.org")))
-                    sendGroupmsg(group_number, message_id, sender_qqnumber,
-                                 "Version: {}\n".format(a["name"])+"\n".join(files))
-            except Exception as e:
-                getError(group_number, message_id, sender_qqnumber, traceback.format_exc())
+            if command_list[1] == "online":
+                url = "https://bstats.org/api/v1/plugins/11076/charts/minecraftVersion/data"
+                a = requests.get(url=url).json()
+                onlinePlayer = 0
+                for i in a:
+                    onlinePlayer += i["y"]
+                sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+text2image("OnlinePlayers: {}".format(onlinePlayer))+"]")
+            elif command_list[1] == "versions":
+                url = "https://bstats.org/api/v1/plugins/11076/charts/pluginVersion/data"
+                a = requests.get(url=url).json()
+                onlineVersion = []
+                for i in a:
+                    onlineVersion.append("{}: {}".format(i["name"], i["y"]))
+                sendGroupmsg(group_number, message_id, sender_qqnumber, 
+                             "[CQ:image,file=base64://"+text2image("OnlineVersionsInfo:\n{}".format("\n".join(onlineVersion)))+"]")
+            elif command_list[1] == "systems":
+                url = "https://bstats.org/api/v1/plugins/11076/charts/os/data"
+                a = requests.get(url=url).json()
+                onlineSystem = []
+                for i in a["seriesData"]:
+                    onlineSystem.append("{}: {}".format(i["name"], i["y"]))
+                sendGroupmsg(group_number, message_id, sender_qqnumber,
+                             "[CQ:image,file=base64://"+text2image("OnlineSystms:\n{}".format("\n".join(onlineSystem)))+"]")
+            elif command_list[1] == "countries":
+                url = "https://bstats.org/api/v1/plugins/11076/charts/location/data"
+                a = requests.get(url=url).json()
+                onlineCountry = []
+                for i in a:
+                    onlineCountry.append("{}: {}".format(i["name"].replace("Hong Kong", "Hong Kong, China").replace("Taiwan", "Taiwan, China"),
+                        i["y"]))
+                sendGroupmsg(group_number, message_id, sender_qqnumber,
+                             "[CQ:image,file=base64://"+text2image("OnlineCountrys:\n{}".format("\n".join(onlineCountry)))+"]")
+            elif command_list[1] == "beta":
+                sendGroupmsg(group_number, message_id, sender_qqnumber, "Please wait...")
+                url = "https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs"
+                a = requests.get(url=url).json()
+                objectIDs = []
+                for i in a["workflow_runs"]:
+                    if i["name"] == "build":
+                        objectIDs.append(i["id"])
+                actionInfo = requests.get(url="https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs/{}".format(objectIDs[0])).json()
+                updTime = actionInfo["head_commit"]["timestamp"]
+                updMsg = actionInfo["head_commit"]["message"]
+                updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"], actionInfo["head_commit"]["author"]["email"])
+                sendGroupmsg(group_number, message_id, sender_qqnumber,
+                             "Update Time:{}\n"
+                             "Update Message:{}\n"
+                             "Author:{}\n"
+                             "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(updTime, updMsg, updAuthor, objectIDs[0]))
+            elif command_list[1] == "release":
+                url = "https://api.github.com/repos/UnlegitMC/FDPClient/releases/latest"
+                a = requests.get(url=url).json()
+                files = []
+                for i in a["assets"]:
+                    files.append("{}: {}".format(i["name"], i["browser_download_url"].replace("github.com", "hub.fastgit.org")))
+                sendGroupmsg(group_number, message_id, sender_qqnumber,
+                             "Version: {}\n".format(a["name"])+"\n".join(files))
                 
         BVID = re.match(BILI_BV_RE, message_text)
         if BVID != None:
@@ -535,7 +525,7 @@ UP主: {} ({})
             with open(imageuid+"_cache.png", "rb") as f:
                 sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+base64.b64encode(f.read()).decode()+"]")
     except Exception as e:
-        print(traceback.format_exc())
+        getError(group_number, message_id, sender_qqnumber, traceback.format_exc())
 
 
 def mutePerson(group, qqnumber, mutetime):
@@ -587,15 +577,6 @@ def sendGroupmsg5(target1, msgid, senderqq, text):
 
 def sendGroupmsgImg(target1, msgid, senderqq, base64s):
     sendGroupmsg(target1, msgid, senderqq, "[CQ:image,file=base64://{}]".format(base64s))
-
-
-def sendGuildmsg(guild_id, channel_id, message_id, sender_id, message):
-    data1 = {
-        "guild_id": guild_id,
-        "channel_id": channel_id,
-        "message": "[CQ:reply,id={}][CQ:at,qq={}]".format(message_id, sender_id)+message
-    }
-    print(requests.post("http://" + HTTPURL + "/send_guild_channel_msg", data=data1).text)
 
 
 def urlget(url):
