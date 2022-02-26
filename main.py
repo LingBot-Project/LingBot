@@ -10,6 +10,7 @@ import threading
 import time
 import traceback
 from io import BytesIO
+from apscheduler.schedulers.blocking import BackgroundScheduler
 
 import requests
 import websocket
@@ -671,11 +672,6 @@ def on_close(ws, a, b):
     print("-------连接已关闭------")
 
 
-def updatet(a):
-    # print("s1")
-    pass
-
-
 def githubSub():
     # print("s2")
     url = "https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs"
@@ -717,12 +713,36 @@ def githubSub():
         time.sleep(60)
 
 
+def goodmor():
+    a = requests.get("http://open.iciba.com/dsapi/").json()
+    msg1 = "早上好! \n{}\n{}".format(a["content"], a["note"])
+    s = getGroups()
+    for i in s:
+        sendGroupmsg2(i, msg1)
+        time.sleep(random.randint(700, 1100)/1000)
+
+
+def goodmor2():
+    msg1 = requests.get("https://www.ipip5.com/today/api.php?type=txt").text
+    s = getGroups()
+    for i in s:
+        sendGroupmsg2(i, msg1)
+        time.sleep(random.randint(700, 1100)/1000)
+
+
+def goodnoon():
+    msg1 = "中午好! 来点二刺螈图片吧\n[CQ:image,file=base64://{}]".format(acg_img())
+    s = getGroups()
+    for i in s:
+        sendGroupmsg2(i, msg1)
+        time.sleep(random.randint(700, 1100)/1000)
+
+
 def main():
     try:
         print("Starting... (0/5)")
         readConfig()
         print("Starting... (1/5)")
-        t1 = threading.Thread(target=updatet, args=("a"))
         t2 = threading.Thread(target=githubSub)
         ws = websocket.WebSocketApp("ws://" + WSURL + "/all?verifyKey=uThZyFeQwJbD&qq=3026726134",
                                     on_message=on_message,
@@ -730,10 +750,15 @@ def main():
                                     on_close=on_close,
                                     )
         t3 = threading.Thread(target=ws.run_forever)
-        t1.daemon = True
         t2.daemon = True
         t3.daemon = True
         print("Starting... (2/5)")
+        sched = BlockingScheduler()
+        sched.add_job(goodmor, 'cron', day_of_week='1-7', hour=6, minute=30)
+        sched.add_job(goodmor2, 'cron', day_of_week='1-7', hour=8, minute=30)
+        sched.add_job(goodnoon, 'cron', day_of_week='1-7', hour=12, minute=1)
+        t1 = threading.Thread(target=sched.start)
+        t1.deamon = True
         t1.start()
         print("Starting... (3/5)")
         t2.start()
