@@ -754,9 +754,9 @@ def main():
         t3.daemon = True
         print("Starting... (2/5)")
         sched = BlockingScheduler()
-        sched.add_job(goodmor, 'cron', day_of_week='1-7', hour=6, minute=30)
-        sched.add_job(goodmor2, 'cron', day_of_week='1-7', hour=8, minute=30)
-        sched.add_job(goodnoon, 'cron', day_of_week='1-7', hour=12, minute=1)
+        sched.add_job(goodmor, 'cron', hour=6, minute=30)
+        sched.add_job(goodmor2, 'cron', hour=8)
+        sched.add_job(goodnoon, 'cron', hour=12)
         t1 = threading.Thread(target=sched.start)
         t1.deamon = True
         t1.start()
