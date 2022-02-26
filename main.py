@@ -38,6 +38,7 @@ unicodeSymbolList = ["‍", "‌", "‭"]
 
 
 def readConfig():
+    # TODO: Use SQLite
     global ADMIN_LIST, BLACK_LIST
     if os.path.isfile('config.json') == False:
         f = open('config.json', 'w')
@@ -57,6 +58,7 @@ def readConfig():
 
 
 def saveConfig():
+    # TODO: Use SQLite
     global ADMIN_LIST, BLACK_LIST
     f = open('config.json', 'w')
     s = {
