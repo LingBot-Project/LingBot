@@ -80,11 +80,15 @@ def SpammerChecker(group, user):
         ANTISPAMMER[group] = {}
     if user not in ANTISPAMMER:
         ANTISPAMMER[group][user] = [0, 0]
-    if time.time()-ANTISPAMMER[group][user][0] <= 10:
+    if time.time()-ANTISPAMMER[group][user][0] <= 20:
         ANTISPAMMER[group][user][1] += 1
     else:
         ANTISPAMMER[group][user][0] = time.time()
         ANTISPAMMER[group][user][1] = 1
+    if ANTISPAMMER[group][user][1] > 8:
+        return True
+    else:
+        return False
 
 
 def getRuntime():
@@ -176,6 +180,11 @@ def on_message2(ws, message):
             recall(message_id)
             ALL_AD  += 1
             return
+        
+        if SpammerChecker(group_number, sender_qqnumber):
+            mutePerson(group_number, sender_qqnumber, 600)
+            recall(message_id)
+            sendGroupmsg2(group_number, "不要刷屏哟~~")
 
         if sender_qqnumber in BLACK_LIST:
             recall(message_id)
@@ -575,7 +584,7 @@ def sendGroupmsg2(target1, text):
         "message": text
     }
     print("[Bot -> Group]{}".format(text))
-    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/delete_msg", data1, POST)).start()
+    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/send_group_msg", data1, POST)).start()
 
 
 def sendGroupmsg3(target1, senderqq, text):
