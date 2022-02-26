@@ -731,7 +731,7 @@ def goodmor2():
 
 
 def goodnoon():
-    msg1 = "中午好! 来点二刺螈图片吧\n[CQ:image,file=base64://{}]".format(acg_img())
+    msg1 = "来点二刺螈图片吧\n[CQ:image,file=base64://{}]".format(acg_img())
     s = getGroups()
     for i in s:
         sendGroupmsg2(i, msg1)
@@ -767,6 +767,7 @@ def main():
         sched.add_job(goodmor2, 'cron', hour=8)
         sched.add_job(goodnoon, 'cron', hour=12)
         sched.add_job(goodnig, 'cron', hour=22, minute=30)
+        sched.add_job(goodnoon, 'cron', hour=23)
         t1 = threading.Thread(target=sched.start)
         t1.deamon = True
         t1.start()
