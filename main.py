@@ -78,13 +78,12 @@ def quit():
 
 def SpammerChecker(group, user):
     global ANTISPAMMER
-    print(ANTISPAMMER)
     if group not in ANTISPAMMER:
         ANTISPAMMER[group] = {}
     if user not in ANTISPAMMER:
         ANTISPAMMER[group][user] = [0, 0]
     if time.time()-ANTISPAMMER[group][user][0] <= 20:
-        ANTISPAMMER[group][user][1] += 1
+        ANTISPAMMER[group][user][1] = ANTISPAMMER[group][user][1]+1
     else:
         ANTISPAMMER[group][user][0] = time.time()
         ANTISPAMMER[group][user][1] = 1
