@@ -534,8 +534,6 @@ def request_and_print(url, data, pre_mode=GET):
         print(requests.get(url, data=data).text)
     elif pre_mode == POST:
         print(requests.post(url, data=data).text)
-    else:
-        throw Exception("Not supported mode")
     return
 
 def mutePerson(group, qqnumber, mutetime):
