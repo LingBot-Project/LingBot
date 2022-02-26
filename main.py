@@ -88,6 +88,7 @@ def SpammerChecker(group, user):
         ANTISPAMMER[group][user][0] = time.time()
         ANTISPAMMER[group][user][1] = 1
     if ANTISPAMMER[group][user][1] > 8:
+        ANTISPAMMER[group][user] = [0, 0]
         return True
     else:
         return False
