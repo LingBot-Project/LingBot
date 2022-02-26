@@ -76,6 +76,7 @@ def quit():
     ALLOWRUNNING = False
 
 def SpammerChecker(group, user):
+    global ANTISPAMMER
     if group not in ANTISPAMMER:
         ANTISPAMMER[group] = {}
     if user not in ANTISPAMMER:
