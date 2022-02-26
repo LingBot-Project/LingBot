@@ -10,7 +10,7 @@ import threading
 import time
 import traceback
 from io import BytesIO
-from apscheduler.schedulers.blocking import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 import requests
 import websocket
