@@ -36,6 +36,7 @@ recordTime = int(time.time())
 isChatBypassOpened = False
 unicodeSymbolList = ["‍", "‌", "‭"]
 GET, POST = (0, 1)
+ANTISPAMMER = {}
 
 
 def readConfig():
@@ -72,7 +73,18 @@ def saveConfig():
 def quit():
     print("Try to Quit...")
     saveConfig()
-    sys.exit(0)
+    ALLOWRUNNING = False
+
+def SpammerChecker(group, user):
+    if group not in ANTISPAMMER:
+        ANTISPAMMER[group] = {}
+    if user not in ANTISPAMMER:
+        ANTISPAMMER[group][user] = [0, 0]
+    if time.time()-ANTISPAMMER[group][user][0] <= 10:
+        ANTISPAMMER[group][user][1] += 1
+    else:
+        ANTISPAMMER[group][user][0] = time.time()
+        ANTISPAMMER[group][user][1] = 1
 
 
 def getRuntime():
