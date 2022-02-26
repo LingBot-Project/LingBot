@@ -345,29 +345,28 @@ UP主: {} ({})
                 else:
                     if BanID.find("$") != -1 & BanID.find("{") != -1:
                         sendGroupmsg(group_number,message_id,sender_qqnumber,"Firewall defense")
-                        back=False
-                    else:
+                        return
                         a = ""
                         c = 1
-                        while True:
-                            print("Username:{} BanID:{}".format(userName, BanID))
-                            a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, BanID), headers={'Host': 'api.getfdp.today'}).text
-                            if a.find("too many request") == -1:
-                                break
-                            else:
-                                # sendGroupmsg(group_number,message_id,sender_qqnumber,a)
-                                if c == 1:
-                                    sendGroupmsg(group_number, message_id, sender_qqnumber, "请稍等 我们正在自动重新请求 将在请求成功后返回")
-                                    c = 0
-                            time.sleep(3)
-                        print(a)
-                        # a+="查ban冷却5秒"
-                        # 没有意义 :(((
-                        if a.find("ERR|") != -1:
-                            sendGroupmsg5(group_number, message_id, sender_qqnumber, a)
+                    while True:
+                        print("Username:{} BanID:{}".format(userName, BanID))
+                        a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, BanID), headers={'Host': 'api.getfdp.today'}).text
+                        if a.find("too many request") == -1:
+                            break
                         else:
-                            BANCHECK_UID[sender_qqnumber] = time.time()
-                            sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+text2image(a)+"]")
+                            # sendGroupmsg(group_number,message_id,sender_qqnumber,a)
+                            if c == 1:
+                                sendGroupmsg(group_number, message_id, sender_qqnumber, "请稍等 我们正在自动重新请求 将在请求成功后返回")
+                                c = 0
+                        time.sleep(3)
+                    print(a)
+                    # a+="查ban冷却5秒"
+                    # 没有意义 :(((
+                    if a.find("ERR|") != -1:
+                        sendGroupmsg5(group_number, message_id, sender_qqnumber, a)
+                    else:
+                        BANCHECK_UID[sender_qqnumber] = time.time()
+                        sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+text2image(a)+"]")
 
         if command_list[0] == "#send":
             if sender_qqnumber in ADMIN_LIST:
@@ -390,33 +389,18 @@ UP主: {} ({})
 
         if command_list[0] == "#mute":
             if sender_qqnumber in ADMIN_LIST:
-                if command_list[1] == "all":
-                    sendGroupmsg3(group_number, sender_qqnumber,
-                                  "尝试在所有群禁言 {} {}分钟...".format(command_list[2], command_list[3]))
-                    s = getGroups()
-                    print(s)
-                    command_list[3] = int(command_list[3])
-                    for i in s:
-                        if command_list[3] == 0:
-                            unmutePerson(i, command_list[2])
-                        else:
-                            mutePerson(i, command_list[2], command_list[3] * 60)
-                        time.sleep(random.randint(500, 800)/1000)
-                    sendGroupmsg3(group_number, sender_qqnumber,
-                                  "已在所有群禁言 {} {}分钟...".format(command_list[2], command_list[3]))
+                if command_list[1] == "this":
+                    command_list[1] = group_number
                 else:
-                    if command_list[1] == "this":
-                        command_list[1] = group_number
-                    else:
-                        command_list[1] = int(command_list[1])
-                    command_list[2] = int(command_list[2].replace("@", ""))
-                    command_list[3] = int(command_list[3])
-                    if command_list[3] == 0:
-                        unmutePerson(command_list[1], command_list[2])
-                    else:
-                        mutePerson(command_list[1], command_list[2], command_list[3] * 60)
-                        sendGroupmsg3(group_number, sender_qqnumber,
-                                      "已尝试在群 {} 禁言 {} {}分钟".format(command_list[1], command_list[2], command_list[3]))
+                    command_list[1] = int(command_list[1])
+                command_list[2] = int(command_list[2].replace("@", ""))
+                command_list[3] = int(command_list[3])
+                if command_list[3] == 0:
+                    unmutePerson(command_list[1], command_list[2])
+                else:
+                    mutePerson(command_list[1], command_list[2], command_list[3] * 60)
+                    sendGroupmsg3(group_number, sender_qqnumber,
+                                  "已尝试在群 {} 禁言 {} {}分钟".format(command_list[1], command_list[2], command_list[3]))
             else:
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
         
