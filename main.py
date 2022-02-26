@@ -537,12 +537,14 @@ def request_and_print(url, data, pre_mode=GET):
     return
 
 def mutePerson(group, qqnumber, mutetime):
+    if mutetime >= 43200:
+        mutetime = 43199
     data1 = {
         "group_id": int(group),
         "user_id": int(qqnumber),
         "duration": int(mutetime)
     }
-    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/set_group_ban", data=data1, pre_mode=POST)).start()
+    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/set_group_ban", data1, POST)).start()
 
 
 def unmutePerson(group, qqnumber):
@@ -553,7 +555,7 @@ def recall(msgid):
     data1 = {
         "message_id": int(msgid)
     }
-    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/delete_msg", data=data1, pre_mode=POST)).start()
+    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/delete_msg", data1, POST)).start()
 
 
 def sendGroupmsg2(target1, text):
@@ -562,7 +564,7 @@ def sendGroupmsg2(target1, text):
         "message": text
     }
     print("[Bot -> Group]{}".format(text))
-    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/delete_msg", data=data1, pre_mode=POST)).start()
+    threading.Thread(target=request_and_print, args=("http://" + HTTPURL + "/delete_msg", data1, POST)).start()
 
 
 def sendGroupmsg3(target1, senderqq, text):
@@ -638,7 +640,7 @@ def nickname(group:int, target:int, nick:str):
         "user_id": target,
         "card": nick
     }
-    threading.Thread(target=request_and_print, args=(url = "http://{}/set_group_card".format(HTTPURL), data=data1, pre_mode=POST)).start()
+    threading.Thread(target=request_and_print, args=(url = "http://{}/set_group_card".format(HTTPURL), data1, POST)).start()
 
 
 def search_user(uid):
