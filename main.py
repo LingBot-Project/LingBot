@@ -10,7 +10,6 @@ import time
 import traceback
 from io import BytesIO
 
-import client
 import requests
 import websocket
 from mcstatus import MinecraftServer
@@ -334,7 +333,7 @@ UP主: {} ({})
                             c = 1
                             while True:
                                 print("Username:{} BanID:{}".format(userName, BanID))
-                                a = client.ban(userName, BanID)
+                                a = crequests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, banId), headers={'Host': 'api.getfdp.today'}).text
                                 if a.find("too many request") == -1:
                                     break
                                 else:
