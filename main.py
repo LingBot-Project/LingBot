@@ -194,10 +194,10 @@ def on_message2(ws, message):
             return
 
         command_list = message_text.split(" ")
-        if message_text == "#test":
+        if message_text in ["!test", "凌状态"]:
             sendGroupmsg(group_number, message_id, sender_qqnumber, "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(ALL_MESSAGE, getRuntime(), timePreMessage, ALL_AD, (ALL_AD/ALL_MESSAGE)*100))
             
-        if command_list[0] == "#help":
+        if command_list[0] in ["!help", "菜单"]:
             sendGroupmsg(group_number, message_id, sender_qqnumber, "请访问: https://lingbot.guimc.ltd/")
 
         if message_text == "一语":
@@ -272,7 +272,7 @@ UP主: {} ({})
                          requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
                          requests.get("http://open.iciba.com/dsapi/").json()["note"])
         
-        if command_list[0] == "#admin":
+        if command_list[0] == "!admin":
             if command_list[1] == "list":
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "{}".format(ADMIN_LIST))
             if sender_qqnumber not in ADMIN_LIST:
@@ -295,7 +295,7 @@ UP主: {} ({})
                 ADMIN_LIST.remove(int(command_list[2]))
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "操作成功")
         
-        if command_list[0] == "#blacklist":
+        if command_list[0] == "!blacklist":
             if command_list[1] == "list":
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "{}".format(BLACK_LIST))
             if sender_qqnumber not in ADMIN_LIST:
@@ -330,7 +330,7 @@ UP主: {} ({})
                 aaa = aaa + "\n[CQ:image,file="+server.favicon.replace("data:image/png;base64,", "base64://")+"]"
             sendGroupmsg(group_number, message_id, sender_qqnumber, aaa)
                 
-        if command_list[0] in ["#hypban", "!hypban", "#hyp", "#ban"]:
+        if command_list[0] == "!hypban":
             if len(command_list)<=2:
                 sendGroupmsg(group_number,message_id,sender_qqnumber,"正确格式:#hypban <USERNAME> <BANID>")
             else:
@@ -355,7 +355,7 @@ UP主: {} ({})
                     BANCHECK_UID[sender_qqnumber] = time.time()
                     sendGroupmsg(group_number, message_id, sender_qqnumber, "[CQ:image,file=base64://"+text2image(a)+"]")
 
-        if command_list[0] == "#send":
+        if command_list[0] == "!send":
             if sender_qqnumber in ADMIN_LIST:
                 msg1 = " ".join(command_list[2:])
                 all_req = re.match(REQ_TEXT, msg1)
@@ -375,7 +375,7 @@ UP主: {} ({})
             else:
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
 
-        if command_list[0] == "#mute":
+        if command_list[0] == "!mute":
             if sender_qqnumber in ADMIN_LIST:
                 if command_list[1] == "this":
                     command_list[1] = group_number
@@ -392,12 +392,12 @@ UP主: {} ({})
             else:
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
         
-        if command_list[0] == "#namelocker":
+        if command_list[0] == "!namelocker":
             sendGroupmsg5(group_number, message_id, sender_qqnumber, "恭喜你找到了一个彩蛋!")
             # 这东西给我整不会了了 陌生人能不能帮帮我
             return
         
-        if command_list[0] == "#search":
+        if command_list[0] == "!search":
             if sender_qqnumber not in ADMIN_LIST:
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "你的权限不足!")
                 return
@@ -405,13 +405,13 @@ UP主: {} ({})
             a = search_user(int(command_list[1]))
             sendGroupmsg5(group_number, message_id, sender_qqnumber, "搜索完成:\n{}".format(a))
 
-        if command_list[0] == "#quit":
+        if command_list[0] == "!quit":
             if sender_qqnumber == 1584784496:
                 quit()
                 sendGroupmsg3(group_number, sender_qqnumber,
                                       "已尝试设置运行信号为False")
 
-        if command_list[0] == "#fdpinfo":
+        if command_list[0] == "!fdpinfo":
             if command_list[1] == "online":
                 url = "https://bstats.org/api/v1/plugins/11076/charts/minecraftVersion/data"
                 a = requests.get(url=url).json()
