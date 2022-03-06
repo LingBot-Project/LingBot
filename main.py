@@ -39,10 +39,11 @@ unicodeSymbolList = ["‍", "‌", "‭"]
 GET, POST = (0, 1)
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
+FEEDBACKS = {}
 
 
 def readConfig():
-    global ADMIN_LIST, BLACK_LIST
+    global ADMIN_LIST, BLACK_LIST, FEEDBACKS
     config = configparser.ConfigParser()
     config.read("config.ini")
     s = config["DEFAULT"]
@@ -54,15 +55,18 @@ def readConfig():
         BLACK_LIST = [int(i) for i in s["blacklist"].split(",")]
     except:
         pass
+    try:
+        FEEDBACKS = config["FEEDBACKS"]
 
 
 def saveConfig():
-    global ADMIN_LIST, BLACK_LIST
+    global ADMIN_LIST, BLACK_LIST, FEEDBACKS
     config = configparser.ConfigParser()
     config["DEFAULT"] = {
         "admin": ",".join('%s' %id for id in ADMIN_LIST),
         "blacklist": ",".join('%s' %id for id in BLACK_LIST)
     }
+    config["FEEDBACKS"] = FEEDBACKS
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
 
@@ -141,7 +145,7 @@ def acg_img():
     
 
 def on_message2(ws, message):
-    global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD
+    global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS
     try:
         a = json.loads(message)
         message_text = ""
@@ -272,6 +276,22 @@ UP主: {} ({})
                          requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
                          requests.get("http://open.iciba.com/dsapi/").json()["note"])
         
+        if command_list[0] == "!feedback":
+            if command_list[1] == "send":
+                feedback_code = "F{}{}".format(datetime.datetime.now().strftime("%Y%m%d%H%M"), random.randint(100000, 999999))
+                FEEDBACKS[feedback_code] = "QQ: {}\n内容: {}".format(sender_qqnumber, " ".join(command_list[2:]))
+                sendGroupmsg5(group_number, message_id, sender_qqnumber, "成功构建一个意见反馈 编号: {}\n注意: 投递垃圾信息可能会导致您进入黑名单")
+                sendGroupmsg2(868218262, "您有一条新的 Feedback 请及时处理\n编号: {}\n{}".format(feedback_code, FEEDBACKS[feedback_code]))
+            if sender_qqnumber not in ADMIN_LIST:
+                return
+            if command_list[1] == "list":
+                feelbacks1 = ""
+                for i in FEELBACKS:
+                    feelbacks1 += "---------------------\n编号: {}\n{}".format(i, FEELBACKS[i])
+                sendGroupmsg2(group_number, "[CQ:image,file=base64://{}]".format(text2image(feedbacks1)))
+            elif command_list[1] == "remove":
+                FEELBACKS.pop(command_list[2])
+                sendGroupmsg5(group_number, message_id, sender_qqnumber, "已经尝试这么干了")
         if command_list[0] == "!admin":
             if command_list[1] == "list":
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "{}".format(ADMIN_LIST))
