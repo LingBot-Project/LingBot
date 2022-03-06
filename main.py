@@ -210,7 +210,7 @@ def on_message2(ws, message):
             sendGroupmsg(group_number, message_id, sender_qqnumber, "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(ALL_MESSAGE, getRuntime(), timePreMessage, ALL_AD, (ALL_AD/ALL_MESSAGE)*100))
             
         if command_list[0] in ["!help", "菜单"]:
-            sendGroupmsg(group_number, message_id, sender_qqnumber, "请访问: https://lingbot.guimc.ltd/")
+            sendGroupmsg(group_number, message_id, sender_qqnumber, "请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
 
         if message_text == "一语":
             sendGroupmsg(group_number, message_id, sender_qqnumber,
