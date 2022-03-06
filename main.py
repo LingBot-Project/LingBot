@@ -295,7 +295,7 @@ UP主: {} ({})
             if command_list[1] == "list":
                 feedbacks1 = ""
                 for i in FEEDBACKS:
-                    feedbacks1 += "---------------------\n编号: {}\n{}".format(i, FEEDBACKS[i])
+                    feedbacks1 += "---------------------\n编号: {}\n{}\n".format(i, FEEDBACKS[i])
                 sendGroupmsg2(group_number, "[CQ:image,file=base64://{}]".format(text2image(feedbacks1)))
             elif command_list[1] == "remove":
                 FEEDBACKS.pop(command_list[2])
