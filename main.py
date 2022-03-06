@@ -57,6 +57,8 @@ def readConfig():
         pass
     try:
         FEEDBACKS = config["FEEDBACKS"]
+    except:
+        pass
 
 
 def saveConfig():
