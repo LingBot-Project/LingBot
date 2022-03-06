@@ -290,7 +290,7 @@ UP主: {} ({})
             if command_list[1] == "list":
                 feelbacks1 = ""
                 for i in FEEDBACKS:
-                    feelbacks1 += "---------------------\n编号: {}\n{}".format(i, FEELBACKS[i])
+                    feelbacks1 += "---------------------\n编号: {}\n{}".format(i, FEEDBACKS[i])
                 sendGroupmsg2(group_number, "[CQ:image,file=base64://{}]".format(text2image(feedbacks1)))
             elif command_list[1] == "remove":
                 FEELBACKS.pop(command_list[2])
