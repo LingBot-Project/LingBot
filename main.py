@@ -285,6 +285,7 @@ UP主: {} ({})
                          requests.get("http://open.iciba.com/dsapi/").json()["note"])
         
         if command_list[0] == "!feedback":
+            if group_number == 628715712: return
             if command_list[1] == "send":
                 feedback_code = "F{}{}".format(datetime.datetime.now().strftime("%Y%m%d%H%M"), random.randint(100000, 999999))
                 FEEDBACKS[feedback_code] = "QQ: {}\n内容: {}".format(sender_qqnumber, " ".join(command_list[2:]))
