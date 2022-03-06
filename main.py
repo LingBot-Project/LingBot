@@ -10,6 +10,7 @@ import sys
 import threading
 import time
 import traceback
+import hypixel
 from io import BytesIO
 
 import requests
