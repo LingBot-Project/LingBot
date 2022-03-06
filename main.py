@@ -298,7 +298,7 @@ UP主: {} ({})
                     feedbacks1 += "---------------------\n编号: {}\n{}".format(i, FEEDBACKS[i])
                 sendGroupmsg2(group_number, "[CQ:image,file=base64://{}]".format(text2image(feedbacks1)))
             elif command_list[1] == "remove":
-                FEELBACKS.pop(command_list[2])
+                FEEDBACKS.pop(command_list[2])
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "已经尝试这么干了")
         if command_list[0] == "!admin":
             if command_list[1] == "list":
