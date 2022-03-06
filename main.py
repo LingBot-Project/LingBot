@@ -288,9 +288,9 @@ UP主: {} ({})
             if sender_qqnumber not in ADMIN_LIST:
                 return
             if command_list[1] == "list":
-                feelbacks1 = ""
+                feedbacks1 = ""
                 for i in FEEDBACKS:
-                    feelbacks1 += "---------------------\n编号: {}\n{}".format(i, FEEDBACKS[i])
+                    feedbacks1 += "---------------------\n编号: {}\n{}".format(i, FEEDBACKS[i])
                 sendGroupmsg2(group_number, "[CQ:image,file=base64://{}]".format(text2image(feedbacks1)))
             elif command_list[1] == "remove":
                 FEELBACKS.pop(command_list[2])
