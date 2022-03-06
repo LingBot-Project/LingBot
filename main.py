@@ -56,6 +56,8 @@ def readConfig():
         BLACK_LIST = [int(i) for i in s["blacklist"].split(",")]
     except:
         pass
+    config = configparser.ConfigParser()
+    config.read("feedback.ini")
     try:
         FEEDBACKS = config["FEEDBACKS"]
     except:
@@ -69,8 +71,11 @@ def saveConfig():
         "admin": ",".join('%s' %id for id in ADMIN_LIST),
         "blacklist": ",".join('%s' %id for id in BLACK_LIST)
     }
-    config["FEEDBACKS"] = FEEDBACKS
     with open('config.ini', 'w') as configfile:
+        config.write(configfile)
+    config = configparser.ConfigParser()
+    config["FEEDBACKS"] = FEEDBACKS
+    with open('feedback.ini', 'w') as configfile:
         config.write(configfile)
 
 
