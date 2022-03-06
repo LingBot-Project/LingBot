@@ -18,6 +18,9 @@ import websocket
 from mcstatus import MinecraftServer
 from PIL import Image, ImageDraw, ImageFont
 
+hypixel.setKeys([""])
+hypixel.setCacheTime(3600.0)
+
 SERVER_ADDR = "127.0.0.1"
 ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566]
 HYPBAN_COOKIE = None
@@ -499,7 +502,20 @@ UP主: {} ({})
                     files.append("{}: {}".format(i["name"], i["browser_download_url"].replace("github.com", "hub.fastgit.org")))
                 sendGroupmsg(group_number, message_id, sender_qqnumber,
                              "Version: {}\n".format(a["name"])+"\n".join(files))
-                
+        if command_list[0] == "!hyp":
+            if len(command_list) == 1:
+                sendGroupmsg(group_number, message_id, sender_qqnumber, "格式貌似有点问题?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
+                return
+            
+            # 获取玩家信息
+            try:
+                player1 = hypixel.Player(command_list[1])
+            except:
+                sendGroupmsg(group_number, message_id, sender_qqnumber, "貌似没有这个玩家?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
+            pI = player1.getPlayerInfo()
+            sendGroupmsg(group_number, message_id, sender_qqnumber, 
+                         "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(这是什么?): {}\n上次登陆: {}\n首次登陆: {}".format(pI["rank"], pI["displayName"], pI["networkLevel"], pI["karma"], pI["lastLogin"], pI["firstLogin"]))
+        
         BVID = re.match(BILI_BV_RE, message_text)
         if BVID != None:
             str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(BVID.group(0))).json()
