@@ -283,7 +283,7 @@ UP主: {} ({})
             if command_list[1] == "send":
                 feedback_code = "F{}{}".format(datetime.datetime.now().strftime("%Y%m%d%H%M"), random.randint(100000, 999999))
                 FEEDBACKS[feedback_code] = "QQ: {}\n内容: {}".format(sender_qqnumber, " ".join(command_list[2:]))
-                sendGroupmsg5(group_number, message_id, sender_qqnumber, "成功构建一个意见反馈 编号: {}\n注意: 投递垃圾信息可能会导致您进入黑名单")
+                sendGroupmsg5(group_number, message_id, sender_qqnumber, "成功构建一个意见反馈 编号: {}\n注意: 投递垃圾信息可能会导致您进入黑名单".format(feedback_code))
                 sendGroupmsg2(868218262, "您有一条新的 Feedback 请及时处理\n编号: {}\n{}".format(feedback_code, FEEDBACKS[feedback_code]))
             if sender_qqnumber not in ADMIN_LIST:
                 return
