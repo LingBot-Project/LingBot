@@ -12,6 +12,7 @@ import time
 import traceback
 import hypixel
 from io import BytesIO
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 import requests
 import websocket
@@ -731,7 +732,7 @@ def githubSub():
                 objectIDs.append(i["id"])
         print(objectIDs)
         newest = objectIDs[0]
-        sendGroupmsg2(628715712, "开始为本群监听 FDPClient 的 actions")
+        # sendGroupmsg2(628715712, "开始为本群监听 FDPClient 的 actions")
     except:
         print("github请求失败", url)
         print(traceback.format_exc())
@@ -760,26 +761,56 @@ def githubSub():
         time.sleep(60)
 
 
+def goodmor():
+    a = requests.get("http://open.iciba.com/dsapi/").json()
+    msg1 = "早上好! \n{}\n{}".format(a["content"], a["note"])
+    s = getGroups()
+    for i in s:
+        sendGroupmsg2(i, msg1)
+        time.sleep(random.randint(700, 1100)/1000)
+
+
+def goodmor2():
+    msg1 = requests.get("https://www.ipip5.com/today/api.php?type=txt").text
+    s = getGroups()
+    for i in s:
+        sendGroupmsg2(i, msg1)
+        time.sleep(random.randint(700, 1100)/1000)
+
+
+def goodnig():
+    a = requests.get("http://api.muxiuge.cn/API/society.php").json()
+    msg1 = "很晚了!该睡了! \n{}".format(a["text"])
+    s = getGroups()
+    for i in s:
+        sendGroupmsg2(i, msg1)
+        time.sleep(random.randint(700, 1100)/1000)
+
+
 def main():
     try:
         print("Starting... (0/5)")
         readConfig()
         print("Starting... (1/5)")
-        t1 = threading.Thread(target=updatet, args=("a"))
-        t2 = threading.Thread(target=githubSub)
+        # t2 = threading.Thread(target=githubSub)
         ws = websocket.WebSocketApp("ws://" + WSURL + "/all?verifyKey=uThZyFeQwJbD&qq=3026726134",
                                     on_message=on_message,
                                     on_error=on_error,
                                     on_close=on_close,
                                     )
         t3 = threading.Thread(target=ws.run_forever)
-        t1.daemon = True
-        t2.daemon = True
+        # t2.daemon = True
         t3.daemon = True
         print("Starting... (2/5)")
+        sched = BlockingScheduler()
+        sched.add_job(goodmor, 'cron', hour=6, minute=30)
+        sched.add_job(goodmor2, 'cron', hour=8)
+        sched.add_job(goodnig, 'cron', hour=22, minute=30)
+        t1 = threading.Thread(target=sched.start)
+        t1.deamon = True
         t1.start()
         print("Starting... (3/5)")
-        t2.start()
+        # t2.start()
         print("Starting... (4/5)")
         t3.start()
         print("Starting... (5/5)")
