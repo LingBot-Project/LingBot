@@ -780,7 +780,7 @@ def goodmor2():
 
 def goodnig():
     a = requests.get("http://api.muxiuge.cn/API/society.php").json()
-    msg1 = "很晚了!该睡了! \n{}".format(a["text"])
+    msg1 = "现在是 22:30!!\n很晚了!该睡了! \n{}".format(a["text"])
     s = getGroups()
     for i in s:
         sendGroupmsg2(i, msg1)
@@ -804,7 +804,7 @@ def main():
         print("Starting... (2/5)")
         sched = BlockingScheduler()
         sched.add_job(goodmor, 'cron', hour=6, minute=30)
-        sched.add_job(goodmor2, 'cron', hour=8)
+        sched.add_job(goodmor2, 'cron', hour=6, minute=31)
         sched.add_job(goodnig, 'cron', hour=22, minute=30)
         t1 = threading.Thread(target=sched.start)
         t1.deamon = True
