@@ -515,8 +515,10 @@ UP主: {} ({})
                 sendGroupmsg(group_number, message_id, sender_qqnumber, "貌似没有这个玩家?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
             pI = player1.getPlayerInfo()
             print(pI)
+            if "lastLogin" not in pI: 
+                pI["lastLogin"] = 0
             sendGroupmsg(group_number, message_id, sender_qqnumber, 
-                         "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(这是什么?): {}\n上次登陆: {}\n首次登陆: {}".format(pI["rank"], pI["displayName"], pI["networkLevel"], pI["karma"], pI["lastLogin"], pI["firstLogin"]))
+                         "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(这是什么?): {}\n上次登陆: {}\n首次登陆: {}".format(pI["rank"], pI["displayName"], pI["networkLevel"], pI["karma"], datetime.datetime.utcfromtimestamp(pI["lastLogin"]).strftime("%Y-%m-%d %H:%M:%S"), datetime.datetime.utcfromtimestamp(pI["firstLogin"]).strftime("%Y-%m-%d %H:%M:%S")))
         
         BVID = re.match(BILI_BV_RE, message_text)
         if BVID != None:
