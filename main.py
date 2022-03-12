@@ -513,6 +513,7 @@ UP主: {} ({})
                 player1 = hypixel.Player(command_list[1])
             except:
                 sendGroupmsg(group_number, message_id, sender_qqnumber, "貌似没有这个玩家?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
+                return
             pI = player1.getPlayerInfo()
             print(pI)
             if "lastLogin" not in pI: 
