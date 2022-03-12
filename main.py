@@ -514,6 +514,7 @@ UP主: {} ({})
             except:
                 sendGroupmsg(group_number, message_id, sender_qqnumber, "貌似没有这个玩家?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
             pI = player1.getPlayerInfo()
+            print(pI)
             sendGroupmsg(group_number, message_id, sender_qqnumber, 
                          "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(这是什么?): {}\n上次登陆: {}\n首次登陆: {}".format(pI["rank"], pI["displayName"], pI["networkLevel"], pI["karma"], pI["lastLogin"], pI["firstLogin"]))
         
