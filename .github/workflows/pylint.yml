@@ -21,4 +21,4 @@ jobs:
         pip install hypixel apscheduler requests websocket-client mcstatus pillow
     - name: Analysing the code with pylint
       run: |
-        pylint --disable=C ./main.py
+        pylint --disable=C,W ./main.py
