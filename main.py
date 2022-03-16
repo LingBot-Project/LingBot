@@ -32,7 +32,6 @@ BANCHECK_UID = {}
 WSURL = SERVER_ADDR+":10540"
 HTTPURL = SERVER_ADDR+":10500"
 MC_MOTD_COLORFUL = re.compile(r"§.")
-ALLOWRUNNING = True
 ALL_MESSAGE = 0
 MESSAGE_PRE_MINUTE = [0, 0]
 ALL_AD = 0
@@ -87,8 +86,6 @@ def saveConfig():
 def quit():
     print("Try to Quit...")
     saveConfig()
-    ALLOWRUNNING = False
-    sys.exit(0)
 
 def SpammerChecker(group, user):
     global ANTISPAMMER
@@ -186,7 +183,7 @@ def on_message2(ws, message):
         ALL_MESSAGE += 1
         print("[{0}] {1}({2}) {3}".format(group_number, sender_name, sender_qqnumber, message_text))
         reScan = re.search(
-            "定制水影|加群(:)[0-9]{5,10}|.*内部|\\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺",
+            r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺",
             message_text.replace(" ", "").replace(".", "").replace("\n", "").lower())
         if len(message_text) > 35 and reScan != None:
             if sender_qqnumber in ADMIN_LIST:
@@ -822,7 +819,7 @@ def main():
         t3.start()
         print("Starting... (5/5)")
         print("Bot Ready!")
-        while ALLOWRUNNING:
+        while True:
             time.sleep(1)
         quit()
     except KeyboardInterrupt:
