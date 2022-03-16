@@ -518,8 +518,11 @@ UP主: {} ({})
             print(pI)
             if "lastLogin" not in pI: 
                 pI["lastLogin"] = 0
-            sendGroupmsg(group_number, message_id, sender_qqnumber, 
-                         "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(这是什么?): {}\n上次登陆: {}\n首次登陆: {}".format(pI["rank"]["rank"].replace(" ","").replace("PLUS", "+"), pI["displayName"], pI["networkLevel"], pI["karma"], datetime.datetime.utcfromtimestamp(pI["lastLogin"]/1000).strftime("%Y-%m-%d %H:%M:%S"), datetime.datetime.utcfromtimestamp(pI["firstLogin"]/1000).strftime("%Y-%m-%d %H:%M:%S")))
+            playerSkin = requests.get("https://crafatar.com/renders/body/"+pI["uuid"])
+            pmsg = "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(人品值): {}\n上次登陆: {}\n首次登陆: {}".format(pI["rank"]["rank"].replace(" ","").replace("PLUS", "+"), pI["displayName"], pI["networkLevel"], pI["karma"], datetime.datetime.utcfromtimestamp(pI["lastLogin"]/1000).strftime("%Y-%m-%d %H:%M:%S"), datetime.datetime.utcfromtimestamp(pI["firstLogin"]/1000).strftime("%Y-%m-%d %H:%M:%S"))
+            if playerSkin.status_code == 200:
+                pmsg = "[CQ:image,file=base64://"+base64.b64encode(playerSkin.content).decode()+"]\n"+pmsg
+            sendGroupmsg(group_number, message_id, sender_qqnumber, pmsg)
         
         BVID = re.match(BILI_BV_RE, message_text)
         if BVID != None:
