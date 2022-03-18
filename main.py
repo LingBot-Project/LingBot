@@ -287,22 +287,8 @@ UP主: {} ({})
                          requests.get("http://open.iciba.com/dsapi/").json()["note"])
         
         if command_list[0] == "!feedback":
-            if group_number == 628715712: return
-            if command_list[1] == "send":
-                feedback_code = "F{}{}".format(datetime.datetime.now().strftime("%Y%m%d%H%M"), random.randint(100000, 999999))
-                FEEDBACKS[feedback_code] = "QQ: {}\n内容: {}".format(sender_qqnumber, " ".join(command_list[2:]))
-                sendGroupmsg5(group_number, message_id, sender_qqnumber, "成功构建一个意见反馈 编号: {}\n注意: 投递垃圾信息可能会导致您进入黑名单".format(feedback_code))
-                sendGroupmsg2(868218262, "您有一条新的 Feedback 请及时处理\n编号: {}\n{}".format(feedback_code, FEEDBACKS[feedback_code]))
-            if sender_qqnumber not in ADMIN_LIST:
-                return
-            if command_list[1] == "list":
-                feedbacks1 = ""
-                for i in FEEDBACKS:
-                    feedbacks1 += "---------------------\n编号: {}\n{}\n".format(i, FEEDBACKS[i])
-                sendGroupmsg2(group_number, "[CQ:image,file=base64://{}]".format(text2image(feedbacks1)))
-            elif command_list[1] == "remove":
-                FEEDBACKS.pop(command_list[2])
-                sendGroupmsg5(group_number, message_id, sender_qqnumber, "已经尝试这么干了")
+            sendGroupmsg5(group_number, message_id, sender_qqnumber, "该功能已经下线了！https://lingbot.guimc.ltd/#/AboutFeedback")
+
         if command_list[0] == "!admin":
             if command_list[1] == "list":
                 sendGroupmsg5(group_number, message_id, sender_qqnumber, "{}".format(ADMIN_LIST))
