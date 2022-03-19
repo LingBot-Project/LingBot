@@ -205,6 +205,12 @@ def on_message2(ws, message):
         if sender_qqnumber in BLACK_LIST:
             recall(message_id)
             return
+        
+        if message_text.lower().count("[cq:image") >= 3:
+            if sender_qqnumber in ADMIN_LIST:
+                mutePerson(group_number, sender_qqnumber, 600)
+                recall(message_id)
+                sendGroupmsg2(group_number, "太...太多图片了..")
 
         command_list = message_text.split(" ")
         if message_text in ["!test", "凌状态"]:
