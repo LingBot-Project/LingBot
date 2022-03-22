@@ -289,7 +289,7 @@ UP主: {} ({})
                          requests.get("http://open.iciba.com/dsapi/").json()["note"])
 
         if message_text == "二次元":
-            fastReply(acg_img())
+            fastReply("[CQ:image,file=base64://"+acg_img()+"]")
 
         if message_text == "必应壁纸":
             fastReply("[CQ:image,file=base64://"+base64.b64encode(requests.get("http://www.xgstudio.xyz/api/bing.php").content).decode()+"]")
