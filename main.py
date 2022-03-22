@@ -40,7 +40,6 @@ timePreMessage = 0
 recordTime = int(time.time())
 isChatBypassOpened = False
 unicodeSymbolList = ["‍", "‌", "‭"]
-GET, POST = (0, 1)
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
@@ -202,13 +201,27 @@ def on_message2(ws, message):
             if sender_qqnumber in ADMIN_LIST:
                 sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(sender_qqnumber, message_text), target_group=868218262)
                 return
-            time.sleep(1)
             mutePerson(group_number, sender_qqnumber, 600)
             recall(message_id)
             ALL_AD  += 1
             return
 
-        
+        multiMsg = re.search( r'\[CQ:forward,id=(.*)\]', message_text)
+        if multiMsg != None:
+            a = requests.get("http://"HTTPURL+"/get_forward_msg?message_id={}".format(multiMsg.group(1))).json()["data"]["messages"]
+            multiMsg_raw = ""
+            for i in a:
+                multiMsg_raw += i["content"]
+            reScan = re.search(
+                r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺",
+                multiMsg_raw.replace(" ", "").replace(".", "").replace("\n", "").lower())
+            if reScan != None:
+                fastReply("您发送的合并转发内容貌似有广告!")
+                mutePerson(group_number, sender_qqnumber, 600)
+                recall(message_id)
+                ALL_AD  += 1
+                return
+
         
         try:
             if SpammerChecker(group_number, sender_qqnumber):
@@ -240,8 +253,8 @@ def on_message2(ws, message):
         
         if message_text.find("[CQ:json,data=") != -1:
             message_text = message_text.replace("\\", "")
-            if message_text.find('"jumpUrl":"https://b23.tv/') != -1:
-                str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',requests.get(json.loads(re.findall(r"\[CQ:json,data=.*\]",message_text)[0].replace("[CQ:json,data=","").replace("&#44;",",")[:-1])["meta"]["news"]["jumpUrl"].replace("&amp;", "&")).text)[0].replace(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
+            if message_text.find('https://b23.tv/') != -1:
+                str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',requests.get(json.loads(re.search(r"\[CQ:json,data=(.*)\]",message_text).group(1).replace("&amp;", "&"))["meta"]["news"]["jumpUrl"]).text)[0].replace(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
                 if str1["code"] != 0:
                     print("查询失败")
                     return
@@ -303,7 +316,7 @@ UP主: {} ({})
             fastReply(req1["content"] + "\n" + req1["note"])
         
         if command_list[0] == "!feedback":
-            fastReply("该功能已经下线了！https://lingbot.guimc.ltd/#/AboutFeedback")
+            fastReply("该功能已经下线了! https://lingbot.guimc.ltd/#/AboutFeedback")
 
         if command_list[0] == "!admin":
             if command_list[1] == "list":
