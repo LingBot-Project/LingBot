@@ -615,6 +615,15 @@ def sendGroupmsg5(target1, msgid, senderqq, text):
 def sendGroupmsgImg(target1, msgid, senderqq, base64s):
     sendGroupmsg(target1, msgid, senderqq, "[CQ:image,file=base64://{}]".format(base64s))
 
+def sendMessage(message, target_qq=None, target_group=None, message_id=None):
+    if target_qq == None and target_group == None:
+        raise Exception()
+    if target_group != None:
+        data1 = {
+            "group_id": int(target_group),
+            "message": message
+        }
+
 
 def urlget(url):
     headers = {
