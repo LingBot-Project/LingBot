@@ -189,7 +189,7 @@ def on_message2(ws, message):
                 temp1[0] == sender_qqnumber
             
             if reply:
-                temp1[1] == mseeage_id
+                temp1[1] == message_id
             
             sendMessage(message, target_qq=temp1[0], target_group=group_number, message_id=temp1[1])
         
@@ -207,6 +207,8 @@ def on_message2(ws, message):
             recall(message_id)
             ALL_AD  += 1
             return
+
+        
         
         try:
             if SpammerChecker(group_number, sender_qqnumber):
@@ -593,7 +595,7 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None):
             prefix += "[CQ:at,qq={}]".format(target_qq)
         
         if message_id != None:
-            prefix += "[CQ:reply,id={}]".format(messgae_id)
+            prefix += "[CQ:reply,id={}]".format(message_id)
         
         # 构建数据
         data1 = {
