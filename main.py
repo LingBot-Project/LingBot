@@ -53,7 +53,7 @@ class Group:
         return getGroupUser(self.id)
     
     def mute(self, user, mute_time):
-        mutePerson(self.id, user.uid, mute_time)
+        mutePerson(self.id, user.id, mute_time)
 
 
 class User:
