@@ -102,7 +102,7 @@ class Message:
                 self.id = ad["message_id"]
                 self.success = True
             else:
-                throw Exception()
+                raise Exception()
     
     def mute(self, time):
         self.group.mute(sender, time)
@@ -274,21 +274,21 @@ def on_message2(ws, message):
 
         
         try:
-            if SpammerChecker(group_number, msg.sender.id):
-                mutePerson(group_number, msg.sender.id, 600)
-                recall(message_id)
+            if SpammerChecker(self.group.id, msg.sender.id):
+                msg.mute(600)
+                msg.recall()
                 msg.fastReply("不要刷屏哟~~", reply=False)
         except:
             pass
 
         if msg.sender.id in BLACK_LIST:
-            recall(message_id)
+            msg.recall()
             return
         
         if msg.text.lower().count("[cq:image") >= 3:
             if msg.sender.id in ADMIN_LIST:
-                mutePerson(group_number, msg.sender.id, 600)
-                recall(message_id)
+                msg.mute(600)
+                msg.recall()
                 msg.fastReply("太...太多图片了..", reply=False)
 
         command_list = msg.text.split(" ")
@@ -474,7 +474,7 @@ UP主: {} ({})
         if command_list[0] == "!mute":
             if msg.sender.isadmin():
                 if command_list[1] == "this":
-                    command_list[1] = group_number
+                    command_list[1] = msg.group.id
                 else:
                     command_list[1] = int(command_list[1])
                 command_list[2] = int(command_list[2].replace("@", ""))
