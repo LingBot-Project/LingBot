@@ -90,7 +90,6 @@ class Message:
         self.text = 0
         self.sender = None
         self.group = None
-        self.success = False
         if JSON != None:
             a = json.loads(JSON)
             ad = a
@@ -102,6 +101,8 @@ class Message:
                 self.group = Group(ad["group_id"])
                 self.id = ad["message_id"]
                 self.success = True
+            else:
+                throw Exception()
     
     def mute(self, time):
         self.group.mute(sender, time)
