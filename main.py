@@ -105,7 +105,7 @@ class Message:
                 raise Exception()
     
     def mute(self, time):
-        self.group.mute(sender, time)
+        self.group.mute(self.sender, time)
     
     def recall(self):
         recall(self.id)
@@ -249,7 +249,7 @@ def on_message2(ws, message):
             msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
         if len(msg.text) > 35 and reScan != None:
             if msg.sender.isadmin():
-                sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(self.sender.id, msg.text), target_group=868218262)
+                sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text), target_group=868218262)
                 return
             msg.mute(600)
             msg.recall()
@@ -274,7 +274,7 @@ def on_message2(ws, message):
 
         
         try:
-            if SpammerChecker(self.group.id, msg.sender.id):
+            if SpammerChecker(msg.group.id, msg.sender.id):
                 msg.mute(600)
                 msg.recall()
                 msg.fastReply("不要刷屏哟~~", reply=False)
