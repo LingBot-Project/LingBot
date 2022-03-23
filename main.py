@@ -45,6 +45,82 @@ IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 
 
+class Group:
+    def __init__(self, gid):
+        self.id = int(gid)
+    
+    def get_users(self):
+        return getGroupUser(self.id)
+    
+    def mute(self, user, mute_time):
+        mutePerson(self.id, user.uid, mute_time)
+
+
+class User:
+    def __init__(self, uid, nickname):
+        self.id = int(uid)
+        self.name = nickname
+    
+    def add2blacklist(self):
+        if self.id not in BLACK_LIST and self.id != 1584784496:
+            BLACK_LIST.append(self.id)
+    
+    def remove4blacklist(self):
+        BLACK_LIST.remove(self.id)
+    
+    def isblack(self):
+        return(self.id in BLACK_LIST)
+    
+    def isadmin(self):
+        return(self.id in ADMIN_LIST)
+    
+    def add2admin(self):
+        if self.id not in ADMIN_LIST:
+            ADMIN_LIST.append(self.id)
+    
+    def remove4admin(self):
+        if self.id != 1584784496:
+            ADMIN_LIST.remove(self.id)
+
+
+
+class Message:
+    def __init__(self, JSON=None):
+        self.id = 0
+        self.text = 0
+        self.sender = None
+        self.group = None
+        self.success = False
+        if JSON != None:
+            a = json.loads(JSON)
+            ad = a
+            if ad["post_type"] == "message" and ad["message_type"] == "group":
+                self.text = strQ2B(ad["message"])
+                for i in unicodeSymbolList:
+                    self.text = self.text.replace(i, "")
+                self.sender = User(ad["sender"]["user_id"], ad["sender"]["nickname"])
+                self.group = Group(ad["group_id"])
+                self.id = ad["message_id"]
+                self.success = True
+    
+    def mute(self, time):
+        self.group.mute(sender, time)
+    
+    def recall(self):
+        recall(self.id)
+    
+    def fastReply(self, message, at=True, reply=True):
+        temp1 = [None, None]
+
+        if at:
+            temp1[0] == self.sender.id
+        
+        if reply:
+            temp1[1] == self.id
+        
+        sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
+
+
 def readConfig():
     global ADMIN_LIST, BLACK_LIST, FEEDBACKS
     config = configparser.ConfigParser()
@@ -156,24 +232,8 @@ def on_message2(ws, message):
     global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS
     try:
         # 处理消息内容
-        a = json.loads(message)
-        message_text = ""
-        message_id = 0
-        ad = a
-        if ad["post_type"] == "message":
-            if ad["message_type"] != "group":
-                return
-        else:
-            return
-        message_text = ad["message"]
-        message_text = strQ2B(message_text)
-        for i in unicodeSymbolList:
-            message_text.replace(i, "")
-        sender_qqnumber = ad["sender"]["user_id"]
-        sender_name = ad["sender"]["nickname"]
-        group_number = ad["group_id"]
-        message_id = ad["message_id"]
-        if message_text == "":
+        msg = Message(message)
+        if msg.text == "":
             return
         if time.time() - MESSAGE_PRE_MINUTE[0] >= 60:
             MESSAGE_PRE_MINUTE = [time.time(), 1]
@@ -181,32 +241,21 @@ def on_message2(ws, message):
             MESSAGE_PRE_MINUTE[1] += 1
         ALL_MESSAGE += 1
 
-        def fastReply(message, at=True, reply=True):
-            temp1 = [None, None]
-
-            if at:
-                temp1[0] == sender_qqnumber
-            
-            if reply:
-                temp1[1] == message_id
-            
-            sendMessage(message, target_qq=temp1[0], target_group=group_number, message_id=temp1[1])
-        
-        print("[{0}] {1}({2}) {3}".format(group_number, sender_name, sender_qqnumber, message_text))
+        print("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
 
         reScan = re.search(
             r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺",
-            message_text.replace(" ", "").replace(".", "").replace("\n", "").lower())
-        if len(message_text) > 35 and reScan != None:
-            if sender_qqnumber in ADMIN_LIST:
-                sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(sender_qqnumber, message_text), target_group=868218262)
+            msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
+        if len(msg.text) > 35 and reScan != None:
+            if msg.sender.isadmin():
+                sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(self.sender.id, msg.text), target_group=868218262)
                 return
-            mutePerson(group_number, sender_qqnumber, 600)
-            recall(message_id)
+            msg.mute(600)
+            msg.recall()
             ALL_AD  += 1
             return
 
-        multiMsg = re.search(r'\[CQ:forward,id=(.*)\]', message_text)
+        multiMsg = re.search(r'\[CQ:forward,id=(.*)\]', msg.text)
         if multiMsg != None:
             a = requests.get(url="http://"+HTTPURL+"/get_forward_msg?message_id="+str(multiMsg.group(1))).json()["data"]["messages"]
             multiMsg_raw = ""
@@ -216,45 +265,45 @@ def on_message2(ws, message):
                 r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺",
                 multiMsg_raw.replace(" ", "").replace(".", "").replace("\n", "").lower())
             if reScan != None:
-                fastReply("您发送的合并转发内容貌似有广告!")
-                mutePerson(group_number, sender_qqnumber, 600)
-                recall(message_id)
+                msg.fastReply("您发送的合并转发内容貌似有广告!")
+                msg.mute(600)
+                msg.recall()
                 ALL_AD  += 1
                 return
 
         
         try:
-            if SpammerChecker(group_number, sender_qqnumber):
-                mutePerson(group_number, sender_qqnumber, 600)
+            if SpammerChecker(group_number, msg.sender.id):
+                mutePerson(group_number, msg.sender.id, 600)
                 recall(message_id)
-                fastReply("不要刷屏哟~~", reply=False)
+                msg.fastReply("不要刷屏哟~~", reply=False)
         except:
             pass
 
-        if sender_qqnumber in BLACK_LIST:
+        if msg.sender.id in BLACK_LIST:
             recall(message_id)
             return
         
-        if message_text.lower().count("[cq:image") >= 3:
-            if sender_qqnumber in ADMIN_LIST:
-                mutePerson(group_number, sender_qqnumber, 600)
+        if msg.text.lower().count("[cq:image") >= 3:
+            if msg.sender.id in ADMIN_LIST:
+                mutePerson(group_number, msg.sender.id, 600)
                 recall(message_id)
-                fastReply("太...太多图片了..", reply=False)
+                msg.fastReply("太...太多图片了..", reply=False)
 
-        command_list = message_text.split(" ")
-        if message_text in ["!test", "凌状态"]:
-            fastReply("Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(ALL_MESSAGE, getRuntime(), timePreMessage, ALL_AD, (ALL_AD/ALL_MESSAGE)*100))
+        command_list = msg.text.split(" ")
+        if msg.text in ["!test", "凌状态"]:
+            msg.fastReply("Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(ALL_MESSAGE, getRuntime(), timePreMessage, ALL_AD, (ALL_AD/ALL_MESSAGE)*100))
             
         if command_list[0] in ["!help", "菜单"]:
-            fastReply("请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
+            msg.fastReply("请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
 
-        if message_text == "一语":
-            fastReply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
+        if msg.text == "一语":
+            msg.fastReply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
         
-        if message_text.find("[CQ:json,data=") != -1:
-            message_text = message_text.replace("\\", "")
-            if message_text.find('https://b23.tv/') != -1:
-                str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',requests.get(json.loads(re.search(r"\[CQ:json,data=(.*)\]",message_text).group(1).replace("&amp;", "&"))["meta"]["news"]["jumpUrl"]).text)[0].replace(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
+        if msg.text.find("[CQ:json,data=") != -1:
+            msg.text = msg.text.replace("\\", "")
+            if msg.text.find('https://b23.tv/') != -1:
+                str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',requests.get(json.loads(re.search(r"\[CQ:json,data=(.*)\]",msg.text).group(1).replace("&amp;", "&"))["meta"]["news"]["jumpUrl"]).text)[0].replace(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
                 if str1["code"] != 0:
                     print("查询失败")
                     return
@@ -297,72 +346,72 @@ UP主: {} ({})
                 dr.text((1, 280), text, font=font, fill="#000000")
                 im.save(imageuid+"_cache.png")
                 with open(imageuid+"_cache.png", "rb") as f:
-                    fastReply("[CQ:image,file=base64://"+base64.b64encode(f.read()).decode()+"]")
+                    msg.fastReply("[CQ:image,file=base64://"+base64.b64encode(f.read()).decode()+"]")
         
-        if message_text == "一英":
-            fastReply(requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
+        if msg.text == "一英":
+            msg.fastReply(requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
                          requests.get("http://open.iciba.com/dsapi/").json()["note"])
 
-        if message_text == "二次元":
-            fastReply("[CQ:image,file=base64://"+acg_img()+"]")
+        if msg.text == "二次元":
+            msg.fastReply("[CQ:image,file=base64://"+acg_img()+"]")
 
-        if message_text == "必应壁纸":
-            fastReply("[CQ:image,file=base64://"+base64.b64encode(requests.get("http://www.xgstudio.xyz/api/bing.php").content).decode()+"]")
+        if msg.text == "必应壁纸":
+            msg.fastReply("[CQ:image,file=base64://"+base64.b64encode(requests.get("http://www.xgstudio.xyz/api/bing.php").content).decode()+"]")
 
-        if message_text == "一话":
+        if msg.text == "一话":
             req1 = requests.get("http://open.iciba.com/dsapi/").json()
-            fastReply(
+            msg.fastReply(
                          requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
-            fastReply(req1["content"] + "\n" + req1["note"])
+            msg.fastReply(req1["content"] + "\n" + req1["note"])
         
         if command_list[0] == "!feedback":
-            fastReply("该功能已经下线了! https://lingbot.guimc.ltd/#/AboutFeedback")
+            msg.fastReply("该功能已经下线了! https://lingbot.guimc.ltd/#/AboutFeedback")
 
         if command_list[0] == "!admin":
             if command_list[1] == "list":
-                fastReply("{}".format(ADMIN_LIST))
-            if sender_qqnumber not in ADMIN_LIST:
-                fastReply("你的权限不足!")
+                msg.fastReply("{}".format(ADMIN_LIST))
+            if msg.sender.isadmin():
+                msg.fastReply("你的权限不足!")
                 return
             if command_list[1] == "add":
                 if int(command_list[2]) in ADMIN_LIST:
-                    fastReply("超管内已经有这个人了")
+                    msg.fastReply("超管内已经有这个人了")
                     return
                 ADMIN_LIST.append(int(command_list[2]))
-                fastReply("操作成功")
+                msg.fastReply("操作成功")
             elif command_list[1] == "remove":
                 if int(command_list[2]) not in ADMIN_LIST:
-                    fastReply("超管内没有这个人")
+                    msg.fastReply("超管内没有这个人")
                     return
                 elif int(command_list[2]) == 1584784496:
-                    fastReply("不可以这么干哟~~")
-                    sendMessage("{}尝试把您(Owner)从超管列表删除".format(sender_qqnumber), target_group=868218262)
+                    msg.fastReply("不可以这么干哟~~")
+                    sendMessage("{}尝试把您(Owner)从超管列表删除".format(msg.sender.id), target_group=868218262)
                     return
                 ADMIN_LIST.remove(int(command_list[2]))
-                fastReply("操作成功")
+                msg.fastReply("操作成功")
         
         if command_list[0] == "!blacklist":
             if command_list[1] == "list":
-                fastReply("{}".format(BLACK_LIST))
-            if sender_qqnumber not in ADMIN_LIST:
-                fastReply("你的权限不足!")
+                msg.fastReply("{}".format(BLACK_LIST))
+            if msg.sender.isadmin():
+                msg.fastReply("你的权限不足!")
                 return
             if command_list[1] == "add":
                 if int(command_list[2]) in BLACK_LIST:
-                    fastReply("黑名单内已经有这个人了")
+                    msg.fastReply("黑名单内已经有这个人了")
                     return
                 elif int(command_list[2]) == 1584784496:
-                    fastReply("不可以这么干哦~~")
-                    sendMessage("{}尝试把您(Owner)添加进黑名单".format(sender_qqnumber), target_group=868218262)
+                    msg.fastReply("不可以这么干哦~~")
+                    sendMessage("{}尝试把您(Owner)添加进黑名单".format(msg.sender.id), target_group=868218262)
                     return
                 BLACK_LIST.append(int(command_list[2]))
-                fastReply("操作成功")
+                msg.fastReply("操作成功")
             elif command_list[1] == "remove":
                 if int(command_list[2]) not in BLACK_LIST:
-                    fastReply("黑名单内没有这个人")
+                    msg.fastReply("黑名单内没有这个人")
                     return
                 BLACK_LIST.remove(int(command_list[2]))
-                fastReply("操作成功")
+                msg.fastReply("操作成功")
 
 
         if command_list[0] == "/mcping":
@@ -374,18 +423,18 @@ UP主: {} ({})
             aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
             if server.favicon is not None:
                 aaa = aaa + "\n[CQ:image,file="+server.favicon.replace("data:image/png;base64,", "base64://")+"]"
-            fastReply(aaa)
+            msg.fastReply(aaa)
                 
         if command_list[0] == "!hypban":
             if len(command_list)<=2:
-                fastReply("正确格式:#hypban <USERNAME> <BANID>")
+                msg.fastReply("正确格式:#hypban <USERNAME> <BANID>")
             else:
-                if sender_qqnumber not in BANCHECK_UID or sender_qqnumber in ADMIN_LIST:
-                    BANCHECK_UID[sender_qqnumber] = time.time()
-                elif time.time() - BANCHECK_UID[sender_qqnumber] <= 60:
-                    fastReply("进入冷却时间 可在{}秒后使用".format(round(60.0 - (time.time() - BANCHECK_UID[sender_qqnumber]), 2)))
+                if msg.sender.id not in BANCHECK_UID or msg.sender.id in ADMIN_LIST:
+                    BANCHECK_UID[msg.sender.id] = time.time()
+                elif time.time() - BANCHECK_UID[msg.sender.id] <= 60:
+                    msg.fastReply("进入冷却时间 可在{}秒后使用".format(round(60.0 - (time.time() - BANCHECK_UID[msg.sender.id]), 2)))
                     return
-                fastReply("请稍等 正在向远程服务器发送请求")
+                msg.fastReply("请稍等 正在向远程服务器发送请求")
                 userName = command_list[1]
                 BanID = command_list[2].replace("#", "")
                 while True:
@@ -396,13 +445,13 @@ UP主: {} ({})
                     time.sleep(3)
                 print(a)
                 if a.find("ERR|") != -1:
-                    fastReply(a)
+                    msg.fastReply(a)
                 else:
-                    BANCHECK_UID[sender_qqnumber] = time.time()
-                    fastReply( "[CQ:image,file=base64://"+text2image(a)+"]")
+                    BANCHECK_UID[msg.sender.id] = time.time()
+                    msg.fastReply( "[CQ:image,file=base64://"+text2image(a)+"]")
 
         if command_list[0] == "!send":
-            if sender_qqnumber in ADMIN_LIST:
+            if msg.sender.isadmin():
                 msg1 = " ".join(command_list[2:])
                 all_req = re.match(REQ_TEXT, msg1)
                 print(all_req)
@@ -410,19 +459,19 @@ UP主: {} ({})
                     msg1 = msg1.replace(all_req.group(0), urlget(all_req.group(0).replace("get±", "").replace("±", "")))
                 if command_list[1] == "all":
                     s = getGroups()
-                    fastReply("正在群发... 目标:{}个群".format(len(s)))
+                    msg.fastReply("正在群发... 目标:{}个群".format(len(s)))
                     for i in s:
                         if i not in IGNORE_GROUP:
                             sendMessage(msg1, target_group=i)
                             time.sleep(random.randint(500, 800)/1000)
-                    fastReply("群发完成")
+                    msg.fastReply("群发完成")
                 else:
                     sendMessage(msg1, target_group=command_list[1])
             else:
-                fastReply("你的权限不足!")
+                msg.fastReply("你的权限不足!")
 
         if command_list[0] == "!mute":
-            if sender_qqnumber in ADMIN_LIST:
+            if msg.sender.isadmin():
                 if command_list[1] == "this":
                     command_list[1] = group_number
                 else:
@@ -433,22 +482,22 @@ UP主: {} ({})
                     unmutePerson(command_list[1], command_list[2])
                 else:
                     mutePerson(command_list[1], command_list[2], command_list[3] * 60)
-                    fastReply("已尝试在群 {} 禁言 {} {}分钟".format(command_list[1], command_list[2], command_list[3]))
+                    msg.fastReply("已尝试在群 {} 禁言 {} {}分钟".format(command_list[1], command_list[2], command_list[3]))
             else:
-                fastReply("你的权限不足!")
+                msg.fastReply("你的权限不足!")
         
         if command_list[0] == "!namelocker":
-            fastReply("恭喜你找到了一个彩蛋!")
+            msg.fastReply("恭喜你找到了一个彩蛋!")
             # 鬼!
             return
         
         if command_list[0] == "!search":
-            if sender_qqnumber not in ADMIN_LIST:
-                fastReply("你的权限不足!")
+            if msg.sender.isadmin():
+                msg.fastReply("你的权限不足!")
                 return
-            fastReply("正在从机器人所有加入的群搜索此人")
+            msg.fastReply("正在从机器人所有加入的群搜索此人")
             a = search_user(int(command_list[1]))
-            fastReply("搜索完成:\n{}".format(a))
+            msg.fastReply("搜索完成:\n{}".format(a))
 
         if command_list[0] == "!fdpinfo":
             if command_list[1] == "online":
@@ -457,21 +506,21 @@ UP主: {} ({})
                 onlinePlayer = 0
                 for i in a:
                     onlinePlayer += i["y"]
-                fastReply("[CQ:image,file=base64://"+text2image("OnlinePlayers: {}".format(onlinePlayer))+"]")
+                msg.fastReply("[CQ:image,file=base64://"+text2image("OnlinePlayers: {}".format(onlinePlayer))+"]")
             elif command_list[1] == "versions":
                 url = "https://bstats.org/api/v1/plugins/11076/charts/pluginVersion/data"
                 a = requests.get(url=url).json()
                 onlineVersion = []
                 for i in a:
                     onlineVersion.append("{}: {}".format(i["name"], i["y"]))
-                fastReply("[CQ:image,file=base64://"+text2image("OnlineVersionsInfo:\n{}".format("\n".join(onlineVersion)))+"]")
+                msg.fastReply("[CQ:image,file=base64://"+text2image("OnlineVersionsInfo:\n{}".format("\n".join(onlineVersion)))+"]")
             elif command_list[1] == "systems":
                 url = "https://bstats.org/api/v1/plugins/11076/charts/os/data"
                 a = requests.get(url=url).json()
                 onlineSystem = []
                 for i in a["seriesData"]:
                     onlineSystem.append("{}: {}".format(i["name"], i["y"]))
-                fastReply("[CQ:image,file=base64://"+text2image("OnlineSystms:\n{}".format("\n".join(onlineSystem)))+"]")
+                msg.fastReply("[CQ:image,file=base64://"+text2image("OnlineSystms:\n{}".format("\n".join(onlineSystem)))+"]")
             elif command_list[1] == "countries":
                 url = "https://bstats.org/api/v1/plugins/11076/charts/location/data"
                 a = requests.get(url=url).json()
@@ -479,9 +528,9 @@ UP主: {} ({})
                 for i in a:
                     onlineCountry.append("{}: {}".format(i["name"].replace("Hong Kong", "Hong Kong, China").replace("Taiwan", "Taiwan, China"),
                         i["y"]))
-                fastReply("[CQ:image,file=base64://"+text2image("OnlineCountrys:\n{}".format("\n".join(onlineCountry)))+"]")
+                msg.fastReply("[CQ:image,file=base64://"+text2image("OnlineCountrys:\n{}".format("\n".join(onlineCountry)))+"]")
             elif command_list[1] == "beta":
-                fastReply( "Please wait...")
+                msg.fastReply( "Please wait...")
                 url = "https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs"
                 a = requests.get(url=url).json()
                 objectIDs = []
@@ -492,7 +541,7 @@ UP主: {} ({})
                 updTime = actionInfo["head_commit"]["timestamp"]
                 updMsg = actionInfo["head_commit"]["message"]
                 updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"], actionInfo["head_commit"]["author"]["email"])
-                fastReply("Update Time:{}\n"
+                msg.fastReply("Update Time:{}\n"
                              "Update Message:{}\n"
                              "Author:{}\n"
                              "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(updTime, updMsg, updAuthor, objectIDs[0]))
@@ -502,17 +551,17 @@ UP主: {} ({})
                 files = []
                 for i in a["assets"]:
                     files.append("{}: {}".format(i["name"], i["browser_download_url"].replace("github.com", "hub.fastgit.org")))
-                fastReply("Version: {}\n".format(a["name"])+"\n".join(files))
+                msg.fastReply("Version: {}\n".format(a["name"])+"\n".join(files))
         if command_list[0] == "!hyp":
             if len(command_list) == 1:
-                fastReply("格式貌似有点问题?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
+                msg.fastReply("格式貌似有点问题?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
                 return
             
             # 获取玩家信息
             try:
                 player1 = hypixel.Player(command_list[1])
             except:
-                fastReply("貌似没有这个玩家?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
+                msg.fastReply("貌似没有这个玩家?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
                 return
             pI = player1.getPlayerInfo()
             print(pI)
@@ -522,9 +571,9 @@ UP主: {} ({})
             pmsg = "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(人品值): {}\n上次登陆: {}\n首次登陆: {}".format(pI["rank"]["rank"].replace(" ","").replace("PLUS", "+"), pI["displayName"], pI["networkLevel"], pI["karma"], datetime.datetime.utcfromtimestamp(pI["lastLogin"]/1000).strftime("%Y-%m-%d %H:%M:%S"), datetime.datetime.utcfromtimestamp(pI["firstLogin"]/1000).strftime("%Y-%m-%d %H:%M:%S"))
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://"+base64.b64encode(playerSkin.content).decode()+"]\n"+pmsg
-            fastReply(pmsg)
+            msg.fastReply(pmsg)
         
-        BVID = re.match(BILI_BV_RE, message_text)
+        BVID = re.match(BILI_BV_RE, msg.text)
         if BVID != None:
             str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(BVID.group(0))).json()
             if str1["code"] != 0:
@@ -569,9 +618,9 @@ UP主: {} ({})
             dr.text((1, 280), text, font=font, fill="#000000")
             im.save(imageuid+"_cache.png")
             with open(imageuid+"_cache.png", "rb") as f:
-                fastReply("[CQ:image,file=base64://"+base64.b64encode(f.read()).decode()+"]")
+                msg.fastReply("[CQ:image,file=base64://"+base64.b64encode(f.read()).decode()+"]")
     except Exception as e:
-        fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/")
+        msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/")
         print(traceback.format_exc())
 
 
