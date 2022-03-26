@@ -392,7 +392,7 @@ UP主: {} ({})
         if command_list[0] == "!blacklist":
             if command_list[1] == "list":
                 msg.fastReply("{}".format(BLACK_LIST))
-            if msg.sender.isadmin():
+            if msg.sender.isadmin() != True:
                 msg.fastReply("你的权限不足!")
                 return
             if command_list[1] == "add":
