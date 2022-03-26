@@ -248,7 +248,7 @@ def on_message2(ws, message):
             if msg.sender.isadmin():
                 sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text), target_group=868218262)
                 return
-            msg.mute(600)
+            msg.mute(3600)
             msg.recall()
             ALL_AD  += 1
             return
@@ -264,7 +264,7 @@ def on_message2(ws, message):
                 multiMsg_raw.replace(" ", "").replace(".", "").replace("\n", "").lower())
             if reScan != None:
                 msg.fastReply("您发送的合并转发内容貌似有广告!")
-                msg.mute(600)
+                msg.mute(3600)
                 msg.recall()
                 ALL_AD  += 1
                 return
@@ -272,19 +272,20 @@ def on_message2(ws, message):
         
         try:
             if SpammerChecker(msg.group.id, msg.sender.id):
-                msg.mute(600)
+                msg.mute(60)
                 msg.recall()
                 msg.fastReply("不要刷屏哟~~", reply=False)
         except:
             pass
 
         if msg.sender.id in BLACK_LIST:
+            msg.mute(60)
             msg.recall()
             return
         
-        if msg.text.lower().count("[cq:image") >= 3:
-            if msg.sender.id in ADMIN_LIST:
-                msg.mute(600)
+        if msg.text.count("[CQ:image") >= 3:
+            if msg.sender.isadmin() is False:
+                msg.mute(60)
                 msg.recall()
                 msg.fastReply("太...太多图片了..", reply=False)
 
@@ -470,6 +471,9 @@ UP主: {} ({})
 
         if command_list[0] == "!mute":
             if msg.sender.isadmin():
+                atcq = re.search(r'\[CQ:at,qq=(.*)\]', msg.text)
+                if atcq != None:
+                    command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(" ")
                 if command_list[1] == "this":
                     command_list[1] = msg.group.id
                 else:
