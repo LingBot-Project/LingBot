@@ -39,7 +39,6 @@ REQ_TEXT = re.compile(r"get±.*±")
 timePreMessage = 0
 recordTime = int(time.time())
 isChatBypassOpened = False
-unicodeSymbolList = ["‍", "‌", "‭"]
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
@@ -95,8 +94,6 @@ class Message:
             ad = a
             if ad["post_type"] == "message" and ad["message_type"] == "group":
                 self.text = strQ2B(ad["message"])
-                for i in unicodeSymbolList:
-                    self.text = self.text.replace(i, "")
                 self.sender = User(ad["sender"]["user_id"], ad["sender"]["nickname"])
                 self.group = Group(ad["group_id"])
                 self.id = ad["message_id"]
