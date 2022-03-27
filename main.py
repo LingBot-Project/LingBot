@@ -467,7 +467,7 @@ UP主: {} ({})
                     for i in s:
                         if i not in IGNORE_GROUP:
                             sendMessage(msg1, target_group=i)
-                            time.sleep(random.randint(500, 800)/1000)
+                            time.sleep(random.randint(1500, 1900)/1000)
                     msg.fastReply("群发完成")
                 else:
                     sendMessage(msg1, target_group=command_list[1])
