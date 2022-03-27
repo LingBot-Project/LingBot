@@ -159,8 +159,10 @@ def quit():
     print("Try to Quit...")
     saveConfig()
 
-def SpammerChecker(group, user):
+def SpammerChecker(msg):
     global ANTISPAMMER
+    group = msg.group.id
+    user = msg.sender.id
     if group not in ANTISPAMMER:
         ANTISPAMMER[group] = {}
     if user not in ANTISPAMMER[group]:
@@ -170,11 +172,14 @@ def SpammerChecker(group, user):
     else:
         ANTISPAMMER[group][user][0] = time.time()
         ANTISPAMMER[group][user][1] = 1
-    if ANTISPAMMER[group][user][1] > 8:
+    if ANTISPAMMER[group][user][1] >= 8:
         ANTISPAMMER[group][user] = [0, 0]
         return True
     else:
-        return False
+        if msg.text.count("\n") >= 15:
+            return True
+    
+    return False
 
 
 def getRuntime():
@@ -271,7 +276,7 @@ def on_message2(ws, message):
 
         
         try:
-            if SpammerChecker(msg.group.id, msg.sender.id):
+            if SpammerChecker(msg):
                 msg.mute(60)
                 msg.recall()
                 msg.fastReply("不要刷屏哟~~", reply=False)
