@@ -368,7 +368,7 @@ UP主: {} ({})
 
         if command_list[0] == "!admin":
             if command_list[1] == "list":
-                msg.fastReply(", ".join(ADMIN_LIST))
+                msg.fastReply(", ".join('%s' %id for id in ADMIN_LIST))
             elif msg.sender.isadmin() != True:
                 msg.fastReply("你的权限不足!")
                 return
@@ -391,7 +391,7 @@ UP主: {} ({})
         
         if command_list[0] == "!blacklist":
             if command_list[1] == "list":
-                msg.fastReply(", ".join(BLACK_LIST))
+                msg.fastReply(", ".join('%s' %id for id in BLACK_LIST))
             elif msg.sender.isadmin() != True:
                 msg.fastReply("你的权限不足!")
                 return
