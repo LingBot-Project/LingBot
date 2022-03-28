@@ -502,7 +502,7 @@ UP主: {} ({})
             return
         
         if command_list[0] == "!search":
-            if msg.sender.isadmin():
+            if msg.sender.isadmin() != True:
                 msg.fastReply("你的权限不足!")
                 return
             msg.fastReply("正在从机器人所有加入的群搜索此人")
