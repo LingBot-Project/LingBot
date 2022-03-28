@@ -778,7 +778,7 @@ def getzb():
 
 
 def goodmor(target=None):
-    msg1 = "早上好呀~ [CQ:image,file=base64://{}][CQ:image,file=base64://{}]".format(text2image(requests.get("https://www.ipip5.com/today/api.php?type=txt").text), getzb())
+    msg1 = "早上好呀~ [CQ:image,file=base64://{}][CQ:image,file=base64://{}]".format(text2image(requests.get("https://www.ipip5.com/today/api.php?type=txt", verify=False).text), getzb())
     s = getGroups()
     if target:
         sendMessage(msg1, target_group = target)
