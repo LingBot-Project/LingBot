@@ -778,7 +778,6 @@ def getzb():
 
 
 def goodmor(target=None):
-    a = requests.get("http://open.iciba.com/dsapi/").json()
     msg1 = "早上好呀~ [CQ:image,file=base64://{}][CQ:image,file=base64://{}]".format(text2image(requests.get("https://www.ipip5.com/today/api.php?type=txt").text), getzb())
     s = getGroups()
     if target:
