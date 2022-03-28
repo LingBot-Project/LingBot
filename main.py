@@ -306,7 +306,7 @@ def on_message2(ws, message):
         if msg.text == "一语":
             msg.fastReply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
         
-        if msg.text == "#testzb":
+        if msg.text == "!testzb":
             goodmor(target=msg.group.id)
         
         if msg.text.find("[CQ:json,data=") != -1:
