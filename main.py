@@ -12,11 +12,13 @@ import time
 import traceback
 import hypixel
 from io import BytesIO
+from selenium import webdriver
 
 import requests
 import websocket
 from mcstatus import MinecraftServer
 from PIL import Image, ImageDraw, ImageFont
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(3600.0)
@@ -303,6 +305,9 @@ def on_message2(ws, message):
 
         if msg.text == "一语":
             msg.fastReply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
+        
+        if msg.text == "#testzb":
+            goodmor(target=msg.group.id)
         
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
@@ -761,9 +766,35 @@ def on_close(ws, a, b):
     print("-------连接已关闭------")
 
 
-def updatet(a):
-    # print("s1")
-    pass
+def getzb():
+    imageuid = str(random.randint(10000000,9999999999))
+    brower=webdriver.PhantomJS()
+    brower.get("https://news.topurl.cn/")
+    brower.maximize_window()
+    brower.save_screenshot(imageuid+".cache.png")
+    brower.close()
+    with open(imageuid+".cache.png", "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+
+def goodmor(target=None):
+    a = requests.get("http://open.iciba.com/dsapi/").json()
+    msg1 = "早上好呀~ [CQ:image,file=base64://{}][CQ:image,file=base64://{}]".format(text2image(requests.get("https://www.ipip5.com/today/api.php?type=txt").text), getzb())
+    s = getGroups()
+    if target:
+        sendMessage(msg1, target_group = target)
+    else
+        for i in s:
+            sendMessage(msg1, target_group = i)
+            time.sleep(random.randint(1500, 2000)/1000)
+
+
+def goodnig():
+    msg1 = "很晚了!该睡了! 再不睡全都给我屎!"
+    s = getGroups()
+    for i in s:
+        sendMessage(msg1, target_group = i)
+        time.sleep(random.randint(700, 1100)/1000)
 
 
 def githubSub():
