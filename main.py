@@ -783,7 +783,7 @@ def goodmor(target=None):
     s = getGroups()
     if target:
         sendMessage(msg1, target_group = target)
-    else
+    else:
         for i in s:
             sendMessage(msg1, target_group = i)
             time.sleep(random.randint(1500, 2000)/1000)
