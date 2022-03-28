@@ -43,8 +43,7 @@ recordTime = int(time.time())
 isChatBypassOpened = False
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
-FEEDBACKS = {}
-
+FEEDBACKS = {}l
 
 class Group:
     def __init__(self, gid):
@@ -767,8 +766,8 @@ def on_close(ws, a, b):
 
 
 def getzb():
-    imageuid = str(random.randint(10000000,9999999999))
     brower=webdriver.PhantomJS(executable_path="~/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
+    imageuid = str(random.randint(10000000,9999999999))
     brower.get("https://news.topurl.cn/")
     brower.maximize_window()
     brower.save_screenshot(imageuid+".cache.png")
