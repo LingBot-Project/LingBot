@@ -20,7 +20,10 @@ from mcstatus import MinecraftServer
 from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-brower=webdriver.PhantomJS(executable_path="~/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
+temp7564845 = os.getcwd()
+os.chdir("~/phantomjs-2.1.1-linux-x86_64/bin/")
+brower=webdriver.PhantomJS()
+os.chdir(temp7564845)
 
 hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(3600.0)
@@ -869,7 +872,9 @@ def main():
             time.sleep(3600)
             brower.close()
             brower=None
-            brower=webdriver.PhantomJS(executable_path="~/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
+            os.chdir("~/phantomjs-2.1.1-linux-x86_64/bin/")
+            brower=webdriver.PhantomJS()
+            os.chdir(temp7564845)
         quit()
     except KeyboardInterrupt:
         quit()
