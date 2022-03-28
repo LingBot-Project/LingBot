@@ -842,18 +842,21 @@ def main():
         print("Starting... (0/5)")
         readConfig()
         print("Starting... (1/5)")
-        # t2 = threading.Thread(target=githubSub)
         ws = websocket.WebSocketApp("ws://" + WSURL + "/all?verifyKey=uThZyFeQwJbD&qq=3026726134",
                                     on_message=on_message,
                                     on_error=on_error,
                                     on_close=on_close,
                                     )
         t3 = threading.Thread(target=ws.run_forever)
-        # t2.daemon = True
         t3.daemon = True
         print("Starting... (2/5)")
+        sched = BlockingScheduler()
+        sched.add_job(goodmor, 'cron', hour=7)
+        sched.add_job(goodnig, 'cron', hour=22, minute=30)
+        t1 = threading.Thread(target=sched.start)
+        t1.deamon = True
         print("Starting... (3/5)")
-        # t2.start()
+        t1.start()
         print("Starting... (4/5)")
         t3.start()
         print("Starting... (5/5)")
