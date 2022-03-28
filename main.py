@@ -45,7 +45,7 @@ recordTime = int(time.time())
 isChatBypassOpened = False
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
-FEEDBACKS = {}l
+FEEDBACKS = {}
 
 class Group:
     def __init__(self, gid):
