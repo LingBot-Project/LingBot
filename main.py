@@ -20,6 +20,8 @@ from mcstatus import MinecraftServer
 from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+brower=webdriver.PhantomJS(executable_path="~/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
+
 hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(3600.0)
 
@@ -157,7 +159,9 @@ def saveConfig():
 
 
 def quit():
+    global brower
     print("Try to Quit...")
+    brower.close()
     saveConfig()
 
 def SpammerChecker(msg):
@@ -766,12 +770,13 @@ def on_close(ws, a, b):
 
 
 def getzb():
-    brower=webdriver.PhantomJS(executable_path="~/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
+    global brower
+    while brower is not None:
+        time.sleep(0.1)
     imageuid = str(random.randint(10000000,9999999999))
     brower.get("https://news.topurl.cn/")
     brower.maximize_window()
     brower.save_screenshot(imageuid+".cache.png")
-    brower.close()
     with open(imageuid+".cache.png", "rb") as f:
         return base64.b64encode(f.read()).decode()
 
@@ -836,6 +841,7 @@ def githubSub():
 
 
 def main():
+    global brower
     try:
         print("Starting... (0/5)")
         readConfig()
@@ -860,7 +866,10 @@ def main():
         print("Starting... (5/5)")
         print("Bot Ready!")
         while True:
-            time.sleep(1)
+            time.sleep(3600)
+            brower.close()
+            brower=None
+            brower=webdriver.PhantomJS(executable_path="~/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
         quit()
     except KeyboardInterrupt:
         quit()
