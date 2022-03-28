@@ -161,8 +161,8 @@ def saveConfig():
 def quit():
     global brower
     print("Try to Quit...")
-    brower.close()
     saveConfig()
+    brower.close()
 
 def SpammerChecker(msg):
     global ANTISPAMMER
