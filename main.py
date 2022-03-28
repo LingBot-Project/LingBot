@@ -768,7 +768,7 @@ def on_close(ws, a, b):
 
 def getzb():
     imageuid = str(random.randint(10000000,9999999999))
-    brower=webdriver.PhantomJS()
+    brower=webdriver.PhantomJS(executable_path="~/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
     brower.get("https://news.topurl.cn/")
     brower.maximize_window()
     brower.save_screenshot(imageuid+".cache.png")
