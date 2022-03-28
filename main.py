@@ -12,15 +12,12 @@ import time
 import traceback
 import hypixel
 from io import BytesIO
-from selenium import webdriver
 
 import requests
 import websocket
 from mcstatus import MinecraftServer
 from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
-
-brower=webdriver.PhantomJS(executable_path="/root/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
 
 hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(3600.0)
@@ -159,10 +156,8 @@ def saveConfig():
 
 
 def quit():
-    global brower
     print("Try to Quit...")
     saveConfig()
-    brower.close()
 
 def SpammerChecker(msg):
     global ANTISPAMMER
@@ -769,23 +764,8 @@ def on_close(ws, a, b):
     print("-------连接已关闭------")
 
 
-def getzb():
-    global brower
-    while brower is not None:
-        time.sleep(0.1)
-    imageuid = str(random.randint(10000000,9999999999))
-    print("start")
-    brower.get("https://news.topurl.cn/")
-    brower.maximize_window()
-    print("Requested")
-    brower.save_screenshot(imageuid+".cache.png")
-    print("Done")
-    with open(imageuid+".cache.png", "rb") as f:
-        return base64.b64encode(f.read()).decode()
-
-
 def goodmor(target=None):
-    msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(getzb())
+    msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(text2image(requests.get(url="https://www.ipip5.com/today/api.php?type=txt").text))
     s = getGroups()
     if target:
         sendMessage(msg1, target_group = target)
@@ -870,9 +850,6 @@ def main():
         print("Bot Ready!")
         while True:
             time.sleep(3600)
-            brower.close()
-            brower=None
-            brower=webdriver.PhantomJS(executable_path="/root/phantomjs-2.1.1-linux-x86_64/bin/phantomjs")
         quit()
     except KeyboardInterrupt:
         quit()
