@@ -774,9 +774,12 @@ def getzb():
     while brower is not None:
         time.sleep(0.1)
     imageuid = str(random.randint(10000000,9999999999))
+    print("start")
     brower.get("https://news.topurl.cn/")
     brower.maximize_window()
+    print("Requested")
     brower.save_screenshot(imageuid+".cache.png")
+    print("Done")
     with open(imageuid+".cache.png", "rb") as f:
         return base64.b64encode(f.read()).decode()
 
