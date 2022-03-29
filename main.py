@@ -433,29 +433,31 @@ UP主: {} ({})
             msg.fastReply(aaa)
                 
         if command_list[0] == "!hypban":
-            if len(command_list)<=2:
-                msg.fastReply("正确格式:#hypban <USERNAME> <BANID>")
-            else:
-                if msg.sender.id not in BANCHECK_UID or msg.sender.id in ADMIN_LIST:
-                    BANCHECK_UID[msg.sender.id] = time.time()
-                elif time.time() - BANCHECK_UID[msg.sender.id] <= 60:
-                    msg.fastReply("进入冷却时间 可在{}秒后使用".format(round(60.0 - (time.time() - BANCHECK_UID[msg.sender.id]), 2)))
-                    return
-                msg.fastReply("请稍等 正在向远程服务器发送请求")
-                userName = command_list[1]
-                BanID = command_list[2].replace("#", "")
-                while True:
-                    print("Username:{} BanID:{}".format(userName, BanID))
-                    a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, BanID), headers={'Host': 'api.getfdp.today'}).text
-                    if a.find("too many request") == -1:
-                        break
-                    time.sleep(3)
-                print(a)
-                if a.find("ERR|") != -1:
-                    msg.fastReply(a)
-                else:
-                    BANCHECK_UID[msg.sender.id] = time.time()
-                    msg.fastReply( "[CQ:image,file=base64://"+text2image(a)+"]")
+            msg.fastReply("本功能已经停止使用了")
+            return
+            # if len(command_list)<=2:
+            #     msg.fastReply("正确格式:#hypban <USERNAME> <BANID>")
+            # else:
+            #     if msg.sender.id not in BANCHECK_UID or msg.sender.id in ADMIN_LIST:
+            #         BANCHECK_UID[msg.sender.id] = time.time()
+            #     elif time.time() - BANCHECK_UID[msg.sender.id] <= 60:
+            #         msg.fastReply("进入冷却时间 可在{}秒后使用".format(round(60.0 - (time.time() - BANCHECK_UID[msg.sender.id]), 2)))
+            #         return
+            #     msg.fastReply("请稍等 正在向远程服务器发送请求")
+            #     userName = command_list[1]
+            #     BanID = command_list[2].replace("#", "")
+            #     while True:
+            #         print("Username:{} BanID:{}".format(userName, BanID))
+            #         a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, BanID), headers={'Host': 'api.getfdp.today'}).text
+            #         if a.find("too many request") == -1:
+            #             break
+            #         time.sleep(3)
+            #     print(a)
+            #     if a.find("ERR|") != -1:
+            #         msg.fastReply(a)
+            #     else:
+            #         BANCHECK_UID[msg.sender.id] = time.time()
+            #         msg.fastReply( "[CQ:image,file=base64://"+text2image(a)+"]")
 
         if command_list[0] == "!send":
             if msg.sender.isadmin():
