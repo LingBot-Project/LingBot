@@ -812,46 +812,6 @@ def goodnig():
         time.sleep(random.randint(700, 1100) / 1000)
 
 
-# def githubSub():
-# # print("s2")
-# url = "https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs"
-# newest = None
-# try:
-# a = requests.get(url=url).json()
-# objectIDs = []
-# for i in a["workflow_runs"]:
-# if i["name"] == "build":
-# objectIDs.append(i["id"])
-# print(objectIDs)
-# newest = objectIDs[0]
-# except:
-# print("github请求失败", url)
-# print(traceback.format_exc())
-# while True:
-# try:
-# a = requests.get(url=url).json()
-# objectIDs = []
-# for i in a["workflow_runs"]:
-# if i["name"] == "build":
-# objectIDs.append(i["id"])
-# if objectIDs[0] != newest:
-# newest = objectIDs[0]
-# actionInfo = requests.get(url="https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs/{}".format(objectIDs[0])).json()
-# updTime = actionInfo["head_commit"]["timestamp"]
-# updMsg = actionInfo["head_commit"]["message"]
-# updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"], actionInfo["head_commit"]["author"]["email"])
-# sendMessage("监听到 FDPClient 的 actions 有新的任务\nUpdate Time:{}\n"
-# "Update Message:{}\n"
-# "Author:{}\n"
-# "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(updTime, updMsg, updAuthor, objectIDs[0]),
-# target_group = 628715712)
-# except KeyboardInterrupt:
-# quit()
-# except:
-# pass
-# time.sleep(60)
-
-
 def main():
     global brower
     try:
