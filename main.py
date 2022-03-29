@@ -35,7 +35,7 @@ MC_MOTD_COLORFUL = re.compile(r"§.")
 ALL_MESSAGE = 0
 MESSAGE_PRE_MINUTE = [0, 0]
 ALL_AD = 0
-BILI_BV_RE = re.compile(r"BV([a-z|A-Z0-9]{10})")
+BILI_BV_RE = re.compile(r"BV([a-z|A-Z|0-9]{10})")
 REQ_TEXT = re.compile(r"get±.*±")
 timePreMessage = 0
 recordTime = int(time.time())
@@ -216,7 +216,7 @@ def strQ2B(ustring):
         inside_code = ord(uchar)
         if inside_code == 12288:
             inside_code = 32
-        elif inside_code >= 65281 and inside_code <= 65374:
+        elif 65281 <= inside_code <= 65374:
             inside_code -= 65248
 
         rstring += chr(inside_code)
@@ -389,7 +389,7 @@ UP主: {} ({})
         if command_list[0] == "!admin":
             if command_list[1] == "list":
                 msg.fastReply(", ".join('%s' % id for id in ADMIN_LIST))
-            elif msg.sender.isadmin() != True:
+            elif not msg.sender.isadmin():
                 msg.fastReply("你的权限不足!")
                 return
             if command_list[1] == "add":
@@ -412,7 +412,7 @@ UP主: {} ({})
         if command_list[0] == "!blacklist":
             if command_list[1] == "list":
                 msg.fastReply(", ".join('%s' % id for id in BLACK_LIST))
-            elif msg.sender.isadmin() != True:
+            elif not msg.sender.isadmin():
                 msg.fastReply("你的权限不足!")
                 return
             if command_list[1] == "add":
@@ -599,6 +599,8 @@ UP主: {} ({})
             print(pI)
             if "lastLogin" not in pI:
                 pI["lastLogin"] = 0
+            if 'karma' not in pI:
+                pI["karma"] = ":("
             playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
             pmsg = "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(人品值): {}\n上次登陆: {}\n首次登陆: {}".format(
                 pI["rank"]["rank"].replace(" ", "").replace("PLUS", "+"), pI["displayName"], pI["networkLevel"],
@@ -704,7 +706,7 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None):
 
         # 发送消息
         s = requests.post(url="http://" + HTTPURL + "/send_group_msg", data=data1)
-        if s.ok != True:
+        if not s.ok:
             # 如果请求失败
             s.raise_for_status()
     else:
