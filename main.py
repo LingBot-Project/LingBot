@@ -11,6 +11,7 @@ import threading
 import time
 import traceback
 import hypixel
+import psutil
 from io import BytesIO
 
 import requests
@@ -158,6 +159,7 @@ def saveConfig():
 def quit():
     print("Try to Quit...")
     saveConfig()
+    psutil.Process().kill()
 
 
 def SpammerChecker(msg):
@@ -295,6 +297,10 @@ def on_message2(ws, message):
                 msg.mute(60)
                 msg.recall()
                 msg.fastReply("太...太多图片了..", reply=False)
+        
+        if msg.text == "!quit" and msg.sender.isadmin():
+            msg.fastReply("正在尝试这么做...")
+            quit()
 
         command_list = msg.text.split(" ")
         if msg.text in ["!test", "凌状态"]:
