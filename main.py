@@ -29,8 +29,8 @@ SEND_AD_LIST = {}
 BLACK_LIST = []
 CACHE_MESSAGE = []
 BANCHECK_UID = {}
-WSURL = SERVER_ADDR+":10540"
-HTTPURL = SERVER_ADDR+":10500"
+WSURL = SERVER_ADDR + ":10540"
+HTTPURL = SERVER_ADDR + ":10500"
 MC_MOTD_COLORFUL = re.compile(r"§.")
 ALL_MESSAGE = 0
 MESSAGE_PRE_MINUTE = [0, 0]
@@ -44,13 +44,14 @@ ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 
+
 class Group:
     def __init__(self, gid):
         self.id = int(gid)
-    
+
     def get_users(self):
         return getGroupUser(self.id)
-    
+
     def mute(self, user, mute_time):
         mutePerson(self.id, user.id, mute_time)
 
@@ -59,28 +60,28 @@ class User:
     def __init__(self, uid, nickname):
         self.id = int(uid)
         self.name = nickname
-    
+
+
     def add2blacklist(self):
         if self.id not in BLACK_LIST and self.id != 1584784496:
             BLACK_LIST.append(self.id)
-    
+
     def remove4blacklist(self):
         BLACK_LIST.remove(self.id)
-    
+
     def isblack(self):
-        return(self.id in BLACK_LIST)
-    
+        return (self.id in BLACK_LIST)
+
     def isadmin(self):
-        return(self.id in ADMIN_LIST)
-    
+        return (self.id in ADMIN_LIST)
+
     def add2admin(self):
         if self.id not in ADMIN_LIST:
             ADMIN_LIST.append(self.id)
-    
+
     def remove4admin(self):
         if self.id != 1584784496:
             ADMIN_LIST.remove(self.id)
-
 
 
 class Message:
@@ -100,22 +101,22 @@ class Message:
                 self.success = True
             else:
                 raise Exception()
-    
+
     def mute(self, time):
         self.group.mute(self.sender, time)
-    
+
     def recall(self):
         recall(self.id)
-    
+
     def fastReply(self, message, at=True, reply=True):
         temp1 = [None, None]
 
         if at:
             temp1[0] == self.sender.id
-        
+
         if reply:
             temp1[1] == self.id
-        
+
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
 
 
@@ -144,8 +145,8 @@ def saveConfig():
     global ADMIN_LIST, BLACK_LIST, FEEDBACKS
     config = configparser.ConfigParser()
     config["DEFAULT"] = {
-        "admin": ",".join('%s' %id for id in ADMIN_LIST),
-        "blacklist": ",".join('%s' %id for id in BLACK_LIST)
+        "admin": ",".join('%s' % id for id in ADMIN_LIST),
+        "blacklist": ",".join('%s' % id for id in BLACK_LIST)
     }
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
@@ -159,6 +160,7 @@ def quit():
     print("Try to Quit...")
     saveConfig()
 
+
 def SpammerChecker(msg):
     global ANTISPAMMER
     group = msg.group.id
@@ -167,7 +169,7 @@ def SpammerChecker(msg):
         ANTISPAMMER[group] = {}
     if user not in ANTISPAMMER[group]:
         ANTISPAMMER[group][user] = [0, 0]
-    if time.time()-ANTISPAMMER[group][user][0] <= 15:
+    if time.time() - ANTISPAMMER[group][user][0] <= 15:
         ANTISPAMMER[group][user][1] += 1
     else:
         ANTISPAMMER[group][user][0] = time.time()
@@ -178,17 +180,17 @@ def SpammerChecker(msg):
     else:
         if msg.text.count("\n") >= 15:
             return True
-    
+
     return False
 
 
 def getRuntime():
     nowtime = int(time.time())
     return "{}秒".format(int(nowtime - recordTime))
-    
+
 
 def text2image(text):
-    imageuid = str(random.randint(10000000,9999999999))
+    imageuid = str(random.randint(10000000, 9999999999))
     fontSize = 22
     max_w = 0
     lines = text.split('\n')
@@ -201,11 +203,11 @@ def text2image(text):
                 max_w = font.getmask(i).getbbox()[2]
         except:
             pass
-    im = Image.new("RGB", (max_w+11, len(lines)*(fontSize+8)), (255, 255, 255))
+    im = Image.new("RGB", (max_w + 11, len(lines) * (fontSize + 8)), (255, 255, 255))
     dr = ImageDraw.Draw(im)
     dr.text((1, 1), text, font=font, fill="#000000")
-    im.save(imageuid+".cache.png")
-    with open(imageuid+".cache.png", "rb") as f:
+    im.save(imageuid + ".cache.png")
+    with open(imageuid + ".cache.png", "rb") as f:
         return base64.b64encode(f.read()).decode()
 
 
@@ -226,10 +228,10 @@ def acg_img():
     try:
         a = "https://img.xjh.me/random_img.php?return=json"
         a1 = requests.get(url=a).json()
-        return base64.b64encode(requests.get(url='https:'+a1["img"]).content).decode()
+        return base64.b64encode(requests.get(url='https:' + a1["img"]).content).decode()
     except Exception as e:
-        return text2image("获取图片失败\n"+traceback.format_exc())
-    
+        return text2image("获取图片失败\n" + traceback.format_exc())
+
 
 def on_message2(ws, message):
     global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS
@@ -251,16 +253,18 @@ def on_message2(ws, message):
             msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
         if len(msg.text) > 35 and reScan != None:
             if msg.sender.isadmin():
-                sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text), target_group=868218262)
+                sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
+                            target_group=868218262)
                 return
             msg.mute(3600)
             msg.recall()
-            ALL_AD  += 1
+            ALL_AD += 1
             return
 
         multiMsg = re.search(r'\[CQ:forward,id=(.*)\]', msg.text)
         if multiMsg != None:
-            a = requests.get(url="http://"+HTTPURL+"/get_forward_msg?message_id="+str(multiMsg.group(1))).json()["data"]["messages"]
+            a = requests.get(url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()[
+                "data"]["messages"]
             multiMsg_raw = ""
             for i in a:
                 multiMsg_raw += i["content"]
@@ -271,10 +275,9 @@ def on_message2(ws, message):
                 msg.fastReply("您发送的合并转发内容貌似有广告!", reply=False)
                 msg.mute(3600)
                 msg.recall()
-                ALL_AD  += 1
+                ALL_AD += 1
                 return
 
-        
         try:
             if SpammerChecker(msg):
                 msg.mute(60)
@@ -287,7 +290,7 @@ def on_message2(ws, message):
             msg.mute(60)
             msg.recall()
             return
-        
+
         if msg.text.count("[CQ:image") >= 3:
             if msg.sender.isadmin() is False:
                 msg.mute(60)
@@ -296,21 +299,30 @@ def on_message2(ws, message):
 
         command_list = msg.text.split(" ")
         if msg.text in ["!test", "凌状态"]:
-            msg.fastReply("Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(ALL_MESSAGE, getRuntime(), timePreMessage, ALL_AD, (ALL_AD/ALL_MESSAGE)*100))
-            
+            msg.fastReply(
+                "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(ALL_MESSAGE, getRuntime(),
+                                                                                             timePreMessage, ALL_AD, (
+                                                                                                         ALL_AD / ALL_MESSAGE) * 100))
+
         if command_list[0] in ["!help", "菜单"]:
             msg.fastReply("请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
 
         if msg.text == "一语":
             msg.fastReply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
-        
+
         if msg.text == "!testzb":
             goodmor(target=msg.group.id)
-        
+
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
             if msg.text.find('https://b23.tv/') != -1:
-                str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',requests.get(json.loads(re.search(r"\[CQ:json,data=(.*)\]",msg.text).group(1).replace("&amp;", "&"))["meta"]["news"]["jumpUrl"]).text)[0].replace(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
+                str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
+                    re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
+                               requests.get(json.loads(
+                                   re.search(r"\[CQ:json,data=(.*)\]", msg.text).group(1).replace("&amp;", "&"))[
+                                                "meta"]["news"]["jumpUrl"]).text)[0].replace(
+                        r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
+                    :-3])).json()
                 if str1["code"] != 0:
                     print("查询失败")
                     return
@@ -318,7 +330,7 @@ def on_message2(ws, message):
                 response = requests.get(str1["pic"])
                 im_vl = Image.open(BytesIO(response.content))
                 im_v = im_vl.resize((430, 270), Image.ANTIALIAS)
-                imageuid = str(random.randint(10000000,9999999999))
+                imageuid = str(random.randint(10000000, 9999999999))
                 fontSize = 22
                 max_w = 0
                 s = ""
@@ -336,7 +348,7 @@ UP主: {} ({})
 播放量: {}
 简介:
 {}""".format(str1["title"], str1["owner"]["name"], str1["owner"]["mid"],
-            str1["tname"], str1["tid"], s, str1["bvid"], str1["stat"]["view"], str1["desc"])
+             str1["tname"], str1["tid"], s, str1["bvid"], str1["stat"]["view"], str1["desc"])
                 lines = text.split('\n')
                 # print(len(lines))
                 fontPath = r"a.ttf"
@@ -347,36 +359,37 @@ UP主: {} ({})
                             max_w = font.getmask(i).getbbox()[2]
                     except:
                         pass
-                im = Image.new("RGB", (max_w+11, (len(lines)*(fontSize+8))+280), (255, 255, 255))
-                im.paste(im_v, (0,0))
+                im = Image.new("RGB", (max_w + 11, (len(lines) * (fontSize + 8)) + 280), (255, 255, 255))
+                im.paste(im_v, (0, 0))
                 dr = ImageDraw.Draw(im)
                 dr.text((1, 280), text, font=font, fill="#000000")
-                im.save(imageuid+"_cache.png")
-                with open(imageuid+"_cache.png", "rb") as f:
-                    msg.fastReply("[CQ:image,file=base64://"+base64.b64encode(f.read()).decode()+"]")
-        
+                im.save(imageuid + "_cache.png")
+                with open(imageuid + "_cache.png", "rb") as f:
+                    msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
+
         if msg.text == "一英":
             msg.fastReply(requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
-                         requests.get("http://open.iciba.com/dsapi/").json()["note"])
+                          requests.get("http://open.iciba.com/dsapi/").json()["note"])
 
         if msg.text == "二次元":
-            msg.fastReply("[CQ:image,file=base64://"+acg_img()+"]")
+            msg.fastReply("[CQ:image,file=base64://" + acg_img() + "]")
 
         if msg.text == "必应壁纸":
-            msg.fastReply("[CQ:image,file=base64://"+base64.b64encode(requests.get("http://www.xgstudio.xyz/api/bing.php").content).decode()+"]")
+            msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(
+                requests.get("http://www.xgstudio.xyz/api/bing.php").content).decode() + "]")
 
         if msg.text == "一话":
             req1 = requests.get("http://open.iciba.com/dsapi/").json()
             msg.fastReply(
-                         requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
+                requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
             msg.fastReply(req1["content"] + "\n" + req1["note"])
-        
+
         if command_list[0] == "!feedback":
             msg.fastReply("该功能已经下线了! https://lingbot.guimc.ltd/#/AboutFeedback")
 
         if command_list[0] == "!admin":
             if command_list[1] == "list":
-                msg.fastReply(", ".join('%s' %id for id in ADMIN_LIST))
+                msg.fastReply(", ".join('%s' % id for id in ADMIN_LIST))
             elif msg.sender.isadmin() != True:
                 msg.fastReply("你的权限不足!")
                 return
@@ -396,10 +409,10 @@ UP主: {} ({})
                     return
                 ADMIN_LIST.remove(int(command_list[2]))
                 msg.fastReply("操作成功")
-        
+
         if command_list[0] == "!blacklist":
             if command_list[1] == "list":
-                msg.fastReply(", ".join('%s' %id for id in BLACK_LIST))
+                msg.fastReply(", ".join('%s' % id for id in BLACK_LIST))
             elif msg.sender.isadmin() != True:
                 msg.fastReply("你的权限不足!")
                 return
@@ -420,7 +433,6 @@ UP主: {} ({})
                 BLACK_LIST.remove(int(command_list[2]))
                 msg.fastReply("操作成功")
 
-
         if command_list[0] == "/mcping":
             server = MinecraftServer.lookup(command_list[1]).status()
             aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
@@ -429,9 +441,9 @@ UP主: {} ({})
             aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
             aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
             if server.favicon is not None:
-                aaa = aaa + "\n[CQ:image,file="+server.favicon.replace("data:image/png;base64,", "base64://")+"]"
+                aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,", "base64://") + "]"
             msg.fastReply(aaa)
-                
+
         if command_list[0] == "!hypban":
             msg.fastReply("本功能已经停止使用了")
             return
@@ -472,7 +484,7 @@ UP主: {} ({})
                     for i in s:
                         if i not in IGNORE_GROUP:
                             sendMessage(msg1, target_group=i)
-                            time.sleep(random.randint(1500, 1900)/1000)
+                            time.sleep(random.randint(1500, 1900) / 1000)
                     msg.fastReply("群发完成")
                 else:
                     sendMessage(msg1, target_group=command_list[1])
@@ -483,7 +495,8 @@ UP主: {} ({})
             if msg.sender.isadmin():
                 atcq = re.search(r'\[CQ:at,qq=(.*)\]', msg.text)
                 if atcq != None:
-                    command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(" ")
+                    command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(
+                        " ")
                 if command_list[1] == "this":
                     command_list[1] = msg.group.id
                 else:
@@ -497,12 +510,12 @@ UP主: {} ({})
                     msg.fastReply("已尝试在群 {} 禁言 {} {}分钟".format(command_list[1], command_list[2], command_list[3]))
             else:
                 msg.fastReply("你的权限不足!")
-        
+
         if command_list[0] == "!namelocker":
             msg.fastReply("恭喜你找到了一个彩蛋!")
             # 鬼!
             return
-        
+
         if command_list[0] == "!search":
             if msg.sender.isadmin() != True:
                 msg.fastReply("你的权限不足!")
@@ -518,57 +531,65 @@ UP主: {} ({})
                 onlinePlayer = 0
                 for i in a:
                     onlinePlayer += i["y"]
-                msg.fastReply("[CQ:image,file=base64://"+text2image("OnlinePlayers: {}".format(onlinePlayer))+"]")
+                msg.fastReply("[CQ:image,file=base64://" + text2image("OnlinePlayers: {}".format(onlinePlayer)) + "]")
             elif command_list[1] == "versions":
                 url = "https://bstats.org/api/v1/plugins/11076/charts/pluginVersion/data"
                 a = requests.get(url=url).json()
                 onlineVersion = []
                 for i in a:
                     onlineVersion.append("{}: {}".format(i["name"], i["y"]))
-                msg.fastReply("[CQ:image,file=base64://"+text2image("OnlineVersionsInfo:\n{}".format("\n".join(onlineVersion)))+"]")
+                msg.fastReply("[CQ:image,file=base64://" + text2image(
+                    "OnlineVersionsInfo:\n{}".format("\n".join(onlineVersion))) + "]")
             elif command_list[1] == "systems":
                 url = "https://bstats.org/api/v1/plugins/11076/charts/os/data"
                 a = requests.get(url=url).json()
                 onlineSystem = []
                 for i in a["seriesData"]:
                     onlineSystem.append("{}: {}".format(i["name"], i["y"]))
-                msg.fastReply("[CQ:image,file=base64://"+text2image("OnlineSystms:\n{}".format("\n".join(onlineSystem)))+"]")
+                msg.fastReply(
+                    "[CQ:image,file=base64://" + text2image("OnlineSystms:\n{}".format("\n".join(onlineSystem))) + "]")
             elif command_list[1] == "countries":
                 url = "https://bstats.org/api/v1/plugins/11076/charts/location/data"
                 a = requests.get(url=url).json()
                 onlineCountry = []
                 for i in a:
-                    onlineCountry.append("{}: {}".format(i["name"].replace("Hong Kong", "Hong Kong, China").replace("Taiwan", "Taiwan, China"),
+                    onlineCountry.append("{}: {}".format(
+                        i["name"].replace("Hong Kong", "Hong Kong, China").replace("Taiwan", "Taiwan, China"),
                         i["y"]))
-                msg.fastReply("[CQ:image,file=base64://"+text2image("OnlineCountrys:\n{}".format("\n".join(onlineCountry)))+"]")
+                msg.fastReply("[CQ:image,file=base64://" + text2image(
+                    "OnlineCountrys:\n{}".format("\n".join(onlineCountry))) + "]")
             elif command_list[1] == "beta":
-                msg.fastReply( "Please wait...")
+                msg.fastReply("Please wait...")
                 url = "https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs"
                 a = requests.get(url=url).json()
                 objectIDs = []
                 for i in a["workflow_runs"]:
                     if i["name"] == "build":
                         objectIDs.append(i["id"])
-                actionInfo = requests.get(url="https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs/{}".format(objectIDs[0])).json()
+                actionInfo = requests.get(
+                    url="https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs/{}".format(objectIDs[0])).json()
                 updTime = actionInfo["head_commit"]["timestamp"]
                 updMsg = actionInfo["head_commit"]["message"]
-                updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"], actionInfo["head_commit"]["author"]["email"])
+                updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"],
+                                             actionInfo["head_commit"]["author"]["email"])
                 msg.fastReply("Update Time:{}\n"
-                             "Update Message:{}\n"
-                             "Author:{}\n"
-                             "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(updTime, updMsg, updAuthor, objectIDs[0]))
+                              "Update Message:{}\n"
+                              "Author:{}\n"
+                              "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(
+                    updTime, updMsg, updAuthor, objectIDs[0]))
             elif command_list[1] == "release":
                 url = "https://api.github.com/repos/UnlegitMC/FDPClient/releases/latest"
                 a = requests.get(url=url).json()
                 files = []
                 for i in a["assets"]:
-                    files.append("{}: {}".format(i["name"], i["browser_download_url"].replace("github.com", "hub.fastgit.org")))
-                msg.fastReply("Version: {}\n".format(a["name"])+"\n".join(files))
+                    files.append(
+                        "{}: {}".format(i["name"], i["browser_download_url"].replace("github.com", "hub.fastgit.org")))
+                msg.fastReply("Version: {}\n".format(a["name"]) + "\n".join(files))
         if command_list[0] == "!hyp":
             if len(command_list) == 1:
                 msg.fastReply("格式貌似有点问题?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
                 return
-            
+
             # 获取玩家信息
             try:
                 player1 = hypixel.Player(command_list[1])
@@ -577,17 +598,21 @@ UP主: {} ({})
                 return
             pI = player1.getPlayerInfo()
             print(pI)
-            if "lastLogin" not in pI: 
+            if "lastLogin" not in pI:
                 pI["lastLogin"] = 0
-            playerSkin = requests.get("https://crafatar.com/renders/body/"+pI["uuid"])
-            pmsg = "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(人品值): {}\n上次登陆: {}\n首次登陆: {}".format(pI["rank"]["rank"].replace(" ","").replace("PLUS", "+"), pI["displayName"], pI["networkLevel"], pI["karma"], datetime.datetime.utcfromtimestamp(pI["lastLogin"]/1000).strftime("%Y-%m-%d %H:%M:%S"), datetime.datetime.utcfromtimestamp(pI["firstLogin"]/1000).strftime("%Y-%m-%d %H:%M:%S"))
+            playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
+            pmsg = "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(人品值): {}\n上次登陆: {}\n首次登陆: {}".format(
+                pI["rank"]["rank"].replace(" ", "").replace("PLUS", "+"), pI["displayName"], pI["networkLevel"],
+                pI["karma"], datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"))
             if playerSkin.status_code == 200:
-                pmsg = "[CQ:image,file=base64://"+base64.b64encode(playerSkin.content).decode()+"]\n"+pmsg
+                pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
             msg.fastReply(pmsg)
-        
+
         BVID = re.match(BILI_BV_RE, msg.text)
         if BVID != None:
-            str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(BVID.group(0))).json()
+            str1 = requests.get(
+                url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(BVID.group(0))).json()
             if str1["code"] != 0:
                 print("查询失败")
                 return
@@ -595,7 +620,7 @@ UP主: {} ({})
             response = requests.get(str1["pic"])
             im_vl = Image.open(BytesIO(response.content))
             im_v = im_vl.resize((430, 270), Image.ANTIALIAS)
-            imageuid = str(random.randint(10000000,9999999999))
+            imageuid = str(random.randint(10000000, 9999999999))
             fontSize = 22
             max_w = 0
             s = ""
@@ -613,7 +638,7 @@ UP主: {} ({})
 播放量: {}
 简介:
 {}""".format(str1["title"], str1["owner"]["name"], str1["owner"]["mid"],
-        str1["tname"], str1["tid"], s, str1["bvid"], str1["stat"]["view"], str1["desc"])
+             str1["tname"], str1["tid"], s, str1["bvid"], str1["stat"]["view"], str1["desc"])
             lines = text.split('\n')
             # print(len(lines))
             fontPath = r"a.ttf"
@@ -624,21 +649,21 @@ UP主: {} ({})
                         max_w = font.getmask(i).getbbox()[2]
                 except:
                     pass
-            im = Image.new("RGB", (max_w+11, (len(lines)*(fontSize+8))+280), (255, 255, 255))
-            im.paste(im_v, (0,0))
+            im = Image.new("RGB", (max_w + 11, (len(lines) * (fontSize + 8)) + 280), (255, 255, 255))
+            im.paste(im_v, (0, 0))
             dr = ImageDraw.Draw(im)
             dr.text((1, 280), text, font=font, fill="#000000")
-            im.save(imageuid+"_cache.png")
-            with open(imageuid+"_cache.png", "rb") as f:
-                msg.fastReply("[CQ:image,file=base64://"+base64.b64encode(f.read()).decode()+"]")
+            im.save(imageuid + "_cache.png")
+            with open(imageuid + "_cache.png", "rb") as f:
+                msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
     except Exception as e:
         msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/")
         print(traceback.format_exc())
 
 
 def mutePerson(group, qqnumber, mutetime):
-    if mutetime > (43199*60):
-        mutetime = 43199*60
+    if mutetime > (43199 * 60):
+        mutetime = 43199 * 60
     data1 = {
         "group_id": int(group),
         "user_id": int(qqnumber),
@@ -657,24 +682,25 @@ def recall(msgid):
     }
     requests.post(url="http://" + HTTPURL + "/delete_msg", data=data1)
 
+
 def sendMessage(message, target_qq=None, target_group=None, message_id=None):
     if target_qq == None and target_group == None:
         raise Exception()
-    
+
     if target_group != None:
         # 消息前缀 通常用于 At 回复消息
         prefix = ""
 
         if target_qq != None:
             prefix += "[CQ:at,qq={}]".format(target_qq)
-        
+
         if message_id != None:
             prefix += "[CQ:reply,id={}]".format(message_id)
-        
+
         # 构建数据
         data1 = {
             "group_id": int(target_group),
-            "message": prefix+message
+            "message": prefix + message
         }
 
         # 发送消息
@@ -731,7 +757,7 @@ def search_user(uid):
     for i in getGroups():
         if uid in getGroupUser(i):
             groups.append(i)
-        time.sleep(random.randint(35,65)/100)
+        time.sleep(random.randint(35, 65) / 100)
     return groups
 
 
@@ -743,11 +769,11 @@ def temps_message(ws, message):
     except:
         pass
     b = time.time()
-    sflTime = b-a
+    sflTime = b - a
     if timePreMessage == 0:
         timePreMessage = sflTime
     else:
-        timePreMessage = (timePreMessage+sflTime)/2
+        timePreMessage = (timePreMessage + sflTime) / 2
 
 
 # 定义一个用来接收监听数据的方法
@@ -767,62 +793,63 @@ def on_close(ws, a, b):
 
 
 def goodmor(target=None):
-    msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(text2image(requests.get(url="https://www.ipip5.com/today/api.php?type=txt", verify=False).text))
+    msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(
+        text2image(requests.get(url="https://www.ipip5.com/today/api.php?type=txt", verify=False).text))
     s = getGroups()
     if target:
-        sendMessage(msg1, target_group = target)
+        sendMessage(msg1, target_group=target)
     else:
         for i in s:
-            sendMessage(msg1, target_group = i)
-            time.sleep(random.randint(1500, 2000)/1000)
+            sendMessage(msg1, target_group=i)
+            time.sleep(random.randint(1500, 2000) / 1000)
 
 
 def goodnig():
     msg1 = "很晚了!该睡了!"
     s = getGroups()
     for i in s:
-        sendMessage(msg1, target_group = i)
-        time.sleep(random.randint(700, 1100)/1000)
+        sendMessage(msg1, target_group=i)
+        time.sleep(random.randint(700, 1100) / 1000)
 
 
 # def githubSub():
-    # # print("s2")
-    # url = "https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs"
-    # newest = None
-    # try:
-        # a = requests.get(url=url).json()
-        # objectIDs = []
-        # for i in a["workflow_runs"]:
-            # if i["name"] == "build":
-                # objectIDs.append(i["id"])
-        # print(objectIDs)
-        # newest = objectIDs[0]
-    # except:
-        # print("github请求失败", url)
-        # print(traceback.format_exc())
-    # while True:
-        # try:
-            # a = requests.get(url=url).json()
-            # objectIDs = []
-            # for i in a["workflow_runs"]:
-                # if i["name"] == "build":
-                    # objectIDs.append(i["id"])
-            # if objectIDs[0] != newest:
-                # newest = objectIDs[0]
-                # actionInfo = requests.get(url="https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs/{}".format(objectIDs[0])).json()
-                # updTime = actionInfo["head_commit"]["timestamp"]
-                # updMsg = actionInfo["head_commit"]["message"]
-                # updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"], actionInfo["head_commit"]["author"]["email"])
-                # sendMessage("监听到 FDPClient 的 actions 有新的任务\nUpdate Time:{}\n"
-                             # "Update Message:{}\n"
-                             # "Author:{}\n"
-                             # "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(updTime, updMsg, updAuthor, objectIDs[0]),
-                             # target_group = 628715712)
-        # except KeyboardInterrupt:
-            # quit()
-        # except:
-            # pass
-        # time.sleep(60)
+# # print("s2")
+# url = "https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs"
+# newest = None
+# try:
+# a = requests.get(url=url).json()
+# objectIDs = []
+# for i in a["workflow_runs"]:
+# if i["name"] == "build":
+# objectIDs.append(i["id"])
+# print(objectIDs)
+# newest = objectIDs[0]
+# except:
+# print("github请求失败", url)
+# print(traceback.format_exc())
+# while True:
+# try:
+# a = requests.get(url=url).json()
+# objectIDs = []
+# for i in a["workflow_runs"]:
+# if i["name"] == "build":
+# objectIDs.append(i["id"])
+# if objectIDs[0] != newest:
+# newest = objectIDs[0]
+# actionInfo = requests.get(url="https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs/{}".format(objectIDs[0])).json()
+# updTime = actionInfo["head_commit"]["timestamp"]
+# updMsg = actionInfo["head_commit"]["message"]
+# updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"], actionInfo["head_commit"]["author"]["email"])
+# sendMessage("监听到 FDPClient 的 actions 有新的任务\nUpdate Time:{}\n"
+# "Update Message:{}\n"
+# "Author:{}\n"
+# "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(updTime, updMsg, updAuthor, objectIDs[0]),
+# target_group = 628715712)
+# except KeyboardInterrupt:
+# quit()
+# except:
+# pass
+# time.sleep(60)
 
 
 def main():
@@ -859,5 +886,6 @@ def main():
         print("遇到无法恢复的错误 即将退出")
         print(traceback.format_exc())
         quit()
+
 
 main()
