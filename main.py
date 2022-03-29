@@ -35,7 +35,7 @@ MC_MOTD_COLORFUL = re.compile(r"§.")
 ALL_MESSAGE = 0
 MESSAGE_PRE_MINUTE = [0, 0]
 ALL_AD = 0
-BILI_BV_RE = re.compile(r"BV([a-z|A-Z|0-9]{10})")
+BILI_BV_RE = re.compile(r"BV([a-z|A-Z0-9]{10})")
 REQ_TEXT = re.compile(r"get±.*±")
 timePreMessage = 0
 recordTime = int(time.time())
@@ -61,7 +61,6 @@ class User:
         self.id = int(uid)
         self.name = nickname
 
-
     def add2blacklist(self):
         if self.id not in BLACK_LIST and self.id != 1584784496:
             BLACK_LIST.append(self.id)
@@ -70,10 +69,10 @@ class User:
         BLACK_LIST.remove(self.id)
 
     def isblack(self):
-        return (self.id in BLACK_LIST)
+        return self.id in BLACK_LIST
 
     def isadmin(self):
-        return (self.id in ADMIN_LIST)
+        return self.id in ADMIN_LIST
 
     def add2admin(self):
         if self.id not in ADMIN_LIST:
@@ -90,7 +89,7 @@ class Message:
         self.text = 0
         self.sender = None
         self.group = None
-        if JSON != None:
+        if JSON is not None:
             a = json.loads(JSON)
             ad = a
             if ad["post_type"] == "message" and ad["message_type"] == "group":
@@ -251,7 +250,7 @@ def on_message2(ws, message):
         reScan = re.search(
             r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺",
             msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
-        if len(msg.text) > 35 and reScan != None:
+        if len(msg.text) > 35 and reScan is not None:
             if msg.sender.isadmin():
                 sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                             target_group=868218262)
@@ -262,7 +261,7 @@ def on_message2(ws, message):
             return
 
         multiMsg = re.search(r'\[CQ:forward,id=(.*)\]', msg.text)
-        if multiMsg != None:
+        if multiMsg is not None:
             a = requests.get(url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()[
                 "data"]["messages"]
             multiMsg_raw = ""
@@ -271,7 +270,7 @@ def on_message2(ws, message):
             reScan = re.search(
                 r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺|裙(.*)[0-9]{5,10}",
                 multiMsg_raw.replace(" ", "").replace(".", "").replace("\n", "").lower())
-            if reScan != None:
+            if reScan is not None:
                 msg.fastReply("您发送的合并转发内容貌似有广告!", reply=False)
                 msg.mute(3600)
                 msg.recall()
@@ -302,7 +301,7 @@ def on_message2(ws, message):
             msg.fastReply(
                 "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(ALL_MESSAGE, getRuntime(),
                                                                                              timePreMessage, ALL_AD, (
-                                                                                                         ALL_AD / ALL_MESSAGE) * 100))
+                                                                                                     ALL_AD / ALL_MESSAGE) * 100))
 
         if command_list[0] in ["!help", "菜单"]:
             msg.fastReply("请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
@@ -476,7 +475,7 @@ UP主: {} ({})
                 msg1 = " ".join(command_list[2:])
                 all_req = re.match(REQ_TEXT, msg1)
                 print(all_req)
-                if all_req != None:
+                if all_req is not None:
                     msg1 = msg1.replace(all_req.group(0), urlget(all_req.group(0).replace("get±", "").replace("±", "")))
                 if command_list[1] == "all":
                     s = getGroups()
@@ -494,7 +493,7 @@ UP主: {} ({})
         if command_list[0] == "!mute":
             if msg.sender.isadmin():
                 atcq = re.search(r'\[CQ:at,qq=(.*)\]', msg.text)
-                if atcq != None:
+                if atcq is not None:
                     command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(
                         " ")
                 if command_list[1] == "this":
@@ -517,7 +516,7 @@ UP主: {} ({})
             return
 
         if command_list[0] == "!search":
-            if msg.sender.isadmin() != True:
+            if not msg.sender.isadmin():
                 msg.fastReply("你的权限不足!")
                 return
             msg.fastReply("正在从机器人所有加入的群搜索此人")
@@ -610,7 +609,7 @@ UP主: {} ({})
             msg.fastReply(pmsg)
 
         BVID = re.match(BILI_BV_RE, msg.text)
-        if BVID != None:
+        if BVID is not None:
             str1 = requests.get(
                 url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(BVID.group(0))).json()
             if str1["code"] != 0:
@@ -684,17 +683,17 @@ def recall(msgid):
 
 
 def sendMessage(message, target_qq=None, target_group=None, message_id=None):
-    if target_qq == None and target_group == None:
+    if target_qq is None and target_group is None:
         raise Exception()
 
-    if target_group != None:
+    if target_group is not None:
         # 消息前缀 通常用于 At 回复消息
         prefix = ""
 
-        if target_qq != None:
+        if target_qq is not None:
             prefix += "[CQ:at,qq={}]".format(target_qq)
 
-        if message_id != None:
+        if message_id is not None:
             prefix += "[CQ:reply,id={}]".format(message_id)
 
         # 构建数据
