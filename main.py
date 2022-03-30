@@ -444,7 +444,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 
                 _ping = tcping.Ping(_host, int(_port), 1.0)
                 _ping.ping(5)
-                msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(_ping.result.table)))
+                msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(_ping.result.raw)))
 
 
         if command_list[0] == "!admin":
