@@ -410,16 +410,18 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fastReply(req1["content"] + "\n" + req1["note"])
         
         if msg.text == "!hyp players":
-            # _imageuid = str(random.randint(10000000, 9999999999))
-            # _all_modes = hypixel.getJSON("counts")["games"]
-            # _all_players = []
-            # for i in _all_modes:
-            #     _all_players.append(_all_modes[i]["players"])
-            # 
-            # plt.pie(_all_players,labels=_all_modes)
-            # plt.savefig(_imageuid + ".cache.png")
-            # with open(_imageuid + ".cache.png", "rb") as f:
-            #     msg.fastReply("[CQ:image,file=base64://{}]".format(base64.b64encode(f.read()).decode()))
+            _imageuid = str(random.randint(10000000, 9999999999))
+            _all_modes = hypixel.getJSON("counts")
+            _all_player = _all_modes["playerCount"]
+            _all_modes = _all_modes["games"]
+            _all_players = []
+            for i in _all_modes:
+                _all_players.append(_all_modes[i]["players"])
+            
+            _temp_msg = ""
+            for i in range(len(_all_modes)):
+                _temp_msg += "{}: {} ({})".format(_all_modes.items()[i][0], _all_players[i], (_all_players[i]/_all_player)*100)
+            msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(_temp_msg)))
             return
 
         if command_list[0] == "!feedback":
