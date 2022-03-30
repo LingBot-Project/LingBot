@@ -8,6 +8,7 @@ import re
 import threading
 import time
 import traceback
+from click import UUID
 import hypixel
 import psutil
 from io import BytesIO
@@ -622,7 +623,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 pI["karma"] = "这个玩家并没有登录过Hypixel, 无法查询"
             playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
             pmsg = "---查询结果---\n玩家名称: [{rank}]{name}\n等级: {level}\nKarma(人品值): {karma}\n上次登陆: {last_login}\n首次登陆: {first_login}".format(
-                rank=player1.getRank()["rank"],
+                rank=player1.getRank()["rank"].replace(" PLUS", "+"),
                 name=pI["displayName"],
                 level=player1.getLevel(),
                 karma=pI["karma"],
@@ -631,10 +632,10 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
             try:
-                sbplayer = hypixel.SkyblockPlayer(pI["uuid"])
+                sbplayer = hypixel.getJSON('skyblockplayer', UUID = pI['uuid'])
                 print(sbplayer.JSON)
             except:
-                pass
+                print(traceback.format_exc())
             msg.fastReply(pmsg)
 
         BVID = re.match(BILI_BV_RE, msg.text)
