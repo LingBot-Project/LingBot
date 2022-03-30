@@ -697,8 +697,8 @@ UP主: {} ({})
                 msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
     except Exception as e:
         msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/")
-        if msg.sender.isadmin():
-            msg.fastReply(f"这是问题发生的信息，希望有所帮助: {e}")
+        if msg.sender.id == 2915324611:
+            msg.fastReply(f"这是问题发生的信息，希望有所帮助: {e}", reply=False)
         print(traceback.format_exc())
 
 
