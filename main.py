@@ -10,6 +10,7 @@ import time
 import traceback
 import hypixel
 import psutil
+import subprocess as sp
 from io import BytesIO
 
 import requests
@@ -429,8 +430,22 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(temp_msg)))
             return
 
-        if command_list[0] == "!feedback":
-            msg.fastReply("该功能已经下线了! https://lingbot.guimc.ltd/#/AboutFeedback")
+        if command_list[0] == "!tcping":
+            if len(command_list) == 1:
+                msg.fastReply("语法错误 使用方法为: !tcping IP[:端口(默认为80)]\n如: !tcping api.github.com:80")
+            else:
+                msg.fastReply("正在进行TCPing")
+                _host = ""
+                _port = "80"
+                if command_list[1].find(":") != -1:
+                    _host, _port = command_list[1].split(":")
+                else:
+                    _host = command_list[1]
+                
+                status = sp.Popen(['tcping', '-c', '5', '-t', '1', '--report', '-p', _port, _host], stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf-8')
+                status.wait()
+                msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(status.communicate()[0])))
+
 
         if command_list[0] == "!admin":
             if command_list[1] == "list":
