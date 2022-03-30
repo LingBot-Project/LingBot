@@ -605,8 +605,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fastReply("Update Time:{}\n"
                               "Update Message:{}\n"
                               "Author:{}\n"
-                              "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(
-                    upd_time, updMsg, updAuthor, objectIDs[0]))
+                              "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(upd_time, updMsg, updAuthor, objectIDs[0]))
             elif command_list[1] == "release":
                 url = "https://api.github.com/repos/UnlegitMC/FDPClient/releases/latest"
                 a = requests.get(url=url).json()
