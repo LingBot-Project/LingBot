@@ -549,7 +549,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     _prefix = "(由 {}({}) 发起的群发消息)".format(msg.sender.name, msg.sender.id)
                     for i in s:
                         if i not in IGNORE_GROUP:
-                            sendMessage(msg1, target_group=i)
+                            sendMessage(_prefix + msg1, target_group=i)
                             time.sleep(random.randint(1500, 1900) / 1000)
                     msg.fastReply("群发完成")
                 else:
