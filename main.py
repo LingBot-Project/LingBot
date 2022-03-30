@@ -271,7 +271,7 @@ def on_message2(ws, message):
             ALL_AD += 1
             return
 
-        if len(msg.text) > 1000:
+        if len(msg.text) > 1500:
             msg.mute(600)
             msg.recall()
             msg.fastReply("消息太长了哟", reply=False)
