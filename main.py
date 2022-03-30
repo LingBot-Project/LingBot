@@ -419,9 +419,9 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             temp_msg = ""
             for i in range(len(_all_modes)):
                 try:
-                    temp_msg += "{}: {} ({})".format(_all_modes.items()[i][0], _all_players[i], (_all_players[i]/_all_player)*100)
-                except:
-                    pass
+                    temp_msg += "{}: {} ({})".format(_all_modes.items()[i][0], _all_players[i], ((_all_players[i]/_all_player)*100))
+                except Exception as e:
+                    print(e)
             print(temp_msg)
             msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(temp_msg)))
             return
