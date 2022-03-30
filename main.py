@@ -759,7 +759,9 @@ UP主: {} ({})
             with open(imageuid + "_cache.png", "rb") as f:
                 msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
     except Exception as e:
-        msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(text2image(traceback.format_exc())))
+        a = traceback.format_exc()
+        msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(text2image(a)))
+        print(a)
 
 
 def mutePerson(group, qq_number, mute_time):
