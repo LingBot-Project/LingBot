@@ -367,7 +367,7 @@ UP主: {} ({})
                     str1["bvid"],
                     str1["stat"]["view"],
                     str1["desc"]
-                )
+                )  # :(
                 lines = text.split('\n')
                 # print(len(lines))
                 fontPath = r"a.ttf"
@@ -455,8 +455,13 @@ UP主: {} ({})
         if command_list[0] == "/mcping":
             server = MinecraftServer.lookup(command_list[1]).status()
             aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
-                re.sub(MC_MOTD_COLORFUL, "", server.description), server.players.online, server.players.max,
-                server.latency, re.sub(MC_MOTD_COLORFUL, "", server.version.name), server.version.protocol)
+                re.sub(MC_MOTD_COLORFUL, "", server.description),
+                server.players.online,
+                server.players.max,
+                server.latency,
+                re.sub(MC_MOTD_COLORFUL, "", server.version.name),
+                server.version.protocol
+            )
             aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
             aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
             if server.favicon is not None:
@@ -587,15 +592,14 @@ UP主: {} ({})
                         objectIDs.append(i["id"])
                 actionInfo = requests.get(
                     url="https://api.github.com/repos/UnlegitMC/FDPClient/actions/runs/{}".format(objectIDs[0])).json()
-                updTime = actionInfo["head_commit"]["timestamp"]
+                upd_time = actionInfo["head_commit"]["timestamp"]
                 updMsg = actionInfo["head_commit"]["message"]
                 updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"],
                                              actionInfo["head_commit"]["author"]["email"])
                 msg.fastReply("Update Time:{}\n"
                               "Update Message:{}\n"
                               "Author:{}\n"
-                              "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(
-                    updTime, updMsg, updAuthor, objectIDs[0]))
+                              "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(upd_time, updMsg, updAuthor, objectIDs[0]))
             elif command_list[1] == "release":
                 url = "https://api.github.com/repos/UnlegitMC/FDPClient/releases/latest"
                 a = requests.get(url=url).json()
@@ -620,12 +624,15 @@ UP主: {} ({})
             if "lastLogin" not in pI:
                 pI["lastLogin"] = 0
             if 'karma' not in pI:
-                pI["karma"] = ":("
+                pI["karma"] = "这个玩家并没有登录过Hypixel, 无法查询"
             playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
-            pmsg = "---查询结果---\n玩家名称: [{}]{}\n等级: {}\nKarma(人品值): {}\n上次登陆: {}\n首次登陆: {}".format(
-                pI["rank"]["rank"].replace(" ", "").replace("PLUS", "+"), pI["displayName"], pI["networkLevel"],
-                pI["karma"], datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
-                datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"))
+            pmsg = "---查询结果---\n玩家名称: [{rank}]{name}\n等级: {level}\nKarma(人品值): {karma}\n上次登陆: {last_login}\n首次登陆: {first_login}".format(
+                rank=pI["rank"]["rank"].replace(" ", "").replace("PLUS", "+"),
+                name=pI["displayName"],
+                level=pI["networkLevel"],
+                karma=pI["karma"],
+                last_login=datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                first_login=datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"))
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
             msg.fastReply(pmsg)
@@ -682,24 +689,24 @@ UP主: {} ({})
         print(traceback.format_exc())
 
 
-def mutePerson(group, qqnumber, mutetime):
-    if mutetime > (43199 * 60):
-        mutetime = 43199 * 60
+def mutePerson(group, qq_number, mute_time):
+    if mute_time > (43199 * 60):
+        mute_time = 43199 * 60
     data1 = {
         "group_id": int(group),
-        "user_id": int(qqnumber),
-        "duration": int(mutetime)
+        "user_id": int(qq_number),
+        "duration": int(mute_time)
     }
     requests.post(url="http://" + HTTPURL + "/set_group_ban", data=data1)
 
 
-def unmutePerson(group, qqnumber):
-    mutePerson(group, qqnumber, 0)
+def unmutePerson(group, qq_number):
+    mutePerson(group, qq_number, 0)
 
 
-def recall(msgid):
+def recall(msg_id):
     data1 = {
-        "message_id": int(msgid)
+        "message_id": int(msg_id)
     }
     requests.post(url="http://" + HTTPURL + "/delete_msg", data=data1)
 
