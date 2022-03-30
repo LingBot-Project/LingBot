@@ -683,7 +683,7 @@ Karma(人品值): {karma}
                 last_login = datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 first_login = datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 onlineMode = onlineMode,
-                lastLogout = datetime.datetime.utcfromtimestamp(lastLogout) / 1000).strftime("%Y-%m-%d %H:%M:%S")
+                lastLogout = datetime.datetime.utcfromtimestamp(lastLogout / 1000).strftime("%Y-%m-%d %H:%M:%S"))
 
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
