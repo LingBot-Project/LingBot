@@ -252,7 +252,7 @@ def on_message2(ws, message):
         reScan = re.search(
             ANTI_AD,
             msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
-        if len(msg.text) > 35 and (reScan is not None or sc_id_ad is not None):
+        if len(msg.text) > 35 and reScan is not None:
             if msg.sender.isadmin():
                 sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                             target_group=868218262)
@@ -261,7 +261,13 @@ def on_message2(ws, message):
             msg.recall()
             ALL_AD += 1
             return
-        
+
+        if sc_id_ad is not None:
+            msg.mute(600)
+            msg.recall()
+            time.sleep(random.randint(1000, 2000) / 1000); msg.fastReply("您的名称中似乎存在广告", reply=False)
+            ALL_AD += 1
+
         if len(msg.text) > 1000:
             msg.mute(600)
             msg.recall()
