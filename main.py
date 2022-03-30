@@ -10,7 +10,7 @@ import time
 import traceback
 import hypixel
 import psutil
-import subprocess as sp
+import tcping
 from io import BytesIO
 
 import requests
@@ -442,9 +442,9 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 else:
                     _host = command_list[1]
                 
-                status = sp.Popen(['tcping', '-c', '5', '-t', '1', '--report', '-p', _port, _host], stdout=sp.PIPE, stderr=sp.PIPE, encoding='utf-8')
-                status.wait()
-                msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(status.communicate()[0])))
+                _ping = tcping.Ping(_host, int(_port), 1.0)
+                _ping.ping(5)
+                msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(_ping.result.table)))
 
 
         if command_list[0] == "!admin":
