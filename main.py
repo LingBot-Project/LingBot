@@ -653,8 +653,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 玩家名称: [{rank}]{name}
 等级: {level}
 Karma(人品值): {karma}
-上次登陆: {last_login}
-上次登出: {lastLogout}[{onlineMode}]
+上次登陆: {last_login}[{onlineMode}]
 首次登陆: {first_login}""".format(
                 rank = player1.getRank()["rank"].replace(" PLUS", "+"),
                 name = pI["displayName"],
@@ -662,7 +661,6 @@ Karma(人品值): {karma}
                 karma = pI["karma"],
                 last_login = datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 first_login = datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
-                lastLogout = datetime.datetime.utcfromtimestamp(lastLogout / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 onlineMode = onlineMode)
 
             if playerSkin.status_code == 200:
