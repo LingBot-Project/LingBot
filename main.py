@@ -662,7 +662,7 @@ Karma(人品值): {karma}
                 karma = pI["karma"],
                 last_login = datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 first_login = datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
-                lastLogout = lastLogout,
+                lastLogout = datetime.datetime.utcfromtimestamp(lastLogout / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 onlineMode = onlineMode)
 
             if playerSkin.status_code == 200:
