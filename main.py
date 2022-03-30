@@ -261,6 +261,12 @@ def on_message2(ws, message):
             msg.recall()
             ALL_AD += 1
             return
+        
+        if len(msg.text) > 1000:
+            msg.mute(600)
+            msg.recall()
+            msg.fastReply("消息太长了哟", reply=False)
+            return
 
         multiMsg = re.search(r'\[CQ:forward,id=(.*)\]', msg.text)
         if multiMsg is not None:
@@ -297,6 +303,7 @@ def on_message2(ws, message):
                 msg.mute(60)
                 msg.recall()
                 msg.fastReply("太...太多图片了..", reply=False)
+                return
 
         if msg.text == "!quit" and msg.sender.isadmin():
             msg.fastReply("正在尝试这么做...")
