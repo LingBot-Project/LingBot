@@ -622,7 +622,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 pI["karma"] = "这个玩家并没有登录过Hypixel, 无法查询"
             playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
             pmsg = "---查询结果---\n玩家名称: [{rank}]{name}\n等级: {level}\nKarma(人品值): {karma}\n上次登陆: {last_login}\n首次登陆: {first_login}".format(
-                rank=player1.getRank(),
+                rank=player1.getRank()["rank"],
                 name=pI["displayName"],
                 level=player1.getLevel(),
                 karma=pI["karma"],
