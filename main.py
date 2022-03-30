@@ -409,23 +409,19 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fastReply(req1["content"] + "\n" + req1["note"])
         
         if msg.text == "!hyp players":
-            print("1")
             _all_modes = hypixel.getJSON("counts")
-            print("1")
             _all_player = _all_modes["playerCount"]
-            print("1")
             _all_modes = _all_modes["games"]
-            print("1")
             _all_players = []
-            print("1")
             for i in _all_modes:
                 _all_players.append(_all_modes[i]["players"])
             
-            print("1")
             temp_msg = ""
-            print("1")
             for i in range(len(_all_modes)):
-                temp_msg += "{}: {} ({})".format(_all_modes.items()[i][0], _all_players[i], (_all_players[i]/_all_player)*100)
+                try:
+                    temp_msg += "{}: {} ({})".format(_all_modes.items()[i][0], _all_players[i], (_all_players[i]/_all_player)*100)
+                except:
+                    pass
             print(temp_msg)
             msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(temp_msg)))
             return
