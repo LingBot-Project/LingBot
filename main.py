@@ -407,7 +407,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fastReply(
                 requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
             msg.fastReply(req1["content"] + "\n" + req1["note"])
-        
+
         if msg.text == "!hyp players":
             _all_modes = hypixel.getJSON("counts")
             _all_player = _all_modes["playerCount"]
@@ -415,10 +415,10 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             _all_players = []
             for i in _all_modes:
                 _all_players.append(_all_modes[i]["players"])
-            
+
             temp_msg = ""
             for i in range(len(_all_modes)):
-                temp_msg += "{}: {} ({})".format(_all_modes.items()[i][0], _all_players[i], (_all_players[i]/_all_player)*100)
+                temp_msg += "{}: {} ({})".format(_all_modes.items()[i][0], _all_players[i], (_all_players[i] / _all_player) * 100)
             print(temp_msg)
             msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(temp_msg)))
             return
@@ -650,7 +650,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             lastLogout = 0
             if "lastLogout" in player1.JSON:
                 lastLogout = player1.JSON["lastLogout"]
-            
+
             onlineMode = None
             try:
                 _onlineStatus = hypixel.getJSON("status", uuid=pI["uuid"])["session"]
@@ -670,14 +670,14 @@ Karma(人品值): {karma}
 上次登陆: {last_login}
 上次登出: {lastLogout}[{onlineMode}]
 首次登陆: {first_login}""".format(
-                rank = player1.getRank()["rank"].replace(" PLUS", "+"),
-                name = pI["displayName"],
-                level = player1.getLevel(),
-                karma = pI["karma"],
-                last_login = datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
-                first_login = datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
-                onlineMode = onlineMode,
-                lastLogout = lastLogout)
+                rank=player1.getRank()["rank"].replace(" PLUS", "+"),
+                name=pI["displayName"],
+                level=player1.getLevel(),
+                karma=pI["karma"],
+                last_login=datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                first_login=datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                onlineMode=onlineMode,
+                lastLogout=lastLogout)
 
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
