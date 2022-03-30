@@ -546,7 +546,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 if command_list[1] == "all":
                     s = getGroups()
                     msg.fastReply("正在群发... 目标:{}个群".format(len(s)))
-                    _prefix = "[由 {}({}) 发起的群发消息]".format(msg.sender.name, msg.sender.id)
+                    _prefix = "(由 {}({}) 发起的群发消息)".format(msg.sender.name, msg.sender.id)
                     for i in s:
                         if i not in IGNORE_GROUP:
                             sendMessage(msg1, target_group=i)
