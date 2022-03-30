@@ -410,7 +410,19 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fastReply(req1["content"] + "\n" + req1["note"])
         
         if msg.text == "!hyp players":
-            pass # 先留个悬念
+            _imageuid = str(random.randint(10000000, 9999999999))
+            _all_modes = hypixel.getJSON("counts")["games"]
+            _all_players = []
+            for i in _all_modes:
+                _all_players.append(_all_modes[i]["players"])
+            
+            #显示百分比
+            plt.pie(_all_players,labels=_all_modes,autopct='%3.2f%%')
+            #设置x,y的刻度一样，使其饼图为正圆
+            plt.axis('equal')
+            plt.savefig(_imageuid + ".cache.png")
+            with open(_imageuid + ".cache.png", "rb") as f:
+                msg.fastReply("[CQ:image,file=base64://{}]".format(base64.b64encode(f.read()).decode()))
 
         if command_list[0] == "!feedback":
             msg.fastReply("该功能已经下线了! https://lingbot.guimc.ltd/#/AboutFeedback")
@@ -638,7 +650,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 
             lastLogout = 0
             if "lastLogout" in player1.JSON:
-                player1.JSON["lastLogout"]
+                lastLogout = player1.JSON["lastLogout"]
             
             onlineMode = None
             try:
@@ -656,7 +668,8 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 玩家名称: [{rank}]{name}
 等级: {level}
 Karma(人品值): {karma}
-上次登陆: {last_login}[{onlineMode}]
+上次登陆: {last_login}
+上次登出: {lastLogout}[{onlineMode}]
 首次登陆: {first_login}""".format(
                 rank = player1.getRank()["rank"].replace(" PLUS", "+"),
                 name = pI["displayName"],
@@ -664,7 +677,8 @@ Karma(人品值): {karma}
                 karma = pI["karma"],
                 last_login = datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 first_login = datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
-                onlineMode = onlineMode)
+                onlineMode = onlineMode,
+                lastLogout = lastLogout)
 
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
