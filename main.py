@@ -248,7 +248,7 @@ def on_message2(ws, message):
         ALL_MESSAGE += 1
 
         print("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
-        sc_id_ad = re.search(ANTI_AD, msg.sender.name)
+
         reScan = re.search(
             ANTI_AD,
             msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
@@ -262,12 +262,14 @@ def on_message2(ws, message):
             ALL_AD += 1
             return
 
+        sc_id_ad = re.search(ANTI_AD, msg.sender.name.replace(" ", "").replace(".", "").replace("\n", "").lower())
         if sc_id_ad is not None and not msg.sender.isadmin():
             msg.mute(600)
             msg.recall()
             time.sleep(random.randint(500, 2000) / 1000)
             msg.fastReply("您的名称中似乎存在广告", reply=False)
             ALL_AD += 1
+            return
 
         if len(msg.text) > 1000:
             msg.mute(600)
