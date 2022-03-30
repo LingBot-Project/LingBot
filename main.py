@@ -632,18 +632,56 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             if 'karma' not in pI:
                 pI["karma"] = "0"
             playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
-            pmsg = "---查询结果---\n玩家名称: [{rank}]{name}\n等级: {level}\nKarma(人品值): {karma}\n上次登陆: {last_login}\n首次登陆: {first_login}".format(
+            pmsg = """注: 当前为测试版本 不代表最终体验
+---查询结果---
+玩家名称: [{rank}]{name}
+等级: {level}
+Karma(人品值): {karma}
+上次登陆: {last_login}
+首次登陆: {first_login}""".format(
                 rank=player1.getRank()["rank"].replace(" PLUS", "+"),
                 name=pI["displayName"],
                 level=player1.getLevel(),
                 karma=pI["karma"],
                 last_login=datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 first_login=datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"))
+
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
+
+            try:
+                _onlineStatus = hypixel.getJSON("status", uuid = pI["uuid"])["session"]
+                _isOnline = _onlineStatus["online"]
+                if _isOnline:
+                    pmsg += "\n当前玩家在线!\n游戏模式: {}".format(_onlineStatus["gameType"])
+                else:
+                    pmsg += "\n当前玩家离线!"
+            except:
+                pass
+
             try:
                 sbplayer = hypixel.getJSON('skyblock/profiles', uuid = pI['uuid'])
-                print(sbplayer)
+                profile_id = sbplayer["profiles"][0]["profile_id"]
+                sbprofile = sbplayer["profiles"][0]["members"][profile_id]
+                finished_quests = 0
+                for i in sbprofile["quests"]:
+                    if sbprofile["quests"][i]["status"] == "COMPLETE":
+                        finished_quests += 1
+                pmsg += """\n---SkyBlock---
+Profile ID: {profile_id}
+上次保存: {last_save}
+第一次进入: {first_join}
+Coins: {coin_purse}
+已经完成的任务: {finished_quests}
+进入过的区域: {visited_zones}个
+死亡次数: {death_count}""".format(profile_id = profile_id,
+                    last_save = datetime.datetime.utcfromtimestamp(sbprofile["last_save"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                    first_join = datetime.datetime.utcfromtimestamp(sbprofile["first_join"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                    death_count = sbprofile["death_count"],
+                    coin_purse = sbprofile["coin_purse"],
+                    finished_quests = finished_quests,
+                    visited_zones = len(sbprofile["visited_zones"]),
+                    death_count = sbprofile["death_count"])
             except:
                 print(traceback.format_exc())
             msg.fastReply(pmsg)
