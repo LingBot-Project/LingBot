@@ -630,6 +630,11 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 first_login=datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"))
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
+            try:
+                sbplayer = hypixel.SkyblockPlayer(pI["uuid"])
+                print(sbplayer.JSON)
+            except:
+                pass
             msg.fastReply(pmsg)
 
         BVID = re.match(BILI_BV_RE, msg.text)
