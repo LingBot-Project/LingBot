@@ -642,9 +642,9 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 _onlineStatus = hypixel.getJSON("status", uuid=pI["uuid"])["session"]
                 _isOnline = _onlineStatus["online"]
                 if _isOnline:
-                    onlineMode += "Online: {} - {} ({})".format(_onlineStatus["gameType"], _onlineStatus["mode"], _onlineStatus["map"])
+                    onlineMode = "Online: {} - {} ({})".format(_onlineStatus["gameType"], _onlineStatus["mode"], _onlineStatus["map"])
                 else:
-                    onlineMode += "Offline"
+                    onlineMode = "Offline"
             except:
                 pass
 
