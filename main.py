@@ -417,9 +417,12 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 _all_players.append(_all_modes[i]["players"])
             
             temp_msg = ""
+            temp_list = []
+            for i in _all_modes.items():
+                temp_list.append(i)
             for i in range(len(_all_modes)):
                 try:
-                    temp_msg += "{}: {} ({})".format(_all_modes.items()[i][0], _all_players[i], ((_all_players[i]/_all_player)*100))
+                    temp_msg += "{}: {} ({})\n".format(temp_list[i][0], _all_players[i], ((_all_players[i]/_all_player)*100))
                 except Exception as e:
                     print(e)
             print(temp_msg)
