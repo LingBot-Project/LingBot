@@ -8,10 +8,10 @@ import re
 import threading
 import time
 import traceback
-# from click import UUID
 import hypixel
 import psutil
 from io import BytesIO
+import matplotlib.pyplot as plt
 
 import requests
 import websocket
@@ -408,6 +408,9 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fastReply(
                 requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
             msg.fastReply(req1["content"] + "\n" + req1["note"])
+        
+        if msg.text == "!hyp players":
+            pass # 先留个悬念
 
         if command_list[0] == "!feedback":
             msg.fastReply("该功能已经下线了! https://lingbot.guimc.ltd/#/AboutFeedback")
