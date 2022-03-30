@@ -417,12 +417,12 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 _all_players.append(_all_modes[i]["players"])
             
             #显示百分比
-            plt.pie(_all_players,labels=_all_modes,autopct='%3.2f%%')
+            plt.pie(_all_players,labels=_all_modes)
             #设置x,y的刻度一样，使其饼图为正圆
-            plt.axis('equal')
             plt.savefig(_imageuid + ".cache.png")
             with open(_imageuid + ".cache.png", "rb") as f:
                 msg.fastReply("[CQ:image,file=base64://{}]".format(base64.b64encode(f.read()).decode()))
+            return
 
         if command_list[0] == "!feedback":
             msg.fastReply("该功能已经下线了! https://lingbot.guimc.ltd/#/AboutFeedback")
