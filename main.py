@@ -8,7 +8,7 @@ import re
 import threading
 import time
 import traceback
-from click import UUID
+# from click import UUID
 import hypixel
 import psutil
 from io import BytesIO
@@ -605,7 +605,8 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fastReply("Update Time:{}\n"
                               "Update Message:{}\n"
                               "Author:{}\n"
-                              "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(upd_time, updMsg, updAuthor, objectIDs[0]))
+                              "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(
+                    upd_time, updMsg, updAuthor, objectIDs[0]))
             elif command_list[1] == "release":
                 url = "https://api.github.com/repos/UnlegitMC/FDPClient/releases/latest"
                 a = requests.get(url=url).json()
@@ -650,7 +651,7 @@ Karma(人品值): {karma}
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
 
             try:
-                _onlineStatus = hypixel.getJSON("status", uuid = pI["uuid"])["session"]
+                _onlineStatus = hypixel.getJSON("status", uuid=pI["uuid"])["session"]
                 _isOnline = _onlineStatus["online"]
                 if _isOnline:
                     pmsg += "\n当前玩家在线!\n游戏模式: {}".format(_onlineStatus["gameType"])
@@ -660,7 +661,7 @@ Karma(人品值): {karma}
                 pass
 
             try:
-                sbplayer = hypixel.getJSON('skyblock/profiles', uuid = pI['uuid'])
+                sbplayer = hypixel.getJSON('skyblock/profiles', uuid=pI['uuid'])
                 profile_id = sbplayer["profiles"][0]["profile_id"]
                 sbprofile = sbplayer["profiles"][0]["members"][profile_id]
                 finished_quests = 0
@@ -674,13 +675,15 @@ Profile ID: {profile_id}
 Coins: {coin_purse}
 已经完成的任务: {finished_quests}
 进入过的区域: {visited_zones}个
-死亡次数: {death_count}""".format(profile_id = profile_id,
-                    last_save = datetime.datetime.utcfromtimestamp(sbprofile["last_save"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
-                    first_join = datetime.datetime.utcfromtimestamp(sbprofile["first_join"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
-                    coin_purse = sbprofile["coin_purse"],
-                    finished_quests = finished_quests,
-                    visited_zones = len(sbprofile["visited_zones"]),
-                    death_count = sbprofile["death_count"])
+死亡次数: {death_count}""".format(profile_id=profile_id,
+                              last_save=datetime.datetime.utcfromtimestamp(sbprofile["last_save"] / 1000).strftime(
+                                  "%Y-%m-%d %H:%M:%S"),
+                              first_join=datetime.datetime.utcfromtimestamp(sbprofile["first_join"] / 1000).strftime(
+                                  "%Y-%m-%d %H:%M:%S"),
+                              coin_purse=sbprofile["coin_purse"],
+                              finished_quests=finished_quests,
+                              visited_zones=len(sbprofile["visited_zones"]),
+                              death_count=sbprofile["death_count"])
             except:
                 print(traceback.format_exc())
             msg.fastReply(pmsg)
