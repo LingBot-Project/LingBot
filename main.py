@@ -236,9 +236,9 @@ def acg_img():
 
 def on_message2(ws, message):
     global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS
+    msg = Message(message)
     try:
         # 处理消息内容
-        msg = Message(message)
         if msg.text == "":
             return
         if time.time() - MESSAGE_PRE_MINUTE[0] >= 60:
@@ -297,7 +297,7 @@ def on_message2(ws, message):
                 msg.mute(60)
                 msg.recall()
                 msg.fastReply("太...太多图片了..", reply=False)
-        
+
         if msg.text == "!quit" and msg.sender.isadmin():
             msg.fastReply("正在尝试这么做...")
             quit()
@@ -305,9 +305,14 @@ def on_message2(ws, message):
         command_list = msg.text.split(" ")
         if msg.text in ["!test", "凌状态"]:
             msg.fastReply(
-                "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(ALL_MESSAGE, getRuntime(),
-                                                                                             timePreMessage, ALL_AD, (
-                                                                                                     ALL_AD / ALL_MESSAGE) * 100))
+                "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(
+                    ALL_MESSAGE,
+                    getRuntime(),
+                    timePreMessage,
+                    ALL_AD,
+                    (ALL_AD / ALL_MESSAGE) * 100
+                )
+            )
 
         if command_list[0] in ["!help", "菜单"]:
             msg.fastReply("请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
@@ -352,8 +357,17 @@ UP主: {} ({})
 视频链接: https://www.bilibili.com/video/{}/
 播放量: {}
 简介:
-{}""".format(str1["title"], str1["owner"]["name"], str1["owner"]["mid"],
-             str1["tname"], str1["tid"], s, str1["bvid"], str1["stat"]["view"], str1["desc"])
+{}""".format(
+                    str1["title"],
+                    str1["owner"]["name"],
+                    str1["owner"]["mid"],
+                    str1["tname"],
+                    str1["tid"],
+                    s,
+                    str1["bvid"],
+                    str1["stat"]["view"],
+                    str1["desc"]
+                )
                 lines = text.split('\n')
                 # print(len(lines))
                 fontPath = r"a.ttf"
