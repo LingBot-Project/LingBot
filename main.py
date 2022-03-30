@@ -677,7 +677,6 @@ Coins: {coin_purse}
 死亡次数: {death_count}""".format(profile_id = profile_id,
                     last_save = datetime.datetime.utcfromtimestamp(sbprofile["last_save"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                     first_join = datetime.datetime.utcfromtimestamp(sbprofile["first_join"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
-                    death_count = sbprofile["death_count"],
                     coin_purse = sbprofile["coin_purse"],
                     finished_quests = finished_quests,
                     visited_zones = len(sbprofile["visited_zones"]),
