@@ -310,7 +310,6 @@ def on_message2(ws, message):
             quit()
 
         command_list = msg.text.split(" ")
-        command_list[0] = command_list[0].replace("！", "!")
         if msg.text in ["!test", "凌状态"]:
             msg.fastReply(
                 "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(
