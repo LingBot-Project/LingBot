@@ -622,7 +622,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             # 获取玩家信息
             try:
                 player1 = hypixel.Player(command_list[1])
-            except:
+            except hypixel.PlayerNotFoundException:
                 msg.fastReply("貌似没有这个玩家?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
                 return
             pI = player1.getPlayerInfo()
