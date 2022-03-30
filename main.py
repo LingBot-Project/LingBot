@@ -34,7 +34,7 @@ MC_MOTD_COLORFUL = re.compile(r"§.")
 ALL_MESSAGE = 0
 MESSAGE_PRE_MINUTE = [0, 0]
 ALL_AD = 0
-BILI_BV_RE = re.compile(r"BV([a-z|A-Z|0-9]{10})")
+BILI_BV_RE = re.compile(r"BV([a-zA-Z0-9]{10})")
 REQ_TEXT = re.compile(r"get±.*±")
 timePreMessage = 0
 recordTime = int(time.time())
@@ -100,8 +100,8 @@ class Message:
             else:
                 raise Exception()
 
-    def mute(self, time):
-        self.group.mute(self.sender, time)
+    def mute(self, _time):
+        self.group.mute(self.sender, _time)
 
     def recall(self):
         recall(self.id)
@@ -143,8 +143,8 @@ def saveConfig():
     global ADMIN_LIST, BLACK_LIST, FEEDBACKS
     config = configparser.ConfigParser()
     config["DEFAULT"] = {
-        "admin": ",".join('%s' % id for id in ADMIN_LIST),
-        "blacklist": ",".join('%s' % id for id in BLACK_LIST)
+        "admin": ",".join('%s' % _id for _id in ADMIN_LIST),
+        "blacklist": ",".join('%s' % _id for _id in BLACK_LIST)
     }
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
@@ -248,7 +248,7 @@ def on_message2(ws, message):
         print("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
 
         reScan = re.search(
-            r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺",
+            r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺",
             msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
         if len(msg.text) > 35 and reScan is not None:
             if msg.sender.isadmin():
@@ -266,7 +266,7 @@ def on_message2(ws, message):
             msg.fastReply("消息太长了哟", reply=False)
             return
 
-        multiMsg = re.search(r'\[CQ:forward,id=(.*)\]', msg.text)
+        multiMsg = re.search(r'\[CQ:forward,id=(.*)]', msg.text)
         if multiMsg is not None:
             a = requests.get(url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()[
                 "data"]["messages"]
@@ -274,7 +274,7 @@ def on_message2(ws, message):
             for i in a:
                 multiMsg_raw += i["content"]
             reScan = re.search(
-                r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|外部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|群(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺|裙(.*)[0-9]{5,10}",
+                r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|.*配置|3xl?top|.*小卖铺|裙(.*)[0-9]{5,10}",
                 multiMsg_raw.replace(" ", "").replace(".", "").replace("\n", "").lower())
             if reScan is not None:
                 msg.fastReply("您发送的合并转发内容貌似有广告!", reply=False)
@@ -334,7 +334,7 @@ def on_message2(ws, message):
                 str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
                     re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
                                requests.get(json.loads(
-                                   re.search(r"\[CQ:json,data=(.*)\]", msg.text).group(1).replace("&amp;", "&"))[
+                                   re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&"))[
                                                 "meta"]["news"]["jumpUrl"]).text)[0].replace(
                         r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
 
@@ -512,7 +512,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 
         if command_list[0] == "!mute":
             if msg.sender.isadmin():
-                atcq = re.search(r'\[CQ:at,qq=(.*)\]', msg.text)
+                atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
                 if atcq is not None:
                     command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(
                         " ")
