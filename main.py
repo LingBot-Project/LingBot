@@ -632,7 +632,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
             try:
-                sbplayer = hypixel.getJSON('skyblockplayer', UUID = pI['uuid'])
+                sbplayer = hypixel.getJSON('skyblock/profiles', uuid = pI['uuid'])
                 print(sbplayer.JSON)
             except:
                 print(traceback.format_exc())
