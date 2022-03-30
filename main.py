@@ -418,10 +418,10 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             for i in _all_modes:
                 _all_players.append(_all_modes[i]["players"])
             
-            _temp_msg = ""
+            temp_msg = ""
             for i in range(len(_all_modes)):
-                _temp_msg += "{}: {} ({})".format(_all_modes.items()[i][0], _all_players[i], (_all_players[i]/_all_player)*100)
-            msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(_temp_msg)))
+                temp_msg += "{}: {} ({})".format(_all_modes.items()[i][0], _all_players[i], (_all_players[i]/_all_player)*100)
+            msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(temp_msg)))
             return
 
         if command_list[0] == "!feedback":
