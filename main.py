@@ -410,18 +410,16 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fastReply(req1["content"] + "\n" + req1["note"])
         
         if msg.text == "!hyp players":
-            _imageuid = str(random.randint(10000000, 9999999999))
-            _all_modes = hypixel.getJSON("counts")["games"]
-            _all_players = []
-            for i in _all_modes:
-                _all_players.append(_all_modes[i]["players"])
-            
-            #显示百分比
-            plt.pie(_all_players,labels=_all_modes)
-            #设置x,y的刻度一样，使其饼图为正圆
-            plt.savefig(_imageuid + ".cache.png")
-            with open(_imageuid + ".cache.png", "rb") as f:
-                msg.fastReply("[CQ:image,file=base64://{}]".format(base64.b64encode(f.read()).decode()))
+            # _imageuid = str(random.randint(10000000, 9999999999))
+            # _all_modes = hypixel.getJSON("counts")["games"]
+            # _all_players = []
+            # for i in _all_modes:
+            #     _all_players.append(_all_modes[i]["players"])
+            # 
+            # plt.pie(_all_players,labels=_all_modes)
+            # plt.savefig(_imageuid + ".cache.png")
+            # with open(_imageuid + ".cache.png", "rb") as f:
+            #     msg.fastReply("[CQ:image,file=base64://{}]".format(base64.b64encode(f.read()).decode()))
             return
 
         if command_list[0] == "!feedback":
