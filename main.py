@@ -634,7 +634,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
             try:
                 sbplayer = hypixel.getJSON('skyblock/profiles', uuid = pI['uuid'])
-                print(sbplayer.JSON)
+                print(sbplayer)
             except:
                 print(traceback.format_exc())
             msg.fastReply(pmsg)
