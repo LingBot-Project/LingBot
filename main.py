@@ -315,14 +315,15 @@ def on_message2(ws, message):
                 msg.fastReply("太...太多图片了..", reply=False)
                 return
         
-        if (msg.group.id, int(command_list[2])) in REPEATER:
+        command_list = msg.text.split(" ")
+        
+        if (msg.group.id, msg.sender.id) in REPEATER:
             msg.fastReply(msg.text, reply=False, at=False)
 
         if msg.text == "!quit" and msg.sender.isadmin():
             msg.fastReply("正在尝试这么做...")
             quit()
 
-        command_list = msg.text.split(" ")
         if msg.text in ["!test", "凌状态"]:
             msg.fastReply(
                 "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(
