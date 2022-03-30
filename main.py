@@ -265,7 +265,8 @@ def on_message2(ws, message):
         if sc_id_ad is not None:
             msg.mute(600)
             msg.recall()
-            time.sleep(random.randint(1000, 2000) / 1000); msg.fastReply("您的名称中似乎存在广告", reply=False)
+            time.sleep(random.randint(500, 2000) / 1000)
+            msg.fastReply("您的名称中似乎存在广告", reply=False)
             ALL_AD += 1
 
         if len(msg.text) > 1000:
