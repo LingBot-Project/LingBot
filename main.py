@@ -112,10 +112,10 @@ class Message:
         temp1 = [None, None]
 
         if at:
-            temp1[0] == self.sender.id
+            temp1[0] = self.sender.id  # OLD: temp1[0] == self.sender.id
 
         if reply:
-            temp1[1] == self.id
+            temp1[1] = self.id  # temp1[1] == self.id
 
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
 
@@ -331,8 +331,8 @@ def on_message2(ws, message):
                                requests.get(json.loads(
                                    re.search(r"\[CQ:json,data=(.*)\]", msg.text).group(1).replace("&amp;", "&"))[
                                                 "meta"]["news"]["jumpUrl"]).text)[0].replace(
-                        r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
-                    :-3])).json()
+                        r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
+
                 if str1["code"] != 0:
                     print("查询失败")
                     return
@@ -349,25 +349,15 @@ def on_message2(ws, message):
                 elif str1["copyright"] == 2:
                     s = "转载"
                 else:
-                    s = "未曾设想的投稿类型: {}  (不是转载也不是自制?)".format(str1["copyright"])
-                text = """标题: {}
-UP主: {} ({})
-投稿分区: {} ({})
-投稿类型: {}
-视频链接: https://www.bilibili.com/video/{}/
-播放量: {}
+                    s = f"未曾设想的投稿类型: {str1['copyright']}  (不是转载也不是自制?)"
+                text = f"""标题: {str1["title"]}
+UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
+投稿分区: {str1["tname"]} ({str1["tid"]})
+投稿类型: {s}
+视频链接: https://www.bilibili.com/video/{str1["bvid"]}/
+播放量: {str1["stat"]["view"]}
 简介:
-{}""".format(
-                    str1["title"],
-                    str1["owner"]["name"],
-                    str1["owner"]["mid"],
-                    str1["tname"],
-                    str1["tid"],
-                    s,
-                    str1["bvid"],
-                    str1["stat"]["view"],
-                    str1["desc"]
-                )  # :(
+{str1["desc"]}"""  # :(
                 lines = text.split('\n')
                 # print(len(lines))
                 fontPath = r"a.ttf"
