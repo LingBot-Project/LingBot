@@ -632,32 +632,41 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             if 'karma' not in pI:
                 pI["karma"] = "0"
             playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
+
+            lastLogout = 0
+            if "lastLogout" in player1.JSON:
+                player1.JSON["lastLogout"]
+            
+            onlineMode = None
+            try:
+                _onlineStatus = hypixel.getJSON("status", uuid=pI["uuid"])["session"]
+                _isOnline = _onlineStatus["online"]
+                if _isOnline:
+                    onlineMode += "Online: {} - {} ({})".format(_onlineStatus["gameType"], _onlineStatus["mode"], _onlineStatus["map"])
+                else:
+                    onlineMode += "Offline"
+            except:
+                pass
+
             pmsg = """注: 当前为测试版本 不代表最终体验
 ---查询结果---
 玩家名称: [{rank}]{name}
 等级: {level}
 Karma(人品值): {karma}
 上次登陆: {last_login}
+上次登出: {lastLogout}[{onlineMode}]
 首次登陆: {first_login}""".format(
-                rank=player1.getRank()["rank"].replace(" PLUS", "+"),
-                name=pI["displayName"],
-                level=player1.getLevel(),
-                karma=pI["karma"],
-                last_login=datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
-                first_login=datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"))
+                rank = player1.getRank()["rank"].replace(" PLUS", "+"),
+                name = pI["displayName"],
+                level = player1.getLevel(),
+                karma = pI["karma"],
+                last_login = datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                first_login = datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                lastLogout = lastLogout,
+                onlineMode = onlineMode)
 
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
-
-            try:
-                _onlineStatus = hypixel.getJSON("status", uuid=pI["uuid"])["session"]
-                _isOnline = _onlineStatus["online"]
-                if _isOnline:
-                    pmsg += "\n当前玩家在线!\n游戏模式: {}".format(_onlineStatus["gameType"])
-                else:
-                    pmsg += "\n当前玩家离线!"
-            except:
-                pass
 
             try:
                 sbplayer = hypixel.getJSON('skyblock/profiles', uuid=pI['uuid'])
