@@ -237,7 +237,7 @@ def acg_img():
 
 
 def on_message2(ws, message):
-    global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS
+    global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS, cmd
     msg = Message(message)
 
     try:
@@ -325,6 +325,10 @@ def on_message2(ws, message):
         if msg.text == "!quit" and msg.sender.isadmin():
             msg.fastReply("正在尝试这么做...")
             quit()
+
+        if msg.text == "!reload" and msg.sender.isadmin():
+            Message.fastReply("正在尝试这么做...")
+            cmd = command.Command()
 
         if command_list[0] in command.COMMAND_LIST:
             for _i in command.COMMAND_LIST:
