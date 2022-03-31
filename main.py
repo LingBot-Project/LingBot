@@ -397,12 +397,12 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 with open(imageuid + "_cache.png", "rb") as f:
                     msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
 
-        if msg.text == "一英":
-            msg.fastReply(requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
-                          requests.get("http://open.iciba.com/dsapi/").json()["note"])
+        # if msg.text == "一英":
+        #     msg.fastReply(requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
+        #                   requests.get("http://open.iciba.com/dsapi/").json()["note"])
 
-        if msg.text == "二次元":
-            msg.fastReply("[CQ:image,file=base64://" + acg_img() + "]")
+        # if msg.text == "二次元":
+        #     msg.fastReply("[CQ:image,file=base64://" + acg_img() + "]")
 
         if msg.text == "必应壁纸":
             msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(
