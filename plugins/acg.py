@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 # Must
 from main import Modules
 
@@ -39,10 +40,8 @@ def acg(msg, _):
 
 
 def one_eng(msg, _):
-    print("test")
     a = requests.get("http://open.iciba.com/dsapi/").json()
     msg.fastReply(f'{a["content"]}\n{a["note"]}')
 
 Modules.register_module(one_eng, "一英")
 Modules.register_module(acg, "二次元")
-print("test")

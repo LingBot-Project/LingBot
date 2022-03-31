@@ -6,7 +6,6 @@ import datetime
 import json
 import random
 import re
-from socket import if_nameindex
 import threading
 import time
 import traceback
@@ -22,7 +21,7 @@ from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
 from moduleManager import *
 
-hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
+# hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(30.0)
 
 SERVER_ADDR = "127.0.0.1"
@@ -769,7 +768,6 @@ Coins: {coin_purse}
             msg.fastReply(pmsg)
 
         if command_list[0] in Modules.func_dist:
-            print("test")
             Modules.func_dist[command_list[0]](msg, command_list)
     except Exception as e:
         a = traceback.format_exc()

@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import os
 
 
@@ -20,8 +21,7 @@ class ModuleManager:
         self.func_dist.clear()
         for i in os.listdir(os.path.join('.', 'plugins')):
             if os.path.splitext(i)[1] == ".py":
-                with open(os.path.join('.', 'plugins', i), 'r') as f:
-                    exec(f.read())
+                exec("import plugins."+os.path.splitext(i)[0])
 
 
 if __name__ == "__main__":
