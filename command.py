@@ -11,6 +11,19 @@ class Command:
         pass
 
     @staticmethod
-    def add_command(name: str = '', func: any = None):
+    def add_command(name: str = '', func: any = None) -> None:
+        """
+        :param name: the command's name
+        :param func: function
+                     func:def func(sender: Message) -> None:
+        """
         COMMAND_LIST.append(name)
         COMMAND_DICT[name] = func
+
+    @staticmethod
+    def get_function(name: str) -> any:
+        """
+        :param name: the command's name
+        :return: return the func of the name in dict
+        """
+        return COMMAND_DICT.get(name)
