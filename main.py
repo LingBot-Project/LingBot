@@ -995,7 +995,7 @@ def main():
         print("Bot Ready!")
         while True:
             time.sleep(3600)
-        quit()
+        # quit()  Reason: Code is unreachable
     except KeyboardInterrupt:
         quit()
     except Exception:
