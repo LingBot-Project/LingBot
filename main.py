@@ -252,10 +252,10 @@ def on_message2(ws, message):
 
         print("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
 
-        reScan = re.search(
+        reScan = re.findall(
             ANTI_AD,
             msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
-        if len(msg.text) > 35 and reScan is not None:
+        if len(msg.text) > 35 and len(reScan) > 2:
             if msg.sender.isadmin():
                 sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                             target_group=308089090)
