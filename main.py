@@ -11,7 +11,6 @@ import traceback
 import hypixel
 import psutil
 import tcping
-import command
 from io import BytesIO
 
 import requests
@@ -46,7 +45,6 @@ IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 REPEATER = []
 ANTI_AD = r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|hyt|花雨庭|hyp(ixel)|海像素|快乐像素|.*重拳出击.*|回归|暴打|vulcan(反作弊)绕过|aac|watch( )dog|入侵|看门狗|对刀|不服"
-cmd = command.Command()
 
 class Group:
     def __init__(self, gid):
@@ -325,10 +323,6 @@ def on_message2(ws, message):
         if msg.text == "!quit" and msg.sender.isadmin():
             msg.fastReply("正在尝试这么做...")
             quit()
-
-        if msg.text == "!reload" and msg.sender.isadmin():
-            msg.fastReply("正在尝试这么做...")
-            cmd = command.Command()
 
         if msg.text in ["!test", "凌状态"]:
             msg.fastReply(
@@ -806,11 +800,6 @@ UP主: {} ({})
             with open(imageuid + "_cache.png", "rb") as f:
                 msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
             return
-        if command_list[0] in command.COMMAND_LIST:
-            for _i in command.COMMAND_LIST:
-                if msg.text in _i:
-                    command.Command.get_function(_i)(msg)
-                    return
     except Exception as e:
         a = traceback.format_exc()
         msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(text2image(a)))
