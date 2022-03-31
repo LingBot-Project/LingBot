@@ -11,6 +11,7 @@ import traceback
 import hypixel
 import psutil
 import tcping
+import command
 from io import BytesIO
 
 import requests
@@ -323,6 +324,9 @@ def on_message2(ws, message):
         if msg.text == "!quit" and msg.sender.isadmin():
             msg.fastReply("正在尝试这么做...")
             quit()
+        for _ in command.COMMAND_LIST:
+            if _ == command_list[0]:
+                command.Command.get_function(_)(msg)
 
         if msg.text in ["!test", "凌状态"]:
             msg.fastReply(
