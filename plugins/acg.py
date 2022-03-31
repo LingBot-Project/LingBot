@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 # Must
-from main import Modules
+import main
 
 from PIL import Image, ImageDraw, ImageFont
 import requests, base64, random, traceback
@@ -43,5 +43,5 @@ def one_eng(msg, _):
     a = requests.get("http://open.iciba.com/dsapi/").json()
     msg.fastReply(f'{a["content"]}\n{a["note"]}')
 
-Modules.register_module(one_eng, "一英")
-Modules.register_module(acg, "二次元")
+main.Modules.register_module(one_eng, "一英")
+main.Modules.register_module(acg, "二次元")

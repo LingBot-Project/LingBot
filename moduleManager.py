@@ -10,12 +10,7 @@ class ModuleManager:
         self.func_dist = {}
 
     def register_module(self, func, name):
-        if name in self.func_dist:
-            raise DuplicateNameException()
-        
         self.func_dist[name] = func
-
-        return func
     
     def load(self) -> None:
         self.func_dist.clear()
