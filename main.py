@@ -114,10 +114,10 @@ class Message:
         temp1 = [None, None]
 
         if at:
-            temp1[0] = self.sender.id  # OLD: temp1[0] == self.sender.id
+            temp1[0] = self.sender.id
 
         if reply:
-            temp1[1] = self.id  # temp1[1] == self.id
+            temp1[1] = self.id
 
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
 
