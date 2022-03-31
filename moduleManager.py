@@ -8,7 +8,7 @@ class ModuleManager:
     def __init__(self) -> None:
         self.func_dist = {}
 
-    def module(self, func, name):
+    def register_module(self, func, name):
         if name in self.func_dist:
             raise DuplicateNameException()
         
