@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+from ast import Mod
 import configparser
 import base64
 import datetime
@@ -18,6 +19,7 @@ import websocket
 from mcstatus import MinecraftServer
 from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
+from moduleManager import *
 
 hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(30.0)
@@ -45,6 +47,7 @@ IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 REPEATER = []
 ANTI_AD = r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|hyt|花雨庭|hyp(ixel)|海像素|快乐像素|.*重拳出击.*|回归|暴打|vulcan(反作弊)绕过|aac|watch( )dog|入侵|看门狗|对刀|不服"
+Modules = ModuleManager()
 
 class Group:
     def __init__(self, gid):
@@ -323,6 +326,10 @@ def on_message2(ws, message):
         if msg.text == "!quit" and msg.sender.isadmin():
             msg.fastReply("正在尝试这么做...")
             quit()
+        
+        if msg.text == "!reload" and msg.sender.isadmin():
+            Modules.load()
+            msg.fastReply("Reloaded!")
 
         if msg.text in ["!test", "凌状态"]:
             msg.fastReply(
@@ -752,54 +759,8 @@ Coins: {coin_purse}
                 print(traceback.format_exc())
             msg.fastReply(pmsg)
 
-        BVID = re.match(BILI_BV_RE, msg.text)
-        if BVID is not None:
-            str1 = requests.get(
-                url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(BVID.group(0))).json()
-            if str1["code"] != 0:
-                print("查询失败")
-                return
-            str1 = str1["data"]
-            response = requests.get(str1["pic"])
-            im_vl = Image.open(BytesIO(response.content))
-            im_v = im_vl.resize((430, 270), Image.ANTIALIAS)
-            imageuid = str(random.randint(10000000, 9999999999))
-            fontSize = 22
-            max_w = 0
-            s = ""
-            if str1["copyright"] == 1:
-                s = "自制"
-            elif str1["copyright"] == 2:
-                s = "转载"
-            else:
-                s = "未曾设想的投稿类型: {}  (不是转载也不是自制?)".format(str1["copyright"])
-            text = """标题: {}
-UP主: {} ({})
-投稿分区: {} ({})
-投稿类型: {}
-视频链接: https://www.bilibili.com/video/{}/
-播放量: {}
-简介:
-{}""".format(str1["title"], str1["owner"]["name"], str1["owner"]["mid"],
-             str1["tname"], str1["tid"], s, str1["bvid"], str1["stat"]["view"], str1["desc"])
-            lines = text.split('\n')
-            # print(len(lines))
-            fontPath = r"a.ttf"
-            font = ImageFont.truetype(fontPath, fontSize)
-            for i in lines:
-                try:
-                    if max_w <= font.getmask(i).getbbox()[2]:
-                        max_w = font.getmask(i).getbbox()[2]
-                except:
-                    pass
-            im = Image.new("RGB", (max_w + 11, (len(lines) * (fontSize + 8)) + 280), (255, 255, 255))
-            im.paste(im_v, (0, 0))
-            dr = ImageDraw.Draw(im)
-            dr.text((1, 280), text, font=font, fill="#000000")
-            im.save(imageuid + "_cache.png")
-            with open(imageuid + "_cache.png", "rb") as f:
-                msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
-            return
+        if command_list[0] in Modules.func_dist:
+            Modules.func_dist[command_list[0]](msg, command_list)
     except Exception as e:
         a = traceback.format_exc()
         msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(text2image(a)))
@@ -958,7 +919,6 @@ def goodnig():
 
 
 def main():
-    global brower
     try:
         print("Starting... (0/5)")
         readConfig()
@@ -981,6 +941,7 @@ def main():
         print("Starting... (4/5)")
         t3.start()
         print("Starting... (5/5)")
+        Modules.load()
         print("Bot Ready!")
         while True:
             time.sleep(3600)
