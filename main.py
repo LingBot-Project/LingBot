@@ -341,6 +341,10 @@ def on_message2(ws, message):
                 )
             )
 
+            if msg.text.find("[CQ:at,qq:"):
+                # FIXME
+                msg.text.replace(f"[CQ:at,qq:", "", __count=1).replace("]", "", __count=1)
+
         if command_list[0] in ["!help", "菜单"]:
             msg.fastReply("请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
 
