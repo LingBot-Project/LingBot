@@ -322,12 +322,13 @@ def on_message2(ws, message):
 
         if msg.text in ["!test", "凌状态"]:
             msg.fastReply(
-                "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(
+                "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%\ncommand.COMMAND_LIST: {}".format(
                     ALL_MESSAGE,
                     getRuntime(),
                     timePreMessage,
                     ALL_AD,
-                    (ALL_AD / ALL_MESSAGE) * 100
+                    (ALL_AD / ALL_MESSAGE) * 100,
+                    command.COMMAND_LIST
                 )
             )
 
@@ -595,6 +596,12 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     files.append(
                         "{}: {}".format(i["name"], i["browser_download_url"].replace("github.com", "hub.fastgit.org")))
                 msg.fastReply("Version: {}\n".format(a["name"]) + "\n".join(files))
+                
+        if command_list[0] in command.COMMAND_LIST:
+            for _i in command.COMMAND_LIST:
+                if msg.text in _i:
+                    command.Command.get_function(_i)(msg,command_list)
+                    return
 
         BVID = re.match(BILI_BV_RE, msg.text)
         if BVID is not None:
@@ -644,11 +651,6 @@ UP主: {} ({})
             with open(imageuid + "_cache.png", "rb") as f:
                 msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
             return
-        if command_list[0] in command.COMMAND_LIST:
-            for _i in command.COMMAND_LIST:
-                if msg.text in _i:
-                    command.Command.get_function(_i)(msg,command_list)
-                    return
     except Exception as e:
         a = traceback.format_exc()
         msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(text2image(a)))
