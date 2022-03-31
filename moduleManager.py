@@ -8,7 +8,7 @@ class ModuleManager:
     def __init__(self) -> None:
         self.func_dist = {}
 
-    def module(self, func, name) -> function:
+    def module(self, func, name):
         if name in self.func_dist:
             raise DuplicateNameException()
         
@@ -19,7 +19,7 @@ class ModuleManager:
 
         return func
     
-    def load(self):
+    def load(self) -> None:
         self.func_dist.clear()
         for i in os.listdir(os.path.join('.', 'plugins')):
             if os.path.splitext(i)[1] == ".py":
