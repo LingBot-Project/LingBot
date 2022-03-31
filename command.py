@@ -33,7 +33,10 @@ class Command:
         :param func: function
                      func:def func(sender: Message) -> None:
         """
-        COMMAND_LIST.append(name)
+        if name is list:
+            COMMAND_LIST.append(i for i in name)
+        else:
+            COMMAND_LIST.append(name)
         COMMAND_DICT[name] = func
 
     @staticmethod
