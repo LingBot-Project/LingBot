@@ -1,5 +1,4 @@
 # -*- coding: UTF-8 -*-
-"""TODO 留个悬念(其实是我没想好怎么写)"""
 import os
 
 COMMAND_LIST = []
@@ -27,7 +26,7 @@ class Command:
             pass
 
     @staticmethod
-    def add_command(name: str = '', func: any = None) -> None:
+    def add_command(name='', func: any = None) -> None:
         """
         :param name: the command's name
         :param func: function
