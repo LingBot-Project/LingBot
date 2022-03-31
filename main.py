@@ -327,7 +327,7 @@ def on_message2(ws, message):
             quit()
 
         if msg.text == "!reload" and msg.sender.isadmin():
-            Message.fastReply("正在尝试这么做...")
+            msg.fastReply("正在尝试这么做...")
             cmd = command.Command()
 
         if command_list[0] in command.COMMAND_LIST:
