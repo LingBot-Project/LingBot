@@ -1,4 +1,8 @@
 COMMAND = "!hyp"
+import hypixel, requests, json
+
+hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
+hypixel.setCacheTime(30.0)
 
 def func(msg, command_list):
     if msg.text == "!hyp players":

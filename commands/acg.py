@@ -1,4 +1,5 @@
 COMMAND = ["一话", "必应壁纸", "二次元", "一语", "一英"]
+import requests, base64
 
 def acg_img():
     try:

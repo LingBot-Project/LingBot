@@ -8,7 +8,6 @@ import re
 import threading
 import time
 import traceback
-import hypixel
 import psutil
 import tcping
 import command
@@ -19,9 +18,6 @@ import websocket
 from mcstatus import MinecraftServer
 from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
-
-hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
-hypixel.setCacheTime(3600.0)
 
 SERVER_ADDR = "127.0.0.1"
 ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566,1474002938]
