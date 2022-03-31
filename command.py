@@ -34,10 +34,12 @@ class Command:
                      func:def func(sender: Message) -> None:
         """
         if name is list:
-            COMMAND_LIST.append(i for i in name)
+            for i in name:
+                COMMAND_LIST.append(i)
+                COMMAND_DICT[i] = func
         else:
             COMMAND_LIST.append(name)
-        COMMAND_DICT[name] = func
+            COMMAND_DICT[name] = func
 
     @staticmethod
     def get_function(name: str) -> any:
@@ -46,6 +48,7 @@ class Command:
         :return: return the func of the name in dict
         """
         return COMMAND_DICT.get(name)
+
 
 if __name__ == '__main__':
     c = Command()

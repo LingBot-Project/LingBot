@@ -1,4 +1,4 @@
-COMMAND = "reload"
+COMMAND = ["!reload", "!rel"]
 
 
 def func(Message):
