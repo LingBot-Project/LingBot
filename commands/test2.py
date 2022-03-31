@@ -1,4 +1,4 @@
-COMMAND = "!test2"
+COMMAND = ["!test2", "!teeeest"]
 
 
 def func(msg):
