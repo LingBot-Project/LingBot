@@ -46,7 +46,7 @@ IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 REPEATER = []
 ANTI_AD = r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|晋商|禁商|盒子更新后|跑路|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|交流群|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|Q[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺"
-
+cmd = command.Command()
 
 class Group:
     def __init__(self, gid):
@@ -239,7 +239,7 @@ def acg_img():
 def on_message2(ws, message):
     global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS
     msg = Message(message)
-    cmd = command.Command()
+
     try:
         # 处理消息内容
         if msg.text == "":
@@ -330,6 +330,7 @@ def on_message2(ws, message):
             for _i in command.COMMAND_LIST:
                 if msg.text in _i:
                     command.Command.get_function(_i)(msg)
+                    return
 
         if msg.text in ["!test", "凌状态"]:
             msg.fastReply(
