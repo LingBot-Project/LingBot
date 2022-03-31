@@ -6,6 +6,7 @@ import datetime
 import json
 import random
 import re
+from socket import if_nameindex
 import threading
 import time
 import traceback
@@ -961,5 +962,5 @@ def main():
         print(traceback.format_exc())
         quit()
 
-
-main()
+if __name__ == "__main__":
+    main()
