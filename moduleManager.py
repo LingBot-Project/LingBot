@@ -12,9 +12,6 @@ class ModuleManager:
         if name in self.func_dist:
             raise DuplicateNameException()
         
-        if name is not str:
-            raise TypeError()
-        
         self.func_dist[name] = func
 
         return func
