@@ -19,8 +19,7 @@ class Command:
                         f = open(f"commands/{i}", "r", encoding="utf-8")
 
                         print(f"tried to load: {p}")
-                        _ = __import__(f"commands.{p}")
-                        Command.add_command(_.COMMAND, _.func)
+                        exec(f.read() + '\nCommand.add_command(COMMAND, func)')
 
                         f.close()
                     except Exception as exc:
