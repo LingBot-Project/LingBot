@@ -228,13 +228,13 @@ def strQ2B(ustring):
     return rstring
 
 
-def acg_img():
-    try:
-        a = "https://img.xjh.me/random_img.php?return=json"
-        a1 = requests.get(url=a).json()
-        return base64.b64encode(requests.get(url='https:' + a1["img"]).content).decode()
-    except Exception as e:
-        return text2image("获取图片失败\n" + traceback.format_exc())
+# def acg_img():
+#     try:
+#         a = "https://img.xjh.me/random_img.php?return=json"
+#         a1 = requests.get(url=a).json()
+#         return base64.b64encode(requests.get(url='https:' + a1["img"]).content).decode()
+#     except Exception as e:
+#         return text2image("获取图片失败\n" + traceback.format_exc())
 
 
 def on_message2(ws, message):
