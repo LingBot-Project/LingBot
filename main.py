@@ -239,6 +239,7 @@ def acg_img():
 def on_message2(ws, message):
     global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS
     msg = Message(message)
+    cmd = command.Command()
     try:
         # 处理消息内容
         if msg.text == "":

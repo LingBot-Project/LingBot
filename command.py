@@ -20,7 +20,7 @@ class Command:
 
                         print(f"tried to load: {p}")
                         _ = __import__(f"commands.{p}")
-                        Command.add_command(_.name, _.func)
+                        Command.add_command(_.COMMAND, _.func)
 
                         f.close()
                     except Exception as exc:
@@ -44,3 +44,6 @@ class Command:
         :return: return the func of the name in dict
         """
         return COMMAND_DICT.get(name)
+
+if __name__ == '__main__':
+    c = Command()
