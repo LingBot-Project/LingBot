@@ -1,5 +1,8 @@
-# Most
-from main import *
+# Must
+from main import Modules
+
+from PIL import Image, ImageDraw, ImageFont
+import requests, base64, random, traceback
 
 def text2image(text):
     imageuid = str(random.randint(10000000, 9999999999))

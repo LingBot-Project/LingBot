@@ -245,6 +245,14 @@ def on_message2(ws, message):
         # 处理消息内容
         if msg.text == "":
             return
+        
+        if msg.id in CACHE_MESSAGE:
+            if len(CACHE_MESSAGE) >= 1000:
+                CACHE_MESSAGE.clear()
+            return
+        else:
+            CACHE_MESSAGE.append(msg.id)
+        
         if time.time() - MESSAGE_PRE_MINUTE[0] >= 60:
             MESSAGE_PRE_MINUTE = [time.time(), 1]
         else:
