@@ -324,9 +324,11 @@ def on_message2(ws, message):
         if msg.text == "!quit" and msg.sender.isadmin():
             msg.fastReply("正在尝试这么做...")
             quit()
-        for _ in command.COMMAND_LIST:
-            if _ == command_list[0]:
-                command.Command.get_function(_)(msg)
+
+        if command_list[0] in command.COMMAND_LIST:
+            for _i in command.COMMAND_LIST:
+                if msg.text in _i:
+                    command.Command.get_function(_i)(msg)
 
         if msg.text in ["!test", "凌状态"]:
             msg.fastReply(
