@@ -1,8 +1,6 @@
 # Most
 from main import *
 
-from PIL import Image, ImageDraw, ImageFont
-
 def text2image(text):
     imageuid = str(random.randint(10000000, 9999999999))
     fontSize = 22
