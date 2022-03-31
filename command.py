@@ -8,6 +8,8 @@ COMMAND_DICT = {}
 class Command:
     def __init__(self):
         # TODO: 遍历commands下的每一个py文件(__init__除外)，将文件的name和 func这个函数的地址添加到列表和字典中
+        global COMMAND_LIST, COMMAND_DICT
+        del COMMAND_LIST, COMMAND_DICT
         for _, _, file_names in os.walk("commands/"):
             for i in file_names:
                 if i[-3:] == ".py":
