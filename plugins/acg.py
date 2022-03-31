@@ -32,11 +32,11 @@ def acg_img():
     except Exception as e:
         return text2image("获取图片失败\n" + traceback.format_exc())
 
-@ModuleManager.module("二次元")
+@ModuleManager.module(name="二次元")
 def acg(msg, _):
     msg.fastReply("[CQ:image,file=base64://" + acg_img() + "]")
 
-@ModuleManager.module("一英")
+@ModuleManager.module(name="一英")
 def one_eng(msg, _):
     a = requests.get("http://open.iciba.com/dsapi/").json()
     msg.fastReply(f'{a["content"]}\n{a["note"]}')
