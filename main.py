@@ -8,6 +8,7 @@ import re
 import threading
 import time
 import traceback
+import hypixel
 import psutil
 import tcping
 import command
@@ -18,6 +19,9 @@ import websocket
 from mcstatus import MinecraftServer
 from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
+
+hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
+hypixel.setCacheTime(30.0)
 
 SERVER_ADDR = "127.0.0.1"
 ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566,1474002938]
@@ -222,6 +226,16 @@ def strQ2B(ustring):
         rstring += chr(inside_code)
     return rstring
 
+
+def acg_img():
+    try:
+        a = "https://img.xjh.me/random_img.php?return=json"
+        a1 = requests.get(url=a).json()
+        return base64.b64encode(requests.get(url='https:' + a1["img"]).content).decode()
+    except Exception as e:
+        return text2image("获取图片失败\n" + traceback.format_exc())
+
+
 def on_message2(ws, message):
     global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS, cmd
     msg = Message(message)
@@ -318,18 +332,23 @@ def on_message2(ws, message):
 
         if msg.text in ["!test", "凌状态"]:
             msg.fastReply(
-                "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%\ncommand.COMMAND_LIST: {}".format(
+                "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(
                     ALL_MESSAGE,
                     getRuntime(),
                     timePreMessage,
                     ALL_AD,
-                    (ALL_AD / ALL_MESSAGE) * 100,
-                    command.COMMAND_LIST
+                    (ALL_AD / ALL_MESSAGE) * 100
                 )
             )
 
         if command_list[0] in ["!help", "菜单"]:
             msg.fastReply("请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
+
+        if msg.text == "一语":
+            msg.fastReply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
+
+        if msg.text == "!testzb":
+            goodmor(target=msg.group.id)
 
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
@@ -383,6 +402,44 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 im.save(imageuid + "_cache.png")
                 with open(imageuid + "_cache.png", "rb") as f:
                     msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
+
+        if msg.text == "一英":
+            msg.fastReply(requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
+                          requests.get("http://open.iciba.com/dsapi/").json()["note"])
+
+        if msg.text == "二次元":
+            msg.fastReply("[CQ:image,file=base64://" + acg_img() + "]")
+
+        if msg.text == "必应壁纸":
+            msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(
+                requests.get("http://www.xgstudio.xyz/api/bing.php").content).decode() + "]")
+
+        if msg.text == "一话":
+            req1 = requests.get("http://open.iciba.com/dsapi/").json()
+            msg.fastReply(
+                requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
+            msg.fastReply(req1["content"] + "\n" + req1["note"])
+        
+        if msg.text == "!hyp players":
+            _all_modes = hypixel.getJSON("counts")
+            _all_player = _all_modes["playerCount"]
+            _all_modes = _all_modes["games"]
+            _all_players = []
+            for i in _all_modes:
+                _all_players.append(_all_modes[i]["players"])
+            
+            temp_msg = ""
+            temp_list = []
+            for i in _all_modes.items():
+                temp_list.append(i)
+            for i in range(len(_all_modes)):
+                try:
+                    temp_msg += "{}: {} ({}%)\n".format(temp_list[i][0], _all_players[i], round((_all_players[i]/_all_player)*100, 2))
+                except Exception as e:
+                    print(e)
+            print(temp_msg)
+            msg.fastReply("[CQ:image,file=base64://{}]".format(text2image(temp_msg)))
+            return
         
         if command_list[0] == "!repeater":
             if msg.sender.isadmin():
@@ -477,6 +534,33 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             if server.favicon is not None:
                 aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,", "base64://") + "]"
             msg.fastReply(aaa)
+
+        if command_list[0] == "!hypban":
+            msg.fastReply("本功能已经停止使用了")
+            return
+            # if len(command_list)<=2:
+            #     msg.fastReply("正确格式:#hypban <USERNAME> <BANID>")
+            # else:
+            #     if msg.sender.id not in BANCHECK_UID or msg.sender.id in ADMIN_LIST:
+            #         BANCHECK_UID[msg.sender.id] = time.time()
+            #     elif time.time() - BANCHECK_UID[msg.sender.id] <= 60:
+            #         msg.fastReply("进入冷却时间 可在{}秒后使用".format(round(60.0 - (time.time() - BANCHECK_UID[msg.sender.id]), 2)))
+            #         return
+            #     msg.fastReply("请稍等 正在向远程服务器发送请求")
+            #     userName = command_list[1]
+            #     BanID = command_list[2].replace("#", "")
+            #     while True:
+            #         print("Username:{} BanID:{}".format(userName, BanID))
+            #         a = requests.get("http://127.0.0.1/hypban.php?name={0}&banid={1}&type=api".format(userName, BanID), headers={'Host': 'api.getfdp.today'}).text
+            #         if a.find("too many request") == -1:
+            #             break
+            #         time.sleep(3)
+            #     print(a)
+            #     if a.find("ERR|") != -1:
+            #         msg.fastReply(a)
+            #     else:
+            #         BANCHECK_UID[msg.sender.id] = time.time()
+            #         msg.fastReply( "[CQ:image,file=base64://"+text2image(a)+"]")
 
         if command_list[0] == "!send":
             if msg.sender.isadmin():
@@ -592,12 +676,87 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     files.append(
                         "{}: {}".format(i["name"], i["browser_download_url"].replace("github.com", "hub.fastgit.org")))
                 msg.fastReply("Version: {}\n".format(a["name"]) + "\n".join(files))
-                
-        if command_list[0] in command.COMMAND_LIST:
-            for _i in command.COMMAND_LIST:
-                if msg.text in _i:
-                    command.Command.get_function(_i)(msg,command_list)
-                    return
+        if command_list[0] == "!hyp":
+            if len(command_list) == 1:
+                msg.fastReply("格式貌似有点问题?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
+                return
+
+            # 获取玩家信息
+            try:
+                player1 = hypixel.Player(command_list[1])
+            except hypixel.PlayerNotFoundException:
+                msg.fastReply("貌似没有这个玩家?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
+                return
+            pI = player1.getPlayerInfo()
+            print(pI)
+            if "lastLogin" not in pI:
+                pI["lastLogin"] = 0
+            if 'karma' not in pI:
+                pI["karma"] = "0"
+            playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
+
+            lastLogout = 0
+            if "lastLogout" in player1.JSON:
+                lastLogout = player1.JSON["lastLogout"]
+            
+            onlineMode = None
+            try:
+                _onlineStatus = hypixel.getJSON("status", uuid=pI["uuid"])["session"]
+                _isOnline = _onlineStatus["online"]
+                if _isOnline:
+                    onlineMode = "Online: {} - {} ({})".format(_onlineStatus["gameType"], _onlineStatus["mode"], _onlineStatus["map"])
+                else:
+                    onlineMode = "Offline"
+            except:
+                pass
+
+            pmsg = """注: 当前为测试版本 不代表最终体验
+---查询结果---
+玩家名称: [{rank}]{name}
+等级: {level}
+Karma(人品值): {karma}
+上次登陆: {last_login}
+上次登出: {lastLogout}[{onlineMode}]
+首次登陆: {first_login}""".format(
+                rank = player1.getRank()["rank"].replace(" PLUS", "+"),
+                name = pI["displayName"],
+                level = player1.getLevel(),
+                karma = pI["karma"],
+                last_login = datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                first_login = datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
+                onlineMode = onlineMode,
+                lastLogout = datetime.datetime.utcfromtimestamp(lastLogout / 1000).strftime("%Y-%m-%d %H:%M:%S"))
+
+            if playerSkin.status_code == 200:
+                pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
+
+            try:
+                sbplayer = hypixel.getJSON('skyblock/profiles', uuid=pI['uuid'])
+                profile_id = sbplayer["profiles"][0]["profile_id"]
+                sbprofile = sbplayer["profiles"][0]["members"][profile_id]
+                finished_quests = 0
+                for i in sbprofile["quests"]:
+                    if sbprofile["quests"][i]["status"] == "COMPLETE":
+                        finished_quests += 1
+                pmsg += """\n---SkyBlock---
+Profile ID: {profile_id}
+上次保存: {last_save}
+第一次进入: {first_join}
+Coins: {coin_purse}
+已经完成的任务: {finished_quests}
+进入过的区域: {visited_zones}个
+死亡次数: {death_count}""".format(profile_id=profile_id,
+                              last_save=datetime.datetime.utcfromtimestamp(sbprofile["last_save"] / 1000).strftime(
+                                  "%Y-%m-%d %H:%M:%S"),
+                              first_join=datetime.datetime.utcfromtimestamp(sbprofile["first_join"] / 1000).strftime(
+                                  "%Y-%m-%d %H:%M:%S"),
+                              coin_purse=sbprofile["coin_purse"],
+                              finished_quests=finished_quests,
+                              visited_zones=len(sbprofile["visited_zones"]),
+                              death_count=sbprofile["death_count"])
+            except:
+                print(traceback.format_exc())
+            msg.fastReply(pmsg)
 
         BVID = re.match(BILI_BV_RE, msg.text)
         if BVID is not None:
@@ -647,6 +806,11 @@ UP主: {} ({})
             with open(imageuid + "_cache.png", "rb") as f:
                 msg.fastReply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
             return
+        if command_list[0] in command.COMMAND_LIST:
+            for _i in command.COMMAND_LIST:
+                if msg.text in _i:
+                    command.Command.get_function(_i)(msg)
+                    return
     except Exception as e:
         a = traceback.format_exc()
         msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(text2image(a)))
