@@ -1,8 +1,16 @@
 # -*- coding: UTF-8 -*-
 import os
+import traceback
 
 COMMAND_LIST = []
 COMMAND_DICT = {}
+
+def cl(a):
+    try:
+        s = ["text", "text"] + a
+        return True
+    except:
+        return False
 
 
 class Command:
@@ -25,7 +33,8 @@ class Command:
 
                         f.close()
                     except Exception as exc:
-                        print(f"here are some problems in loading command: {p}'s function, {exc}")
+                        print(f"here are some problems in loading command: {p}'s function")
+                        print(traceback.format_exc())
             pass
 
     @staticmethod
@@ -35,7 +44,7 @@ class Command:
         :param func: function
                      func:def func(sender: Message, command_list: list) -> None:
         """
-        if name is list:
+        if name is list or cl(name):
             for i in name:
                 COMMAND_LIST.append(i)
                 COMMAND_DICT[i] = func
