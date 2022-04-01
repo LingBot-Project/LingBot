@@ -47,6 +47,7 @@ FEEDBACKS = {}
 REPEATER = []
 SPAM2_MSG = {}
 SPAM2_VL = {}
+# URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
 ANTI_AD = r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(" \
           r"盒子)vape检测|内部|防封|封号|waibu|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(" \
           r"个人)创业|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5," \
@@ -374,7 +375,7 @@ def on_message2(ws, message):
             SPAM2_MSG[msg.sender.id] = msg.text
         if msg.sender.id not in SPAM2_VL:
             SPAM2_VL[msg.sender.id] = 0
-        if get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower()) <= 0.15 and len(msg.text) >= 5 and not msg.text.startswith("!"):
+        if get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower()) <= 0.15 and len(msg.text) >= 5:
             SPAM2_VL[msg.sender.id] += 7
 
             if SPAM2_VL[msg.sender.id] >= 20:
