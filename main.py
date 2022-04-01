@@ -20,7 +20,7 @@ from mcstatus import MinecraftServer
 
 import tcping
 
-# hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
+hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(30.0)
 
 SERVER_ADDR = "127.0.0.1"
@@ -51,8 +51,8 @@ SPAM2_VL = {}
 ANTI_AD = r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(" \
           r"盒子)vape检测|内部|防封|封号|waibu|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(" \
           r"个人)创业|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5," \
-          r"10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|hyt|花雨庭|hyp(ixel)|海像素|快乐像素|.*重拳出击.*|回归|暴打|vulcan(" \
-          r"反作弊)绕过|aac绕过|watch( )dog|入侵|看门狗绕过|对刀|不服|稳定奔放 "
+          r"10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打" \
+          r"|对刀|不服|稳定奔放 "
 
 spam2_vl_reset_cool_down = time.time()
 
@@ -187,7 +187,10 @@ def spammer_checker(msg):
     else:
         ANTISPAMMER[group][user][0] = time.time()
         ANTISPAMMER[group][user][1] = 1
-    if ANTISPAMMER[group][user][1] >= 5:
+    if ANTISPAMMER[group][user][1] >= 8:
+        ANTISPAMMER[group][user] = [0, 0]
+        return True
+    elif SPAM2_VL[msg.sender.id] >= 50 and ANTISPAMMER[group][user][1] >= 4:
         ANTISPAMMER[group][user] = [0, 0]
         return True
     else:
@@ -386,18 +389,18 @@ def on_message2(ws, message):
                 if msg.sender.isadmin():
                     sendMessage("{}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                                 target_group=1019068934)
-                msg.recall()
+                # msg.recall()
                 if SPAM2_VL[msg.sender.id] >= 100:
                     msg.mute(259200)
-                else:
-                    msg.mute(600)
-                msg.fast_reply("您貌似在刷屏?", reply=False)
+                # else:
+                #     msg.mute(600)
+                # msg.fast_reply("您貌似在刷屏?", reply=False)
                 return
             SPAM2_MSG[msg.sender.id] = msg.text
         else:
             SPAM2_MSG[msg.sender.id] = msg.text
             if SPAM2_VL[msg.sender.id] > 0:
-                SPAM2_VL[msg.sender.id] -= 1
+                SPAM2_VL[msg.sender.id] -= 2
 
         if msg.sender.id in BLACK_LIST:
             msg.mute(60)
