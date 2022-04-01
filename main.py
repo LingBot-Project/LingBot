@@ -45,9 +45,11 @@ ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 REPEATER = []
-SPAM2_MSG = {}
-SPAM2_VL = {}
-ANTI_AD = r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|+q(:)[0-9]{5,10}|免费(获取)|.*launcher|.*小卖铺|cpd(d)|.*重拳出击.*|回归|暴打|入侵|看门狗|对刀|不服"
+ANTI_AD = r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(" \
+          r"盒子)vape检测|内部|防封|封号|waibu|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(" \
+          r"个人)创业|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5," \
+          r"10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|hyt|花雨庭|hyp(ixel)|海像素|快乐像素|.*重拳出击.*|回归|暴打|vulcan(" \
+          r"反作弊)绕过|aac|watch( )dog|入侵|看门狗|对刀|不服 "
 
 
 class Group:
@@ -404,11 +406,6 @@ def on_message2(ws, message):
 
         if msg.text == "!testzb":
             goodmor(target=msg.group.id)
-        
-        if msg.text == "!rickroll":
-            msg.fast_reply("https://www.bilibili.com/video/BV1uT4y1P7CX")
-            # 愚人节彩蛋LOL
-            return
 
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
@@ -480,7 +477,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fast_reply(
                 requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
             msg.fast_reply(req1["content"] + "\n" + req1["note"])
-     
+
         if msg.text == "!hyp players":
             _all_modes = hypixel.getJSON("counts")
             _all_player = _all_modes["playerCount"]
@@ -820,23 +817,6 @@ Coins: {coin_purse}
             except:
                 print(traceback.format_exc())
             msg.fast_reply(pmsg)
-
-        if msg.sender.id not in SPAM2_MSG:
-            SPAM2_MSG[msg.sender.id] = msg.text
-            return
-        if msg.sender.id not in SPAM2_VL:
-            SPAM2_VL[msg.sender.id] = 0
-        if get_min_distance(SPAM2_MSG[msg.sender.id], msg.text) <= 0.15:
-            if msg.sender.isadmin():
-                sendMessage("{}发送的一条消息疑似重复, 且此人才超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
-                            target_group=308089090)
-                return
-            msg.recall()
-            msg.mute(600)
-            SPAM2_VL[msg.sender.id] += 1
-            msg.fast_reply("您貌似在刷屏", at=False, reply=False)
-        else:
-            SPAM2_MSG[msg.sender.id] = msg.text
     except Exception as e:
         a = traceback.format_exc()
         print(a)
