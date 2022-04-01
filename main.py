@@ -53,6 +53,8 @@ ANTI_AD = r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|�
           r"10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|hyt|花雨庭|hyp(ixel)|海像素|快乐像素|.*重拳出击.*|回归|暴打|vulcan(" \
           r"反作弊)绕过|aac|watch( )dog|入侵|看门狗|对刀|不服 "
 
+spam2_vl_reset_cool_down = time.time()
+
 
 class Group:
     def __init__(self, gid):
@@ -292,7 +294,7 @@ def acg_img():
 
 
 def on_message2(ws, message):
-    global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS, cmd
+    global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS, cmd, spam2_vl_reset_cool_down
     msg = Message(message)
 
     try:
@@ -824,6 +826,10 @@ Coins: {coin_purse}
             except:
                 print(traceback.format_exc())
             msg.fast_reply(pmsg)
+
+        if time.time() > spam2_vl_reset_cool_down + 600:
+            SPAM2_VL.clear()
+            spam2_vl_reset_cool_down = time.time()
 
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
