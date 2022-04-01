@@ -438,7 +438,7 @@ def on_message2(ws, message):
             goodmor(target=msg.group.id)
         
         if msg.text == "!rickroll":
-            msg.fast_reply("https://www.bilibili.com/video/BV1uT4y1P7CX")
+            msg.fast_reply("https://lsp.abcdcreeper.xyz")
             # 愚人节彩蛋LOL
             return
         if msg.text == "!random":
