@@ -226,7 +226,7 @@ def get_min_distance(word1, word2):
         i += 1
     # print(f2, '\n\n', f3, '\n\n', f1, '\n', "**"*20)
     i = 1
-    j = 1
+    del f3, f2
     while i <= m:
         j = 1
         while j <= n:
