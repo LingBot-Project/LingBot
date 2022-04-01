@@ -840,6 +840,7 @@ Coins: {coin_purse}
                 msg.recall()
                 msg.mute(600)
                 msg.fast_reply("您貌似在刷屏?", reply=False)
+                SPAM2_VL[msg.sender.id] = 0
                 return
             SPAM2_MSG[msg.sender.id] = msg.text
         else:
