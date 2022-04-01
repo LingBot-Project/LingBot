@@ -192,6 +192,7 @@ def spammer_checker(msg):
         return True
     elif SPAM2_VL[msg.sender.id] >= 50 and ANTISPAMMER[group][user][1] >= 4:
         ANTISPAMMER[group][user] = [0, 0]
+        SPAM2_VL[msg.sender.id] -= 5
         return True
     else:
         if msg.text.count("\n") >= 15:
@@ -383,7 +384,7 @@ def on_message2(ws, message):
         if _spam_cre <= 0.15 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
             SPAM2_VL[msg.sender.id] += 10
             if _spam_cre <= 0.001:
-                SPAM2_VL[msg.sender.id] += 25
+                SPAM2_VL[msg.sender.id] += 20
 
             if SPAM2_VL[msg.sender.id] >= 50:
                 if msg.sender.isadmin():
@@ -392,6 +393,8 @@ def on_message2(ws, message):
                 # msg.recall()
                 if SPAM2_VL[msg.sender.id] >= 190:
                     msg.mute(259200)
+                    SPAM2_VL[msg.sender.id] -= 20
+                    
                 # else:
                 #     msg.mute(600)
                 # msg.fast_reply("您貌似在刷屏?", reply=False)
