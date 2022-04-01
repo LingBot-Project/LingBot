@@ -132,6 +132,7 @@ class Message:
 
 
 def read_config():
+    sendMessage("restart sucuess", target_group=308089090)
     global ADMIN_LIST, BLACK_LIST, FEEDBACKS
     config = configparser.ConfigParser()
     config.read("config.ini")
