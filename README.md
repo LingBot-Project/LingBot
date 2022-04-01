@@ -4,11 +4,11 @@
  * 本项目基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp) 开发
 
 # 中文
-## 联系方式
+### 联系方式
 * LingBot官方群:308089090
 * 汐洛:1584784496
 
-## 开源协议
+### 开源协议
 * 本开源项目使用AGPL3.0开源协议
 * 其具体内容见LICENSE
 
