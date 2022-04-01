@@ -325,7 +325,7 @@ def on_message2(ws, message):
         if len(msg.text) > 35 and len(reScan) >= 2:
             if msg.sender.isadmin():
                 sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
-                            target_group=963024167)
+                            target_group=1019068934)
                 return
             msg.mute(3600)
             msg.recall()
@@ -385,7 +385,7 @@ def on_message2(ws, message):
             if SPAM2_VL[msg.sender.id] >= 50:
                 if msg.sender.isadmin():
                     sendMessage("{}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
-                                target_group=963024167)
+                                target_group=1019068934)
                 msg.recall()
                 if SPAM2_VL[msg.sender.id] >= 100:
                     msg.mute(259200)
