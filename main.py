@@ -827,19 +827,15 @@ Coins: {coin_purse}
                 print(traceback.format_exc())
             msg.fast_reply(pmsg)
 
-        if time.time() > spam2_vl_reset_cool_down + 600:
-            SPAM2_VL.clear()
-            spam2_vl_reset_cool_down = time.time()
-
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
             return
         if msg.sender.id not in SPAM2_VL:
             SPAM2_VL[msg.sender.id] = 0
         if get_min_distance(SPAM2_MSG[msg.sender.id], msg.text) <= 0.15 and len(msg.text) >= 5 and not msg.text.startswith("!"):
-            SPAM2_VL[msg.sender.id] += 1
+            SPAM2_VL[msg.sender.id] += 10
 
-            if SPAM2_VL[msg.sender.id] >= 2:
+            if SPAM2_VL[msg.sender.id] >= 20:
                 if msg.sender.isadmin():
                     sendMessage("{}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                                 target_group=308089090)
@@ -850,6 +846,8 @@ Coins: {coin_purse}
             SPAM2_MSG[msg.sender.id] = msg.text
         else:
             SPAM2_MSG[msg.sender.id] = msg.text
+            if SPAM2_VL[msg.sender.id] > 0:
+                SPAM2_VL[msg.sender.id] -= 1
             return
 
     except Exception as e:
