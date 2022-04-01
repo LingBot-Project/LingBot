@@ -415,6 +415,9 @@ def on_message2(ws, message):
             msg.fast_reply("https://www.bilibili.com/video/BV1uT4y1P7CX")
             # 愚人节彩蛋LOL
             return
+        if msg.text == "!random":
+            msg.fast_reply(str(random.randint(1, 100)))
+            return
 
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
