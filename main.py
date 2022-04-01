@@ -394,7 +394,6 @@ def on_message2(ws, message):
             SPAM2_MSG[msg.sender.id] = msg.text
             if SPAM2_VL[msg.sender.id] > 0:
                 SPAM2_VL[msg.sender.id] -= 1
-            return
 
         if msg.sender.id in BLACK_LIST:
             msg.mute(60)
