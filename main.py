@@ -379,7 +379,7 @@ def on_message2(ws, message):
         _spam_cre = get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
         if _spam_cre <= 0.15 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
             SPAM2_VL[msg.sender.id] += 10
-            if _spam_cre <= 0.01:
+            if _spam_cre <= 0.001:
                 SPAM2_VL[msg.sender.id] += 25
 
             if SPAM2_VL[msg.sender.id] >= 25:
