@@ -191,6 +191,55 @@ def spammer_checker(msg):
     return False
 
 
+def get_min_distance(word1, word2):
+    """
+    This is a part of anti spam.
+    IN TEST
+    :param word1: the word 1
+    :param word2: the word 2
+    :return: return the rate of two params' difference
+    """
+    m = len(word1)
+    n = len(word2)
+    if m == 0:
+        return n
+    if n == 0:
+        return m
+    f1 = {}
+    f2 = {}
+    f3 = {}
+    j = 0
+    while j <= n + 1:
+        f2[j] = j
+        f3[j] = 0
+        j += 1
+    f1[0] = f2
+
+    i = 0
+    while i <= m + 1:
+        f3[0] = i
+        f1[i] = dict(f3)
+        i += 1
+    # print(f2, '\n\n', f3, '\n\n', f1, '\n', "**"*20)
+    i = 1
+    j = 1
+    while i <= m:
+        j = 1
+        while j <= n:
+            if word1[i - 1] == word2[j - 1]:
+                f1[i][j] = f1[i - 1][j - 1]
+
+            else:
+                f1[i][j] = min(f1[i - 1][j - 1], f1[i - 1][j], f1[i][j - 1]) + 1
+            j += 1
+        i += 1
+    # for i in range(len(f1)):
+        # print(f1[i])
+        # pass
+    return f1[m][n] / len(word1)
+
+
+
 def get_runtime():
     nowtime = int(time.time())
     return "{}秒".format(int(nowtime - recordTime))
