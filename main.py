@@ -843,7 +843,10 @@ Coins: {coin_purse}
                     sendMessage("{}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                                 target_group=308089090)
                 msg.recall()
-                msg.mute(600)
+                if SPAM2_VL[msg.sender.id] >= 100:
+                    msg.mute(259200)
+                else:
+                    msg.mute(600)
                 msg.fast_reply("您貌似在刷屏?", reply=False)
                 return
             SPAM2_MSG[msg.sender.id] = msg.text
