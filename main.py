@@ -404,6 +404,11 @@ def on_message2(ws, message):
 
         if msg.text == "!testzb":
             goodmor(target=msg.group.id)
+        
+        if msg.text == "!rickroll":
+            msg.fast_reply("https://www.bilibili.com/video/BV1uT4y1P7CX")
+            # 愚人节彩蛋LOL
+            return
 
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
@@ -475,7 +480,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fast_reply(
                 requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
             msg.fast_reply(req1["content"] + "\n" + req1["note"])
-
+     
         if msg.text == "!hyp players":
             _all_modes = hypixel.getJSON("counts")
             _all_player = _all_modes["playerCount"]
