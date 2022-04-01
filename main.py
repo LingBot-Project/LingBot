@@ -52,7 +52,7 @@ ANTI_AD = r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|�
           r"盒子)vape检测|内部|防封|封号|waibu|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(" \
           r"个人)创业|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5," \
           r"10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|hyt|花雨庭|hyp(ixel)|海像素|快乐像素|.*重拳出击.*|回归|暴打|vulcan(" \
-          r"反作弊)绕过|aac|watch( )dog|入侵|看门狗|对刀|不服|稳定奔放 "
+          r"反作弊)绕过|aac绕过|watch( )dog|入侵|看门狗绕过|对刀|不服|稳定奔放 "
 
 spam2_vl_reset_cool_down = time.time()
 
@@ -375,14 +375,14 @@ def on_message2(ws, message):
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
         if msg.sender.id not in SPAM2_VL:
-            SPAM2_VL[msg.sender.id] = -20
+            SPAM2_VL[msg.sender.id] = 0
         _spam_cre = get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
         if _spam_cre <= 0.15 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
             SPAM2_VL[msg.sender.id] += 10
             if _spam_cre <= 0.001:
-                SPAM2_VL[msg.sender.id] += 15
+                SPAM2_VL[msg.sender.id] += 25
 
-            if SPAM2_VL[msg.sender.id] >= 25:
+            if SPAM2_VL[msg.sender.id] >= 50:
                 if msg.sender.isadmin():
                     sendMessage("{}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                                 target_group=308089090)
