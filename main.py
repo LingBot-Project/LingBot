@@ -406,6 +406,11 @@ def on_message2(ws, message):
 
         if msg.text == "!testzb":
             goodmor(target=msg.group.id)
+        
+        if msg.text == "!rickroll":
+            msg.fast_reply("https://www.bilibili.com/video/BV1uT4y1P7CX")
+            # 愚人节彩蛋LOL
+            return
 
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
