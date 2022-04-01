@@ -374,7 +374,7 @@ def on_message2(ws, message):
             SPAM2_MSG[msg.sender.id] = msg.text
         if msg.sender.id not in SPAM2_VL:
             SPAM2_VL[msg.sender.id] = 0
-        if get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower()) <= 0.15 and len(msg.text) >= 5 and not msg.text.startswith("!"):
+        if get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower()) <= 0.15 and len(msg.text) >= 5:
             SPAM2_VL[msg.sender.id] += 7
 
             if SPAM2_VL[msg.sender.id] >= 20:
