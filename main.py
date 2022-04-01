@@ -390,7 +390,7 @@ def on_message2(ws, message):
                     sendMessage("{}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                                 target_group=1019068934)
                 # msg.recall()
-                if SPAM2_VL[msg.sender.id] >= 100:
+                if SPAM2_VL[msg.sender.id] >= 190:
                     msg.mute(259200)
                 # else:
                 #     msg.mute(600)
