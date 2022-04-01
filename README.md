@@ -3,7 +3,7 @@
  * 机器人使用说明请移步 [Here](https://lingbot.guimc.ltd)
  * 本项目基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp) 开发
 
-#中文
+# 中文
 ## 联系方式
 * LingBot官方群:308089090
 * 汐洛:1584784496
