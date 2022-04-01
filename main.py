@@ -376,8 +376,11 @@ def on_message2(ws, message):
             SPAM2_MSG[msg.sender.id] = msg.text
         if msg.sender.id not in SPAM2_VL:
             SPAM2_VL[msg.sender.id] = 0
-        if get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower()) <= 0.15 and len(msg.text) >= 4:
+        _spam_cre = get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
+        if _spam_cre <= 0.15 and len(msg.text) >= 4:
             SPAM2_VL[msg.sender.id] += 10
+            if _spam_cre <= 0.01:
+                SPAM2_VL[msg.sender.id] += 25
 
             if SPAM2_VL[msg.sender.id] >= 25:
                 if msg.sender.isadmin():
