@@ -830,7 +830,7 @@ Coins: {coin_purse}
             return
         if msg.sender.id not in SPAM2_VL:
             SPAM2_VL[msg.sender.id] = 0
-        if get_min_distance(SPAM2_MSG[msg.sender.id], msg.text) <= 0.15:
+        if get_min_distance(SPAM2_MSG[msg.sender.id], msg.text) <= 0.15 and len(msg.text) >= 3:
             if msg.sender.isadmin():
                 sendMessage("{}发送的一条消息疑似重复, 且此人才超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                             target_group=308089090)
