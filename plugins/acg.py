@@ -5,21 +5,22 @@ import main
 from PIL import Image, ImageDraw, ImageFont
 import requests, base64, random, traceback
 
+
 def text2image(text):
     imageuid = str(random.randint(10000000, 9999999999))
-    fontSize = 22
+    font_size = 22
     max_w = 0
     lines = text.split('\n')
     # print(len(lines))
-    fontPath = r"/root/LingBot/a.ttf"
-    font = ImageFont.truetype(fontPath, fontSize)
+    font_path = r"/root/LingBot/a.ttf"
+    font = ImageFont.truetype(font_path, font_size)
     for i in lines:
         try:
             if max_w <= font.getmask(i).getbbox()[2]:
                 max_w = font.getmask(i).getbbox()[2]
         except:
             pass
-    im = Image.new("RGB", (max_w + 11, len(lines) * (fontSize + 8)), (255, 255, 255))
+    im = Image.new("RGB", (max_w + 11, len(lines) * (font_size + 8)), (255, 255, 255))
     dr = ImageDraw.Draw(im)
     dr.text((1, 1), text, font=font, fill="#000000")
     im.save(imageuid + ".cache.png")
@@ -35,13 +36,14 @@ def acg_img():
     except Exception as e:
         return text2image("获取图片失败\n" + traceback.format_exc())
 
+
 def acg(msg, _):
-    msg.fastReply("[CQ:image,file=base64://" + acg_img() + "]")
+    msg.fast_reply("[CQ:image,file=base64://" + acg_img() + "]")
 
 
 def one_eng(msg, _):
     a = requests.get("http://open.iciba.com/dsapi/").json()
-    msg.fastReply(f'{a["content"]}\n{a["note"]}')
+    msg.fast_reply(f'{a["content"]}\n{a["note"]}')
 
 
 main.Modules.register_module(one_eng, "一英")

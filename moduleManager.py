@@ -6,13 +6,14 @@ import os
 class DuplicateNameException(Exception):
     pass
 
+
 class ModuleManager:
     def __init__(self):
         self.func_dist = {}
 
     def register_module(self, func, name) -> None:
         self.func_dist[name] = func
-    
+
     def load(self) -> None:
         self.func_dist.clear()
         for i in os.listdir(os.path.join('.', 'plugins')):
