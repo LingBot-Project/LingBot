@@ -832,7 +832,7 @@ Coins: {coin_purse}
             return
         if msg.sender.id not in SPAM2_VL:
             SPAM2_VL[msg.sender.id] = 0
-        if get_min_distance(SPAM2_MSG[msg.sender.id], msg.text) <= 0.15 and len(msg.text) >= 5 and not msg.text.startswith("!"):
+        if get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower()) <= 0.15 and len(msg.text) >= 5 and not msg.text.startswith("!"):
             SPAM2_VL[msg.sender.id] += 10
 
             if SPAM2_VL[msg.sender.id] >= 20:
