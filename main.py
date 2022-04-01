@@ -205,8 +205,6 @@ def get_min_distance(word1, word2):
     :param word2: the word 2
     :return: return the rate of two params' difference
     """
-    word3 = list(word1)
-    word4 = list(word2)
     m = len(word1)
     n = len(word2)
     if m == 0:
@@ -234,7 +232,7 @@ def get_min_distance(word1, word2):
     while i <= m:
         j = 1
         while j <= n:
-            if word3[i - 1] == word4[j - 1]:
+            if word1[i - 1] == word2[j - 1]:
                 f1[i][j] = f1[i - 1][j - 1]
 
             else:
