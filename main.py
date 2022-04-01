@@ -369,6 +369,32 @@ def on_message2(ws, message):
                 msg.fast_reply("不要刷屏哟~~", reply=False)
         except:
             pass
+        
+        if msg.sender.id not in SPAM2_MSG:
+            SPAM2_MSG[msg.sender.id] = msg.text
+            return
+        if msg.sender.id not in SPAM2_VL:
+            SPAM2_VL[msg.sender.id] = 0
+        if get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower()) <= 0.15 and len(msg.text) >= 5 and not msg.text.startswith("!"):
+            SPAM2_VL[msg.sender.id] += 6
+
+            if SPAM2_VL[msg.sender.id] >= 20:
+                if msg.sender.isadmin():
+                    sendMessage("{}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
+                                target_group=308089090)
+                msg.recall()
+                if SPAM2_VL[msg.sender.id] >= 100:
+                    msg.mute(259200)
+                else:
+                    msg.mute(600)
+                msg.fast_reply("您貌似在刷屏?", reply=False)
+                return
+            SPAM2_MSG[msg.sender.id] = msg.text
+        else:
+            SPAM2_MSG[msg.sender.id] = msg.text
+            if SPAM2_VL[msg.sender.id] > 0:
+                SPAM2_VL[msg.sender.id] -= 1
+            return
 
         if msg.sender.id in BLACK_LIST:
             msg.mute(60)
@@ -829,32 +855,6 @@ Coins: {coin_purse}
             except:
                 print(traceback.format_exc())
             msg.fast_reply(pmsg)
-
-        if msg.sender.id not in SPAM2_MSG:
-            SPAM2_MSG[msg.sender.id] = msg.text
-            return
-        if msg.sender.id not in SPAM2_VL:
-            SPAM2_VL[msg.sender.id] = 0
-        if get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower()) <= 0.15 and len(msg.text) >= 5 and not msg.text.startswith("!"):
-            SPAM2_VL[msg.sender.id] += 10
-
-            if SPAM2_VL[msg.sender.id] >= 20:
-                if msg.sender.isadmin():
-                    sendMessage("{}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
-                                target_group=308089090)
-                msg.recall()
-                if SPAM2_VL[msg.sender.id] >= 100:
-                    msg.mute(259200)
-                else:
-                    msg.mute(600)
-                msg.fast_reply("您貌似在刷屏?", reply=False)
-                return
-            SPAM2_MSG[msg.sender.id] = msg.text
-        else:
-            SPAM2_MSG[msg.sender.id] = msg.text
-            if SPAM2_VL[msg.sender.id] > 0:
-                SPAM2_VL[msg.sender.id] -= 1
-            return
 
     except Exception as e:
         a = traceback.format_exc()
