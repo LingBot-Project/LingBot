@@ -768,11 +768,11 @@ Coins: {coin_purse}
             msg.fastReply(pmsg)
 
         if command_list[0] in Modules.func_dist:
-            Modules.func_dist[command_list[0]](msg, command_list)
+            exec("{}\n{}(msg, command_list)".format(Modules.func_dist[command_list[0]][0], Modules.func_dist[command_list[0]][1]))
     except Exception as e:
         a = traceback.format_exc()
-        msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(text2image(a)))
         print(a)
+        msg.fastReply("很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(text2image(a)))
 
 
 def mutePerson(group, qq_number, mute_time):
