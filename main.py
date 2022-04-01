@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
-from ast import Mod
-import configparser
 import base64
+import configparser
 import datetime
 import json
 import random
@@ -9,17 +8,17 @@ import re
 import threading
 import time
 import traceback
-import hypixel
-import psutil
-import tcping
 from io import BytesIO
 
+import hypixel
+import psutil
 import requests
 import websocket
-from mcstatus import MinecraftServer
 from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
-from moduleManager import *
+from mcstatus import MinecraftServer
+
+import tcping
 
 # hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(30.0)
@@ -51,7 +50,6 @@ ANTI_AD = r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|�
           r"个人)创业|带价私聊|出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5," \
           r"10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|hyt|花雨庭|hyp(ixel)|海像素|快乐像素|.*重拳出击.*|回归|暴打|vulcan(" \
           r"反作弊)绕过|aac|watch( )dog|入侵|看门狗|对刀|不服 "
-Modules = ModuleManager()
 
 
 class Group:
@@ -233,13 +231,13 @@ def strQ2B(ustring):
     return rstring
 
 
-# def acg_img():
-#     try:
-#         a = "https://img.xjh.me/random_img.php?return=json"
-#         a1 = requests.get(url=a).json()
-#         return base64.b64encode(requests.get(url='https:' + a1["img"]).content).decode()
-#     except Exception as e:
-#         return text2image("获取图片失败\n" + traceback.format_exc())
+def acg_img():
+    try:
+        a = "https://img.xjh.me/random_img.php?return=json"
+        a1 = requests.get(url=a).json()
+        return base64.b64encode(requests.get(url='https:' + a1["img"]).content).decode()
+    except Exception as e:
+        return text2image("获取图片失败\n" + traceback.format_exc())
 
 
 def on_message2(ws, message):
@@ -340,10 +338,6 @@ def on_message2(ws, message):
             msg.fast_reply("正在尝试这么做...")
             quit()
 
-        if msg.text == "!reload" and msg.sender.isadmin():
-            Modules.load()
-            msg.fast_reply("Reloaded!")
-
         if msg.text in ["!test", "凌状态"]:
             msg.fast_reply(
                 "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(
@@ -418,12 +412,12 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 with open(imageuid + "_cache.png", "rb") as f:
                     msg.fast_reply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
 
-        # if msg.text == "一英":
-        #     msg.fastReply(requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
-        #                   requests.get("http://open.iciba.com/dsapi/").json()["note"])
+        if msg.text == "一英":
+            msg.fast_reply(requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
+                           requests.get("http://open.iciba.com/dsapi/").json()["note"])
 
-        # if msg.text == "二次元":
-        #     msg.fastReply("[CQ:image,file=base64://" + acg_img() + "]")
+        if msg.text == "二次元":
+            msg.fast_reply("[CQ:image,file=base64://" + acg_img() + "]")
 
         if msg.text == "必应壁纸":
             msg.fast_reply("[CQ:image,file=base64://" + base64.b64encode(
@@ -680,9 +674,9 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 updAuthor = "{} ({})".format(actionInfo["head_commit"]["author"]["name"],
                                              actionInfo["head_commit"]["author"]["email"])
                 msg.fast_reply("Update Time:{}\n"
-                              "Update Message:{}\n"
-                              "Author:{}\n"
-                              "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(
+                               "Update Message:{}\n"
+                               "Author:{}\n"
+                               "Download URL:https://nightly.link/UnlegitMC/FDPClient/actions/runs/{}/FDPClient.zip\n".format(
                     upd_time, updMsg, updAuthor, objectIDs[0]))
             elif command_list[1] == "release":
                 url = "https://api.github.com/repos/UnlegitMC/FDPClient/releases/latest"
@@ -774,9 +768,6 @@ Coins: {coin_purse}
             except:
                 print(traceback.format_exc())
             msg.fast_reply(pmsg)
-
-        if command_list[0] in Modules.func_dist:
-            Modules.func_dist[command_list[0]](msg, command_list)
     except Exception as e:
         a = traceback.format_exc()
         print(a)
@@ -959,7 +950,6 @@ def main():
         print("Starting... (4/5)")
         t3.start()
         print("Starting... (5/5)")
-        Modules.load()
         print("Bot Ready!")
         while True:
             time.sleep(3600)
