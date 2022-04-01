@@ -21,20 +21,20 @@
 * 开源所有使用了我们代码的项目
 * 你所使用我们代码的项目也需要使用AGPL开源协议
 
-#English
-###Contact us
+# English
+### Contact us
 * LingBot QQ Group：308089090
 * 汐洛 Xi Luo：1584784496(QQ)
 
-###Open source protocol
+### Open source protocol
 * This open source project uses the AGPL3.0 open source license
 * For details see LICENSE
 
-###You can
+### You can
 * Use our code
 * Share our code
 * Compile new code based on our code
 
-###You must to
+### You must to
 * Open source all projects that use our code
 * The projects you use our code also need to use the AGPL open source license
