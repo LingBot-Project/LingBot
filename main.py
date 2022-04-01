@@ -150,7 +150,7 @@ def read_config():
         FEEDBACKS = config["FEEDBACKS"]
     except:
         pass
-    sendMessage("restart successful", target_group=308089090)
+    sendMessage("restart successful", target_group=963024167)
 
 
 def save_config():
@@ -325,7 +325,7 @@ def on_message2(ws, message):
         if len(msg.text) > 35 and len(reScan) >= 2:
             if msg.sender.isadmin():
                 sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
-                            target_group=308089090)
+                            target_group=963024167)
                 return
             msg.mute(3600)
             msg.recall()
@@ -385,7 +385,7 @@ def on_message2(ws, message):
             if SPAM2_VL[msg.sender.id] >= 50:
                 if msg.sender.isadmin():
                     sendMessage("{}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
-                                target_group=308089090)
+                                target_group=963024167)
                 msg.recall()
                 if SPAM2_VL[msg.sender.id] >= 100:
                     msg.mute(259200)
@@ -590,7 +590,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     return
                 elif int(command_list[2]) == 1584784496:
                     msg.fast_reply("不可以这么干哟~~")
-                    sendMessage("{}尝试把您(Owner)从超管列表删除".format(msg.sender.id), target_group=868218262)
+                    sendMessage("{}尝试把您(Owner)从超管列表删除".format(msg.sender.id), target_group=963024167)
                     return
                 ADMIN_LIST.remove(int(command_list[2]))
                 msg.fast_reply("操作成功")
@@ -607,7 +607,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     return
                 elif int(command_list[2]) == 1584784496:
                     msg.fast_reply("不可以这么干哦~~")
-                    sendMessage("{}尝试把您(Owner)添加进黑名单".format(msg.sender.id), target_group=868218262)
+                    sendMessage("{}尝试把您(Owner)添加进黑名单".format(msg.sender.id), target_group=963024167)
                     return
                 BLACK_LIST.append(int(command_list[2]))
                 msg.fast_reply("操作成功")
