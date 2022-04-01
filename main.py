@@ -768,7 +768,7 @@ Coins: {coin_purse}
             msg.fastReply(pmsg)
 
         if command_list[0] in Modules.func_dist:
-            exec("{}\n{}(msg, command_list)".format(Modules.func_dist[command_list[0]][0], Modules.func_dist[command_list[0]][1]))
+            Modules.func_dist[command_list[0]](msg, command_list)
     except Exception as e:
         a = traceback.format_exc()
         print(a)

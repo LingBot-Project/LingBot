@@ -43,5 +43,6 @@ def one_eng(msg, _):
     a = requests.get("http://open.iciba.com/dsapi/").json()
     msg.fastReply(f'{a["content"]}\n{a["note"]}')
 
+
 main.Modules.register_module(one_eng, "一英")
 main.Modules.register_module(acg, "二次元")
