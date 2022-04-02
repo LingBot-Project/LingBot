@@ -16,9 +16,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
+        python -m ensurepip --default-pip
         python -m pip install --upgrade pip
         pip install pylint hypixel apscheduler requests tcping websocket-client mcstatus pillow psutil matplotlib nb-cli 
-        pip install nb-cli
+        pip install nb-cli -i
     - name: Analysing the code with pylint
       run: |
         pylint --disable=C,W,R ./main.py
