@@ -568,6 +568,10 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     REPEATER.remove((msg.group.id, int(command_list[2])))
                     msg.fast_reply("操作成功")
 
+        if command_list [0] == "!plus":
+            msg.fast_reply(Str(Double(command_list[1])+Double(command_list[2])))
+            return
+        
         if command_list[0] == "!tcping":
             if len(command_list) == 1:
                 msg.fast_reply("语法错误 使用方法为: !tcping IP[:端口(默认为80)]\n如: !tcping api.github.com:80")
