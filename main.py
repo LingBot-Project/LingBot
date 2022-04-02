@@ -578,6 +578,9 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fast_reply(str(float(command_list[1])*float(command_list[2])))
             return
         if command_list [0] == "!divide":
+            if int(command_list[2]) == 0:
+                msg.fast_reply("零不能作除数哦~")
+                return
             msg.fast_reply(str(float(command_list[1])/float(command_list[2])))
             return
         
