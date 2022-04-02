@@ -1086,7 +1086,7 @@ def main():
         # restart()  Reason: Code is unreachable
     except KeyboardInterrupt:
         restart()
-    except Exception:
+    except BaseException:
         print("遇到无法恢复的错误 即将退出")
         print(traceback.format_exc())
         restart()
