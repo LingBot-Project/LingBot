@@ -10,8 +10,7 @@ class BiliUtils:
         if bvid is None:
             raise TypeError()
 
-        if bvid in self.cache and self.cache[bvid]["time"] <= time.time() - self.cache_time and self.cache[bvid][
-            "type"] == "viedo":
+        if bvid in self.cache and self.cache[bvid]["time"] <= time.time() - self.cache_time and self.cache[bvid]["type"] == "viedo":
             return self.cache[bvid]["raw"]
 
         pass
@@ -20,8 +19,7 @@ class BiliUtils:
         if uid is None:
             raise TypeError()
 
-        if uid in self.cache and self.cache[uid]["time"] <= time.time() - self.cache_time and self.cache[uid][
-            "type"] == "user":
+        if uid in self.cache and self.cache[uid]["time"] <= time.time() - self.cache_time and self.cache[uid]["type"] == "user":
             return self.cache[uid]["raw"]
 
         pass
