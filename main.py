@@ -422,8 +422,8 @@ def on_message2(ws, message):
         if (msg.group.id, msg.sender.id) in REPEATER:
             msg.fast_reply(msg.text, reply=False, at=False)
 
-        if msg.text in ["!restart", "!stop"] and msg.sender.isadmin():
-            msg.fast_reply("正在尝试这么做...")
+        if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
+            msg.fast_reply("Restarting...")
             restart()
 
         if msg.text in ["!test", "凌状态"]:
