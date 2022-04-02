@@ -349,10 +349,11 @@ def on_message2(ws, message):
             SPAM2_VL[msg.sender.id] = 0
         # _spam_cre = get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
         # if _spam_cre <= 0.125 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
-        if simhash_similarity(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower()) >= 0.84:
+        _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
+        if _simhash_dis >= 0.84:
             SPAM2_VL[msg.sender.id] += 10
-            if _spam_cre <= 0.001:
-                SPAM2_VL[msg.sender.id] += 20
+            if _simhash_dis >= 0.98:
+                SPAM2_VL[msg.sender.id] += 10
 
             if SPAM2_VL[msg.sender.id] >= 55:
                 if msg.sender.isadmin():
