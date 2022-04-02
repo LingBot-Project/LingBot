@@ -244,10 +244,9 @@ def get_min_distance(word1, word2):
             j += 1
         i += 1
     # for i in range(len(f1)):
-        # print(f1[i])
-        # pass
+    #     print(f1[i])
+    #     pass
     return f1[m][n] / len(word1)
-
 
 
 def get_runtime():
@@ -335,8 +334,9 @@ def on_message2(ws, message):
 
             if SPAM2_VL[msg.sender.id] >= 55:
                 if msg.sender.isadmin():
-                    sendMessage(f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度(越小越像): {_spam_cre}\nVL: {SPAM2_VL[msg.sender.id]}",
-                                target_group=1019068934)
+                    sendMessage(
+                        f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度(越小越像): {_spam_cre}\nVL: {SPAM2_VL[msg.sender.id]}",
+                        target_group=1019068934)
                 # msg.recall()
                 if SPAM2_VL[msg.sender.id] >= 200:
                     msg.mute(3600)  # :259200
@@ -445,7 +445,7 @@ def on_message2(ws, message):
 
         if msg.text == "!testzb":
             goodmor(target=msg.group.id)
-        
+
         if msg.text == "!rickroll":
             msg.fast_reply("https://lsp.abcdcreeper.xyz")
             # 愚人节彩蛋LOL
@@ -568,22 +568,22 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     REPEATER.remove((msg.group.id, int(command_list[2])))
                     msg.fast_reply("操作成功")
 
-        if command_list [0] == "!plus":
-            msg.fast_reply(str(float(command_list[1])+float(command_list[2])))
+        if command_list[0] == "!plus":
+            msg.fast_reply(str(float(command_list[1]) + float(command_list[2])))
             return
-        if command_list [0] == "!subtract":
-            msg.fast_reply(str(float(command_list[1])-float(command_list[2])))
+        if command_list[0] == "!subtract":
+            msg.fast_reply(str(float(command_list[1]) - float(command_list[2])))
             return
-        if command_list [0] == "!multiply":
-            msg.fast_reply(str(float(command_list[1])*float(command_list[2])))
+        if command_list[0] == "!multiply":
+            msg.fast_reply(str(float(command_list[1]) * float(command_list[2])))
             return
-        if command_list [0] == "!divide":
+        if command_list[0] == "!divide":
             if int(command_list[2]) == 0:
                 msg.fast_reply("零不能作除数哦~")
                 return
-            msg.fast_reply(str(float(command_list[1])/float(command_list[2])))
+            msg.fast_reply(str(float(command_list[1]) / float(command_list[2])))
             return
-        
+
         if command_list[0] == "!tcping":
             if len(command_list) == 1:
                 msg.fast_reply("语法错误 使用方法为: !tcping IP[:端口(默认为80)]\n如: !tcping api.github.com:80")
