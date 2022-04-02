@@ -341,11 +341,11 @@ def on_message2(ws, message):
                 if SPAM2_VL[msg.sender.id] >= 200:
                     msg.mute(3600)  # :259200
                     SPAM2_VL[msg.sender.id] -= 20
-                    
+                    return
                 # else:
                 #     msg.mute(600)
                 # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
-                return
+                # return
             SPAM2_MSG[msg.sender.id] = msg.text
         else:
             SPAM2_MSG[msg.sender.id] = msg.text
