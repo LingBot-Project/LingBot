@@ -341,11 +341,11 @@ def on_message2(ws, message):
                 if SPAM2_VL[msg.sender.id] >= 200:
                     msg.mute(3600)  # :259200
                     SPAM2_VL[msg.sender.id] -= 20
-                    
+                    return
                 # else:
                 #     msg.mute(600)
                 # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
-                return
+                # return
             SPAM2_MSG[msg.sender.id] = msg.text
         else:
             SPAM2_MSG[msg.sender.id] = msg.text
@@ -422,7 +422,7 @@ def on_message2(ws, message):
         if (msg.group.id, msg.sender.id) in REPEATER:
             msg.fast_reply(msg.text, reply=False, at=False)
 
-        if msg.text == "!quit" and msg.sender.isadmin():
+        if msg.text == "!quit"or"!reload" or "!restart" and msg.sender.isadmin():
             msg.fast_reply("正在尝试这么做...")
             quit()
 
