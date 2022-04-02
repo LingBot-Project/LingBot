@@ -344,7 +344,7 @@ def on_message2(ws, message):
                     
                 # else:
                 #     msg.mute(600)
-                # msg.fast_reply("您貌似在刷屏?", reply=False)
+                # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
                 return
             SPAM2_MSG[msg.sender.id] = msg.text
         else:
@@ -401,7 +401,7 @@ def on_message2(ws, message):
             if spammer_checker(msg):
                 msg.mute(60)
                 msg.recall()
-                msg.fast_reply("不要刷屏哟~~", reply=False)
+                msg.fast_reply("您的说话速度有点快，是不是在刷屏呢？", reply=False)
         except:
             pass
 
