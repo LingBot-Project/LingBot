@@ -712,10 +712,10 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("你的权限不足!")
                 return
             if command_list[1] == "spam2":
-                msg.fast_reply(f'此人spam2 vl为: {SPAM2_VL[command_list[2]]}')
+                msg.fast_reply(f'此人spam2 vl为: {SPAM2_VL[int(command_list[2])]}')
                 return
             elif command_list[1] == "spam":
-                msg.fast_reply(f"此群成员spam vl为: {ANTISPAMMER[command_list[2]]}")
+                msg.fast_reply(f"此群成员spam vl为: {int(ANTISPAMMER[command_list[2]])}")
                 return
 
         if command_list[0] == "!namelocker":
