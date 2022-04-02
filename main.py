@@ -344,7 +344,7 @@ def on_message2(ws, message):
                     
                 # else:
                 #     msg.mute(600)
-                # msg.fast_reply("您貌似在刷屏?", reply=False)
+                # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
                 return
             SPAM2_MSG[msg.sender.id] = msg.text
         else:
@@ -401,7 +401,7 @@ def on_message2(ws, message):
             if spammer_checker(msg):
                 msg.mute(60)
                 msg.recall()
-                msg.fast_reply("不要刷屏哟~~", reply=False)
+                msg.fast_reply("您的说话速度有点快，是不是在刷屏呢？", reply=False)
         except:
             pass
 
@@ -568,6 +568,19 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     REPEATER.remove((msg.group.id, int(command_list[2])))
                     msg.fast_reply("操作成功")
 
+        if command_list [0] == "!plus":
+            msg.fast_reply(str(float(command_list[1])+float(command_list[2])))
+            return
+        if command_list [0] == "!subtract":
+            msg.fast_reply(str(float(command_list[1])-float(command_list[2])))
+            return
+        if command_list [0] == "!multiply":
+            msg.fast_reply(str(float(command_list[1])*float(command_list[2])))
+            return
+        if command_list [0] == "!divide":
+            msg.fast_reply(str(float(command_list[1])/float(command_list[2])))
+            return
+        
         if command_list[0] == "!tcping":
             if len(command_list) == 1:
                 msg.fast_reply("语法错误 使用方法为: !tcping IP[:端口(默认为80)]\n如: !tcping api.github.com:80")
