@@ -18,7 +18,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pylint hypixel apscheduler requests tcping websocket-client mcstatus pillow psutil matplotlib nb-cli 
-        pip install nbcli -i https://pypi.org/simple/
+        pip install nb-cli
     - name: Analysing the code with pylint
       run: |
         pylint --disable=C,W,R ./main.py
