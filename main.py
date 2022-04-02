@@ -381,18 +381,18 @@ def on_message2(ws, message):
         if msg.sender.id not in SPAM2_VL:
             SPAM2_VL[msg.sender.id] = 0
         _spam_cre = get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
-        if _spam_cre <= 0.15 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
+        if _spam_cre <= 0.135 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
             SPAM2_VL[msg.sender.id] += 10
             if _spam_cre <= 0.001:
                 SPAM2_VL[msg.sender.id] += 20
 
             if SPAM2_VL[msg.sender.id] >= 50:
                 if msg.sender.isadmin():
-                    sendMessage("{}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
+                    sendMessage(f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n内容:\n{msg.text}\n阈值为{_spam_cre}",
                                 target_group=1019068934)
                 # msg.recall()
-                if SPAM2_VL[msg.sender.id] >= 190:
-                    msg.mute(259200)
+                if SPAM2_VL[msg.sender.id] >= 200:
+                    msg.mute(3600)  # :259200
                     SPAM2_VL[msg.sender.id] -= 20
                     
                 # else:
