@@ -302,8 +302,7 @@ def on_message2(ws, message):
     global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS, cmd, spam2_vl_reset_cool_down
     
     a = json.loads(message)
-    print(a)
-    if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and target_id == 3026726134:
+    if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and a["target_id"] == a["self_id"]:
         sendMessage("不要戳我啦 =w=", target_group = a["group_id"], target_qq = a["user_id"])
         return
     
