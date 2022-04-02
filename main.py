@@ -17,9 +17,9 @@ import websocket
 from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
 from mcstatus import MinecraftServer
+from simhash import Simhash
 
 import tcping
-from simhash import Simhash
 
 hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(30.0)
@@ -362,7 +362,7 @@ def on_message2(ws, message):
                         target_group=1019068934)
                 # msg.recall()
                 if SPAM2_VL[msg.sender.id] >= 200:
-                    msg.mute(3600)  # :259200
+                    msg.mute(43199*60)  # :259200
                     SPAM2_VL[msg.sender.id] -= 20
                     return
                 # else:
