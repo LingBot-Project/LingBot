@@ -45,6 +45,7 @@ ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 REPEATER = []
+ACG_CD = {}
 SPAM2_MSG = {}
 SPAM2_VL = {}
 # URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
@@ -512,7 +513,13 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                            requests.get("http://open.iciba.com/dsapi/").json()["note"])
 
         if msg.text == "二次元":
-            msg.fast_reply("[CQ:image,file=base64://" + acg_img() + "]")
+            if msg.sender.id not in ACG_CD:
+                ACG_CD[msg.sender.id] = time.time()
+            if ACG_CD[msg.sender.id] <= time.time():
+                msg.fast_reply("[CQ:image,file=base64://" + acg_img() + "]")
+                ACG_CD[msg.sender.id] = time.time() + 120
+            else:
+                msg.fast_reply("歇会吧你")
 
         if msg.text == "必应壁纸":
             msg.fast_reply("[CQ:image,file=base64://" + base64.b64encode(
