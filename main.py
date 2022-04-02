@@ -602,7 +602,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 
         if command_list[0] == "!admin":
             if command_list[1] == "list":
-                msg.fast_reply(", ".join('%s' % id for id in ADMIN_LIST))
+                msg.fast_reply(", ".join('%s' % id for _id in ADMIN_LIST))
             elif not msg.sender.isadmin():
                 msg.fast_reply("你的权限不足!")
                 return
