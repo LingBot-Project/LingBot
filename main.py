@@ -49,9 +49,9 @@ ACG_CD = {}
 SPAM2_MSG = {}
 SPAM2_VL = {}
 # URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
-ANTI_AD = (r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|" "\n"
-           r"内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|" "\n"
-           r"出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|" "\n"
+ANTI_AD = (r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|"
+           r"内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|"
+           r"出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|"
            r"不服|稳定奔放|qq[0-9]{5,10}|定制.*")
 
 spam2_vl_reset_cool_down = time.time()
@@ -422,7 +422,7 @@ def on_message2(ws, message):
         if (msg.group.id, msg.sender.id) in REPEATER:
             msg.fast_reply(msg.text, reply=False, at=False)
 
-        if msg.text == "!restart" and msg.sender.isadmin():
+        if msg.text in ["!restart", "!stop"] and msg.sender.isadmin():
             msg.fast_reply("正在尝试这么做...")
             quit()
 
