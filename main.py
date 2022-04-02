@@ -19,6 +19,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from mcstatus import MinecraftServer
 
 import tcping
+from simhash import Simhash
 
 hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(30.0)
@@ -201,6 +202,21 @@ def spammer_checker(msg):
     return False
 
 
+def simhash_similarity(text1, text2):
+    """
+    :param text1: 文本1
+    :param text2: 文本2
+    :return: 返回两篇文章的相似度
+    """
+    aa_simhash = Simhash(text1)
+    bb_simhash = Simhash(text2)
+    max_hashbit = max(len(bin(aa_simhash.value)), (len(bin(bb_simhash.value))))
+    # 汉明距离
+    distince = aa_simhash.distance(bb_simhash)
+    similar = 1 - distince / max_hashbit
+    return similar
+
+
 def get_min_distance(word1, word2):
     """
     This is a part of anti spam.
@@ -330,10 +346,10 @@ def on_message2(ws, message):
 
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
-        if msg.sender.id not in SPAM2_VL:
             SPAM2_VL[msg.sender.id] = 0
-        _spam_cre = get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
-        if _spam_cre <= 0.125 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
+        # _spam_cre = get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
+        # if _spam_cre <= 0.125 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
+        if simhash_similarity(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower()) >= 0.84:
             SPAM2_VL[msg.sender.id] += 10
             if _spam_cre <= 0.001:
                 SPAM2_VL[msg.sender.id] += 20
