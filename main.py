@@ -168,8 +168,8 @@ def save_config():
         config.write(configfile)
 
 
-def quit():
-    print("Try to Quit...")
+def restart():
+    print("Restarting...")
     save_config()
     psutil.Process().kill()
 
