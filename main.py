@@ -572,16 +572,16 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             msg.fast_reply(str(int(command_list[1])+int(command_list[2])))
             return
         if command_list [0] == "!subtract":
-            msg.fast_reply(str(int(command_list[1]-int(command_list[2]))))
+            msg.fast_reply(str(int(command_list[1])-int(command_list[2])))
             return
         if command_list [0] == "!multiply":
-            msg.fast_reply(str(int(command_list[1]*int(command_list[2]))))
+            msg.fast_reply(str(int(command_list[1])*int(command_list[2])))
             return
         if command_list [0] == "!divide":
-            msg.fast_reply(str(int(command_list[1]/int(command_list[2]))))
+            msg.fast_reply(str(int(command_list[1])/int(command_list[2])))
             return
         if command_list [0] == "!involution":
-            msg.fast_reply(str(int(command_list[1]^int(command_list[2]))))
+            msg.fast_reply(str(int(command_list[1])^int(command_list[2])))
             return
         
         if command_list[0] == "!tcping":
