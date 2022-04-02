@@ -1083,13 +1083,13 @@ def main():
         print("Bot Ready!")
         while True:
             time.sleep(3600)
-        # quit()  Reason: Code is unreachable
+        # restart()  Reason: Code is unreachable
     except KeyboardInterrupt:
-        quit()
+        restart()
     except Exception:
         print("遇到无法恢复的错误 即将退出")
         print(traceback.format_exc())
-        quit()
+        restart()
 
 
 if __name__ == "__main__":
