@@ -322,10 +322,39 @@ def on_message2(ws, message):
 
         print("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
 
+        if msg.sender.id not in SPAM2_MSG:
+            SPAM2_MSG[msg.sender.id] = msg.text
+        if msg.sender.id not in SPAM2_VL:
+            SPAM2_VL[msg.sender.id] = 0
+        _spam_cre = get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
+        if _spam_cre <= 0.125 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
+            SPAM2_VL[msg.sender.id] += 10
+            if _spam_cre <= 0.001:
+                SPAM2_VL[msg.sender.id] += 20
+
+            if SPAM2_VL[msg.sender.id] >= 55:
+                if msg.sender.isadmin():
+                    sendMessage(f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度(越小越像): {_spam_cre}\nVL: {SPAM2_VL[msg.sender.id]}",
+                                target_group=1019068934)
+                # msg.recall()
+                if SPAM2_VL[msg.sender.id] >= 200:
+                    msg.mute(3600)  # :259200
+                    SPAM2_VL[msg.sender.id] -= 20
+                    
+                # else:
+                #     msg.mute(600)
+                # msg.fast_reply("您貌似在刷屏?", reply=False)
+                return
+            SPAM2_MSG[msg.sender.id] = msg.text
+        else:
+            SPAM2_MSG[msg.sender.id] = msg.text
+            if SPAM2_VL[msg.sender.id] > 0:
+                SPAM2_VL[msg.sender.id] -= 2
+
         reScan = re.findall(
             ANTI_AD,
             msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
-        if len(msg.text) > 35 and len(reScan) >= 2:
+        if len(msg.text) >= 33 and len(reScan) >= 2:
             if msg.sender.isadmin():
                 sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                             target_group=1019068934)
@@ -374,35 +403,6 @@ def on_message2(ws, message):
                 msg.fast_reply("不要刷屏哟~~", reply=False)
         except:
             pass
-        
-        if msg.sender.id not in SPAM2_MSG:
-            SPAM2_MSG[msg.sender.id] = msg.text
-        if msg.sender.id not in SPAM2_VL:
-            SPAM2_VL[msg.sender.id] = 0
-        _spam_cre = get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
-        if _spam_cre <= 0.125 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
-            SPAM2_VL[msg.sender.id] += 10
-            if _spam_cre <= 0.001:
-                SPAM2_VL[msg.sender.id] += 20
-
-            if SPAM2_VL[msg.sender.id] >= 55:
-                if msg.sender.isadmin():
-                    sendMessage(f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度(越小越像): {_spam_cre}\nVL: {SPAM2_VL[msg.sender.id]}",
-                                target_group=1019068934)
-                # msg.recall()
-                if SPAM2_VL[msg.sender.id] >= 200:
-                    msg.mute(3600)  # :259200
-                    SPAM2_VL[msg.sender.id] -= 20
-                    
-                # else:
-                #     msg.mute(600)
-                # msg.fast_reply("您貌似在刷屏?", reply=False)
-                return
-            SPAM2_MSG[msg.sender.id] = msg.text
-        else:
-            SPAM2_MSG[msg.sender.id] = msg.text
-            if SPAM2_VL[msg.sender.id] > 0:
-                SPAM2_VL[msg.sender.id] -= 2
 
         if msg.sender.id in BLACK_LIST:
             msg.mute(60)
