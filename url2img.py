@@ -5,7 +5,7 @@ from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from flask import flask
+from flask import Flask
 
 app = Flask(__name__)
 
