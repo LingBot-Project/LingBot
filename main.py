@@ -23,7 +23,6 @@ from simhash import Simhash
 import tcping
 import url2img
 import os
-import commands
 
 # hypixel.setKeys([""])
 hypixel.setCacheTime(30.0)
@@ -1027,7 +1026,7 @@ def on_close(ws, a, b):
 def goodmor(target=None):
     msg1 = "早上好呀~ [CQ:image,file=base64://{}][CQ:image,file=base64://{}]".format(
         text2image(requests.get(url="https://www.ipip5.com/today/api.php?type=txt", verify=False).text),
-        commands.getstatusoutput('python3.10 url2img.py https://news.topurl.cn/').replace("\n", ""))
+        os.popen('bash url2base64.sh https://news.topurl.cn/').read().replace("\n", ""))
     s = getGroups()
     if target:
         sendMessage(msg1, target_group=target)
