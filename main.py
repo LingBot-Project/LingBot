@@ -49,7 +49,6 @@ FEEDBACKS = {}
 REPEATER = []
 SPAM2_MSG = {}
 SPAM2_VL = {}
-BROW = url2img.Url2img()
 SCREENSHOT_CD = 0
 
 
@@ -176,7 +175,6 @@ def save_config():
 def stop():
     logging.info("Restarting...")
     save_config()
-    BROW.quit()
     psutil.Process().kill()
 
 
@@ -1018,7 +1016,7 @@ def on_close(ws, a, b):
 def goodmor(target=None):
     msg1 = "早上好呀~ [CQ:image,file=base64://{}][CQ:image,file=base64://{}]".format(
         text2image(requests.get(url="https://www.ipip5.com/today/api.php?type=txt", verify=False).text),
-        BROW.get_base64_by_url("https://news.topurl.cn/"))
+        url2img.get_base64_by_url("https://news.topurl.cn/"))
     s = getGroups()
     if target:
         sendMessage(msg1, target_group=target)
