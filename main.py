@@ -190,7 +190,7 @@ def spammer_checker(msg):
     if ANTISPAMMER[group][user][1] >= 8:
         ANTISPAMMER[group][user] = [0, 0]
         return True
-    elif SPAM2_VL[msg.sender.id] >= 50 and ANTISPAMMER[group][user][1] >= 4:
+    elif SPAM2_VL[msg.sender.id] >= 50 and ANTISPAMMER[group][user][1] >= 6:
         ANTISPAMMER[group][user] = [0, 0]
         SPAM2_VL[msg.sender.id] -= 5
         return True
@@ -201,7 +201,7 @@ def spammer_checker(msg):
     return False
 
 
-def simhash_similarity(text1, text2):
+def simhash_similarity(text1: str, text2: str) -> float:
     """
     :param text1: 文本1
     :param text2: 文本2
@@ -305,10 +305,10 @@ def on_message2(ws, message):
                 SPAM2_VL[msg.sender.id] += 10
 
             if SPAM2_VL[msg.sender.id] >= 55:
-                if msg.sender.isadmin():
-                    sendMessage(
-                        f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度: {_simhash_dis}\nVL: {SPAM2_VL[msg.sender.id]}",
-                        target_group=1019068934)
+                # if msg.sender.isadmin():
+                #     sendMessage(
+                #         f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度: {_simhash_dis}\nVL: {SPAM2_VL[msg.sender.id]}",
+                #         target_group=1019068934)
                 # msg.recall()
                 if SPAM2_VL[msg.sender.id] >= 200:
                     msg.mute(43199*60)  # :259200
@@ -328,6 +328,7 @@ def on_message2(ws, message):
             ANTI_AD,
             msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
         if len(msg.text) >= 33 and len(reScan) >= 2:
+            SPAM2_VL[msg.sender.id] += 4
             if msg.sender.isadmin():
                 sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                             target_group=1019068934)
@@ -350,6 +351,7 @@ def on_message2(ws, message):
             msg.mute(600)
             msg.recall()
             msg.fast_reply("消息太长了哟", reply=False)
+            SPAM2_VL[msg.sender.id] += 3
             return
 
         multiMsg = re.search(r'\[CQ:forward,id=(.*)]', msg.text)
@@ -367,6 +369,7 @@ def on_message2(ws, message):
                 msg.mute(3600)
                 msg.recall()
                 ALL_AD += 1
+                SPAM2_VL[msg.sender.id] += 3
                 return
 
         try:
