@@ -11,9 +11,11 @@ import traceback
 from io import BytesIO
 
 import hypixel
+import nonebot_plugin_status
 import psutil
 import requests
 import websocket
+import nonebot
 from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
 from mcstatus import MinecraftServer
@@ -52,7 +54,7 @@ SPAM2_VL = {}
 ANTI_AD = (r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|"
            r"内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|"
            r"出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|"
-           r"不服|稳定奔放|qq[0-9]{5,10}|定制.*|高科技小卖铺")
+           r"不服|稳定奔放|qq[0-9]{5,10}|定制.*|高科技小卖铺|老婆不在家(刺激)")
 
 spam2_vl_reset_cool_down = time.time()
 
@@ -151,6 +153,7 @@ def read_config():
     except:
         pass
     sendMessage("restart successful", target_group=1019068934)
+    sendMessage(nonebot_plugin_status,target_group=1019068934)
 
 
 def save_config():
