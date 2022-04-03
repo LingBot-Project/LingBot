@@ -1,4 +1,6 @@
+import base64
 import os
+import random
 
 from PIL import Image
 from selenium import webdriver
@@ -38,31 +40,35 @@ class Url2img:
 
     def screenshot(self, url: str, img_path: str) -> None:
         self.driver1.get(url)
-        self.driver1.save_screenshot('result.png')
+        self.driver1.save_screenshot(img_path)
         JS = {
             '滚动到页尾': "window.scroll({top:document.body.clientHeight,left:0,behavior:'auto'});",
             '滚动到': "window.scroll({top:%d,left:0,behavior:'auto'});",
         }
         # 获取body大小
         body_h = int(self.driver1.find_element_by_xpath('//body').size.get('height'))
-        current_h = Image.open('result.png').size[1]
-        image_list = ['result.png']  # 储存截取到的图片路径
+        current_h = Image.open(img_path).size[1]
 
         for i in range(1, int(body_h / current_h)):
             # 1. 滚动到指定锚点
             self.driver1.execute_script(JS['滚动到'] % (current_h * i))
             # 2. 截图
             self.driver1.save_screenshot(f'test_{i}.png')
-            join_images('result.png', f'test_{i}.png')
+            join_images(img_path, f'test_{i}.png')
             os.remove(f'test_{i}.png')
         # 处理最后一张图
         self.driver1.execute_script(JS['滚动到页尾'])
         self.driver1.save_screenshot('test_end.png')
         # 拼接图片
-        join_images('result.png', 'test_end.png', size=current_h - int(body_h % current_h))
+        join_images(img_path, 'test_end.png', size=current_h - int(body_h % current_h))
         os.remove('test_end.png')
         self.driver1.close()
 
+    def get_base64_by_url(self, url: str) -> str:
+        random_id = random.randint(1000000, 9999999)
+        self.screenshot(url=url, img_path=f"{random_id}.cache.png")
+        with open(f"{random_id}.cache.png", 'rb') as f:
+            return base64.b64encode(f.read()).decode()
 
     def quit(self):
         self.driver1.quit()
