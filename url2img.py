@@ -71,4 +71,4 @@ def get_base64_by_url(url: str) -> str:
 
 
 if __name__ == "__main__":
-    print(get_base64_by_url(sys.argv[1])
+    print(get_base64_by_url(sys.argv[1]))
