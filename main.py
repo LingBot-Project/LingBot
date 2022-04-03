@@ -46,7 +46,6 @@ ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 REPEATER = []
-ACG_CD = {}
 SPAM2_MSG = {}
 SPAM2_VL = {}
 # URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
@@ -217,54 +216,6 @@ def simhash_similarity(text1, text2):
     return similar
 
 
-def get_min_distance(word1, word2):
-    """
-    This is a part of anti spam.
-    IN TEST
-    :param word1: the word 1
-    :param word2: the word 2
-    :return: return the rate of two params' difference
-    """
-    m = len(word1)
-    n = len(word2)
-    if m == 0:
-        return n
-    if n == 0:
-        return m
-    f1 = {}
-    f2 = {}
-    f3 = {}
-    j = 0
-    while j <= n + 1:
-        f2[j] = j
-        f3[j] = 0
-        j += 1
-    f1[0] = f2
-
-    i = 0
-    while i <= m + 1:
-        f3[0] = i
-        f1[i] = dict(f3)
-        i += 1
-    # print(f2, '\n\n', f3, '\n\n', f1, '\n', "**"*20)
-    i = 1
-    del f3, f2
-    while i <= m:
-        j = 1
-        while j <= n:
-            if word1[i - 1] == word2[j - 1]:
-                f1[i][j] = f1[i - 1][j - 1]
-
-            else:
-                f1[i][j] = min(f1[i - 1][j - 1], f1[i - 1][j], f1[i][j - 1]) + 1
-            j += 1
-        i += 1
-    # for i in range(len(f1)):
-    #     print(f1[i])
-    #     pass
-    return f1[m][n] / len(word1)
-
-
 def get_runtime():
     nowtime = int(time.time())
     return "{}秒".format(int(nowtime - recordTime))
@@ -347,12 +298,10 @@ def on_message2(ws, message):
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
             SPAM2_VL[msg.sender.id] = 0
-        # _spam_cre = get_min_distance(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
-        # if _spam_cre <= 0.125 and len(msg.text) >= 4 and not msg.sender.id == 2854196310:
         _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
-        if _simhash_dis >= 0.84:
+        if _simhash_dis >= 0.836:
             SPAM2_VL[msg.sender.id] += 10
-            if _simhash_dis >= 0.98:
+            if _simhash_dis >= 0.99:
                 SPAM2_VL[msg.sender.id] += 10
 
             if SPAM2_VL[msg.sender.id] >= 55:
@@ -536,13 +485,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                            requests.get("http://open.iciba.com/dsapi/").json()["note"])
 
         if msg.text == "二次元":
-            if msg.sender.id not in ACG_CD:
-                ACG_CD[msg.sender.id] = time.time()
-            if ACG_CD[msg.sender.id] <= time.time():
-                msg.fast_reply("[CQ:image,file=base64://" + acg_img() + "]")
-                ACG_CD[msg.sender.id] = time.time() + 120
-            else:
-                msg.fast_reply("歇会吧你")
+            msg.fast_reply("[CQ:image,file=base64://" + acg_img() + "]")
 
         if msg.text == "必应壁纸":
             msg.fast_reply("[CQ:image,file=base64://" + base64.b64encode(
