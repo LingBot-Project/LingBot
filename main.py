@@ -450,7 +450,7 @@ def on_message2(ws, message):
                 str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
                     re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
                                requests.get(json.loads(
-                                   re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&"))[
+                                   re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace("&#44;", ",")))[
                                                 "meta"]["news"]["jumpUrl"]).text)[0].replace(
                         r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
                     :-3])).json()
@@ -1021,7 +1021,7 @@ def on_close(ws, a, b):
 def goodmor(target=None):
     msg1 = "早上好呀~ [CQ:image,file=base64://{}][CQ:image,file=base64://{}]".format(
         text2image(requests.get(url="https://www.ipip5.com/today/api.php?type=txt", verify=False).text),
-        url2img.get_base64_by_url("https://news.topurl.cn/"))
+        os.popen('python3.10 url2img.py https://news.topurl.cn/').read().replace("\n", ""))
     s = getGroups()
     if target:
         sendMessage(msg1, target_group=target)

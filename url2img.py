@@ -1,5 +1,5 @@
 import base64
-import os
+import os, sys
 import random
 
 from PIL import Image
@@ -68,3 +68,7 @@ def get_base64_by_url(url: str) -> str:
     screenshot(url=url, img_path=f"{random_id}.cache.png")
     with open(f"{random_id}.cache.png", 'rb') as f:
         return base64.b64encode(f.read()).decode()
+
+
+if __name__ == "__main__":
+    print(get_base64_by_url(sys.argv[1])
