@@ -153,7 +153,6 @@ def read_config():
     except:
         pass
     sendMessage("restart successful", target_group=1019068934)
-    sendMessage(nonebot_plugin_status,target_group=1019068934)
 
 
 def save_config():
