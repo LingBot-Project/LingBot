@@ -12,7 +12,7 @@ import os
 app = Flask(__name__)
 
 
-def join_images(png1, png2, size=0, output='result.png'):
+def join_images(png1, png2, size=0):
     """
     图片拼接
     :param png1: 图片1
@@ -31,7 +31,7 @@ def join_images(png1, png2, size=0, output='result.png'):
     joint.paste(img1, loc1)
     joint.paste(img2, loc2)
     # 保存结果
-    joint.save(output)
+    joint.save(png1)
 
 
 def screenshot(url: str, img_path: str) -> None:
