@@ -23,7 +23,7 @@ from simhash import Simhash
 import tcping
 import url2img
 
-hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
+# hypixel.setKeys([""])
 hypixel.setCacheTime(30.0)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
@@ -402,6 +402,10 @@ def on_message2(ws, message):
                 return
 
         command_list = msg.text.split(" ")
+        
+        if command_list[0] == "!hyp":
+            msg.fastReply("该功能已经临时停用 汐洛找不到一个能提供正常服务 不是万人骑的Hypixel api-key")
+            return
 
         if (msg.group.id, msg.sender.id) in REPEATER:
             msg.fast_reply(msg.text, reply=False, at=False)
