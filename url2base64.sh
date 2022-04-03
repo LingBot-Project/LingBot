@@ -1,1 +1,0 @@
-python3.10 url2img.py $1

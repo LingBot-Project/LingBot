@@ -1,13 +1,10 @@
 import base64
+import os, sys
 import random
 
 from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-
-from flask import flask
-
-app = Flask(__name__)
 
 
 def join_images(png1, png2, size=0, output='result.png'):
@@ -73,11 +70,5 @@ def get_base64_by_url(url: str) -> str:
         return base64.b64encode(f.read()).decode()
 
 
-@app.route("/url2base64", methods=['POST'])
-def flask_task1():
-    url = request.form['url']
-    return get_base64_by_url(url)
-
-
 if __name__ == "__main__":
-    app.run(debug=False, port=25666)
+    print(get_base64_by_url(sys.argv[1]))
