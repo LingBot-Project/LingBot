@@ -428,14 +428,18 @@ def on_message2(ws, message):
             msg.fast_reply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
 
         if msg.text == "!testzb":
-            if SCREENSHOT_CD + 60 >= time.time():
+            if SCREENSHOT_CD + 60 <= time.time():
+                msg.fast_reply("Trying...")
                 goodmor(msg.group.id)
                 SCREENSHOT_CD = time.time()
+            else:
+                msg.fast_reply("Too fast!")
 
-        if msg.text == "!rickroll":
-            msg.fast_reply("https://lsp.abcdcreeper.xyz")
-            # 愚人节彩蛋LOL
-            return
+        # if msg.text == "!rickroll":
+        #     msg.fast_reply("https://lsp.abcdcreeper.xyz")
+        #     # 愚人节彩蛋LOL
+        #     return
+
         if msg.text == "!random":
             msg.fast_reply(str(random.randint(1, 100)))
             return
