@@ -11,11 +11,9 @@ import traceback
 from io import BytesIO
 
 import hypixel
-import nonebot_plugin_status
 import psutil
 import requests
 import websocket
-import nonebot
 from PIL import Image, ImageDraw, ImageFont
 from apscheduler.schedulers.blocking import BlockingScheduler
 from mcstatus import MinecraftServer
