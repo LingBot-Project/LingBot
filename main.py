@@ -411,11 +411,6 @@ def on_message2(ws, message):
             msg.fast_reply("Restarting...")
             stop()
 
-        if msg.text == "!testzb" and msg.sender.isadmin():
-            if SCREENSHOT_CD+60 >= time.time():
-                goodmor(msg.group.id)
-                SCREENSHOT_CD = time.time()
-
         if msg.text in ["!test", "凌状态"]:
             msg.fast_reply(
                 "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(
@@ -434,7 +429,9 @@ def on_message2(ws, message):
             msg.fast_reply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
 
         if msg.text == "!testzb":
-            goodmor(target=msg.group.id)
+            if SCREENSHOT_CD + 60 >= time.time():
+                goodmor(msg.group.id)
+                SCREENSHOT_CD = time.time()
 
         if msg.text == "!rickroll":
             msg.fast_reply("https://lsp.abcdcreeper.xyz")
