@@ -404,7 +404,7 @@ def on_message2(ws, message):
         command_list = msg.text.split(" ")
         
         if command_list[0] == "!hyp":
-            msg.fastReply("该功能已经临时停用 汐洛找不到一个能提供正常服务 不是万人骑的Hypixel api-key")
+            msg.fast_reply("该功能已经临时停用 汐洛找不到一个能提供正常服务 不是万人骑的Hypixel api-key")
             return
 
         if (msg.group.id, msg.sender.id) in REPEATER:
