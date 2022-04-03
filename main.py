@@ -22,6 +22,7 @@ from simhash import Simhash
 
 import tcping
 import url2img
+import os
 
 # hypixel.setKeys([""])
 hypixel.setCacheTime(30.0)
