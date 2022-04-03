@@ -20,6 +20,7 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 
 import tcping
+import url2img
 
 hypixel.setKeys(["69a1e20d-94ba-4322-91c5-003c6a5dd271"])
 hypixel.setCacheTime(30.0)
@@ -48,6 +49,7 @@ FEEDBACKS = {}
 REPEATER = []
 SPAM2_MSG = {}
 SPAM2_VL = {}
+BROW = url2img.Url2img()
 # URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
 ANTI_AD = (r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|"
            r"内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|"
@@ -171,6 +173,7 @@ def save_config():
 def restart():
     print("Restarting...")
     save_config()
+    BROW.quit()
     psutil.Process().kill()
 
 
