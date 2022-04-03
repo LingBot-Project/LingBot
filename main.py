@@ -3,6 +3,7 @@ import base64
 import configparser
 import datetime
 import json
+import logging
 import random
 import re
 import threading
@@ -39,7 +40,6 @@ ALL_MESSAGE = 0
 MESSAGE_PRE_MINUTE = [0, 0]
 ALL_AD = 0
 BILI_BV_RE = re.compile(r"BV([a-zA-Z0-9]{10})")
-REQ_TEXT = re.compile(r"get±.*±")
 timePreMessage = 0
 recordTime = int(time.time())
 isChatBypassOpened = False
@@ -50,11 +50,14 @@ REPEATER = []
 SPAM2_MSG = {}
 SPAM2_VL = {}
 BROW = url2img.Url2img()
+SCREENSHOT_CD = 0
+
+
 # URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
 ANTI_AD = (r"定制水影|加群(:)[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|"
            r"内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群(号)(:)[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|"
            r"出.*号|裙(号)(:)[0-9]{5,10}|君羊(号)(:)[0-9]{5,10}|q(:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|"
-           r"不服|稳定奔放|qq[0-9]{5,10}|定制.*|高科技小卖铺|老婆不在家(刺激)")
+           r"不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*")
 
 spam2_vl_reset_cool_down = time.time()
 
@@ -170,8 +173,8 @@ def save_config():
         config.write(configfile)
 
 
-def restart():
-    print("Restarting...")
+def stop():
+    logging.info("Restarting...")
     save_config()
     BROW.quit()
     psutil.Process().kill()
@@ -269,7 +272,11 @@ def acg_img():
 
 
 def on_message2(ws, message):
-    global HYPBAN_COOKIE, isChatBypassOpened, CACHE_MESSAGE, timePreMessage, MESSAGE_PRE_MINUTE, ALL_MESSAGE, ALL_AD, FEEDBACKS, cmd, spam2_vl_reset_cool_down
+    global HYPBAN_COOKIE, isChatBypassOpened, \
+        CACHE_MESSAGE, timePreMessage, \
+        MESSAGE_PRE_MINUTE, ALL_MESSAGE, \
+        ALL_AD, FEEDBACKS, \
+        spam2_vl_reset_cool_down, SCREENSHOT_CD
     
     a = json.loads(message)
     if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and a["target_id"] == a["self_id"]:
@@ -296,7 +303,7 @@ def on_message2(ws, message):
             MESSAGE_PRE_MINUTE[1] += 1
         ALL_MESSAGE += 1
 
-        print("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
+        logging.info("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
 
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
@@ -402,7 +409,12 @@ def on_message2(ws, message):
 
         if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
-            restart()
+            stop()
+
+        if msg.text == "!testzb" and msg.sender.isadmin():
+            if SCREENSHOT_CD+60 >= time.time():
+                goodmor(msg.group.id)
+                SCREENSHOT_CD = time.time()
 
         if msg.text in ["!test", "凌状态"]:
             msg.fast_reply(
@@ -444,7 +456,7 @@ def on_message2(ws, message):
                     :-3])).json()
 
                 if str1["code"] != 0:
-                    print("查询失败")
+                    logging.warning("查询失败")
                     return
                 str1 = str1["data"]
                 response = requests.get(str1["pic"])
@@ -520,8 +532,8 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     temp_msg += "{}: {} ({}%)\n".format(temp_list[i][0], _all_players[i],
                                                         round((_all_players[i] / _all_player) * 100, 2))
                 except Exception as e:
-                    print(e)
-            print(temp_msg)
+                    logging.error(e)
+            logging.debug(temp_msg)
             msg.fast_reply("[CQ:image,file=base64://{}]".format(text2image(temp_msg)))
             return
 
@@ -664,10 +676,6 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
         if command_list[0] == "!send":
             if msg.sender.isadmin():
                 msg1 = " ".join(command_list[2:])
-                all_req = re.match(REQ_TEXT, msg1)
-                print(all_req)
-                if all_req is not None:
-                    msg1 = msg1.replace(all_req.group(0), urlget(all_req.group(0).replace("get±", "").replace("±", "")))
                 if command_list[1] == "all":
                     s = getGroups()
                     msg.fast_reply("正在群发... 目标:{}个群".format(len(s)))
@@ -799,7 +807,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("貌似没有这个玩家?\n访问 https://lingbot.guimc.ltd/#/Commands 找一找你想要的功能罢")
                 return
             pI = player1.getPlayerInfo()
-            print(pI)
+            logging.debug(pI)
             if "lastLogin" not in pI:
                 pI["lastLogin"] = 0
             if 'karma' not in pI:
@@ -867,12 +875,12 @@ Coins: {coin_purse}
                               visited_zones=len(sbprofile["visited_zones"]),
                               death_count=sbprofile["death_count"])
             except:
-                print(traceback.format_exc())
+                logging.error(traceback.format_exc())
             msg.fast_reply(pmsg)
 
     except Exception as e:
         a = traceback.format_exc()
-        print(a)
+        logging.error(a)
         msg.fast_reply(
             "很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(
                 text2image(a)))
@@ -926,7 +934,7 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None):
             # 如果请求失败
             s.raise_for_status()
     else:
-        print("WARN: 目前暂时不支持发送私聊消息")
+        logging.warning("目前暂时不支持发送私聊消息")
 
 
 def urlget(url):
@@ -939,7 +947,7 @@ def urlget(url):
 
 def sendTempMsg(target1, target2, text):
     # 会风控
-    print(text)
+    logging.info(text)
 
 
 def getGroupUser(groupID: int):
@@ -959,7 +967,7 @@ def getGroups():
     if a.status_code != 200:
         raise ConnectionError()
     else:
-        print(a.json()["data"])
+        logging.debug(a.json()["data"])
         for i in a.json()["data"]:
             groups.append(i["group_id"])
         return groups
@@ -986,11 +994,11 @@ def temps_message(ws, message):
     except:
         pass
     b = time.time()
-    sflTime = b - a
+    sfl_time = b - a
     if timePreMessage == 0:
-        timePreMessage = sflTime
+        timePreMessage = sfl_time
     else:
-        timePreMessage = (timePreMessage + sflTime) / 2
+        timePreMessage = (timePreMessage + sfl_time) / 2
 
 
 # 定义一个用来接收监听数据的方法
@@ -1000,18 +1008,20 @@ def on_message(ws, message):
 
 # 定义一个用来处理错误的方法
 def on_error(ws, error):
-    print("-----连接出现异常,异常信息如下-----")
-    print(error)
+    logging.warning("-----连接出现异常,异常信息如下-----")
+    logging.warning(error)
 
 
 # 定义一个用来处理关闭连接的方法
 def on_close(ws, a, b):
-    print("-------连接已关闭------")
+    logging.error("-------连接已关闭------")
+    stop()
 
 
 def goodmor(target=None):
-    msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(
-        text2image(requests.get(url="https://www.ipip5.com/today/api.php?type=txt", verify=False).text))
+    msg1 = "早上好呀~ [CQ:image,file=base64://{}][CQ:image,file=base64://{}]".format(
+        text2image(requests.get(url="https://www.ipip5.com/today/api.php?type=txt", verify=False).text),
+        BROW.get_base64_by_url("https://news.topurl.cn/"))
     s = getGroups()
     if target:
         sendMessage(msg1, target_group=target)
@@ -1031,9 +1041,9 @@ def goodnig():
 
 def main():
     try:
-        print("Starting... (0/5)")
+        logging.info("Starting... (0/5)")
         read_config()
-        print("Starting... (1/5)")
+        logging.info("Starting... (1/5)")
         ws = websocket.WebSocketApp("ws://" + WSURL + "/all?verifyKey=uThZyFeQwJbD&qq=3026726134",
                                     on_message=on_message,
                                     on_error=on_error,
@@ -1041,27 +1051,26 @@ def main():
                                     )
         t3 = threading.Thread(target=ws.run_forever)
         t3.daemon = True
-        print("Starting... (2/5)")
+        logging.info("Starting... (2/5)")
         sched = BlockingScheduler()
         sched.add_job(goodmor, 'cron', hour=7)
         sched.add_job(goodnig, 'cron', hour=22, minute=30)
         t1 = threading.Thread(target=sched.start)
         t1.deamon = True
-        print("Starting... (3/5)")
+        logging.info("Starting... (3/5)")
         t1.start()
-        print("Starting... (4/5)")
+        logging.info("Starting... (4/5)")
         t3.start()
-        print("Starting... (5/5)")
-        print("Bot Ready!")
+        logging.info("Starting... (5/5)")
+        logging.info("Bot Ready!")
         while True:
             time.sleep(3600)
-        # restart()  Reason: Code is unreachable
     except KeyboardInterrupt:
-        restart()
+        stop()
     except BaseException:
-        print("遇到无法恢复的错误 即将退出")
-        print(traceback.format_exc())
-        restart()
+        logging.error("遇到无法恢复的错误 即将退出")
+        logging.error(traceback.format_exc())
+        stop()
 
 
 if __name__ == "__main__":

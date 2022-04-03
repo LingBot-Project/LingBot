@@ -9,15 +9,13 @@
 
 import socket
 import time
-import click
-import sys
-
 from collections import namedtuple
 from functools import partial
-from six.moves import zip_longest
-from six import print_
 from timeit import default_timer as timer
+
 from prettytable import PrettyTable
+from six import print_
+from six.moves import zip_longest
 
 __version__ = "0.1.1rc1"
 
@@ -143,7 +141,7 @@ class Ping(object):
             rate = '0.00'
         return rate
 
-    def statistics(self, n):
+    def statistics(self):
         conn_times = self._conn_times if self._conn_times != [] else [0]
         minimum = '{0:.2f}ms'.format(min(conn_times))
         maximum = '{0:.2f}ms'.format(max(conn_times))
@@ -176,7 +174,7 @@ class Ping(object):
                 cost_time = self.timer.cost(
                     (s.connect, s.shutdown),
                     ((self._host, self._port), None))
-                s_runtime = 1000 * (cost_time)
+                s_runtime = 1000 * cost_time
 
                 iprint("Connected to %s[:%s]: seq=%d time=%.2f ms" % (
                     self._host, self._port, n, s_runtime))
@@ -188,7 +186,7 @@ class Ping(object):
                 self._failed += 1
 
             except KeyboardInterrupt:
-                self.statistics(n - 1)
+                self.statistics()
                 raise KeyboardInterrupt()
 
             else:
@@ -197,4 +195,8 @@ class Ping(object):
             finally:
                 s.close()
 
-        self.statistics(n)
+        self.statistics()
+
+
+if __name__ == "__main__":
+    print("This is a library and you shouldn't run it directly.")
