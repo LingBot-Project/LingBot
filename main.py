@@ -21,7 +21,6 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 
 import tcping
-import url2img
 import os
 
 # hypixel.setKeys([""])
