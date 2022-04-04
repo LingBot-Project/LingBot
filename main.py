@@ -21,7 +21,7 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 
 import tcping
-hypixel.setKeys(["a4564ca3-4712-4a63-98ad-e22fbed541dd", "695eaa6a-bace-4ec8-bf3c-45d7d37dea26"])
+# hypixel.setKeys()
 hypixel.setCacheTime(30.0)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
@@ -397,6 +397,7 @@ def on_message2(ws, message):
                 return
 
         command_list = msg.text.split(" ")
+        
 
         if (msg.group.id, msg.sender.id) in REPEATER:
             if not (command_list[0] == "!repeater" and (command_list[1] == "add" or command_list[1] == "remove")):
@@ -416,6 +417,9 @@ def on_message2(ws, message):
                     (ALL_AD / ALL_MESSAGE) * 100
                 )
             )
+        
+        if command_list[0] == "!hyp":
+            return
 
         if command_list[0] in ["!help", "菜单"]:
             msg.fast_reply("请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
