@@ -21,7 +21,7 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 
 import tcping
-# hypixel.setKeys()
+hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
 hypixel.setCacheTime(30.0)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
@@ -419,7 +419,8 @@ def on_message2(ws, message):
             )
         
         if command_list[0] == "!hyp":
-            return
+            # return
+            pass
 
         if command_list[0] in ["!help", "菜单"]:
             msg.fast_reply("请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
