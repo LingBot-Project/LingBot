@@ -237,9 +237,9 @@ def text2image(text):
                 max_w = font.getmask(i).getbbox()[2]
         except:
             pass
-    im = Image.new("RGB", (max_w + 11, len(lines) * (font_size + 8)), (255, 255, 255))
+    im = Image.new("RGB", (max_w + 15, len(lines) * (font_size + 6)), (255, 255, 255))
     dr = ImageDraw.Draw(im)
-    dr.text((1, 1), text, font=font, fill="#000000")
+    dr.text((2, 2), text, font=font, fill="#000000")
     im.save(imageuid + ".cache.png")
     with open(imageuid + ".cache.png", "rb") as f:
         return base64.b64encode(f.read()).decode()
