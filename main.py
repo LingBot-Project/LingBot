@@ -21,8 +21,6 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 
 import tcping
-import os
-
 # hypixel.setKeys([""])
 hypixel.setCacheTime(30.0)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
