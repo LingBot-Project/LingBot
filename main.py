@@ -851,8 +851,12 @@ Karma(人品值): {karma}
 
             try:
                 sbplayer = hypixel.getJSON('skyblock/profiles', uuid=pI['uuid'])
-                profile_id = sbplayer["profiles"][0]["profile_id"]
-                sbprofile = sbplayer["profiles"][0]["members"][profile_id]
+                try:
+                    profile_id = sbplayer["profiles"][0]["profile_id"]
+                    sbprofile = sbplayer["profiles"][0]["members"][profile_id]
+                except:
+                    profile_id = list(sbplayer["profiles"][0]["members"])[0][0]
+                    sbprofile = sbplayer["profiles"][0]["members"][profile_id]
                 finished_quests = 0
                 for i in sbprofile["quests"]:
                     if sbprofile["quests"][i]["status"] == "COMPLETE":
