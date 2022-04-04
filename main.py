@@ -418,7 +418,7 @@ def on_message2(ws, message):
                     get_runtime(),
                     timePreMessage,
                     ALL_AD,
-                    (ALL_AD / ALL_MESSAGE) * 100
+                    round((ALL_AD / ALL_MESSAGE) * 100, 2)
                 )
             )
 
@@ -637,7 +637,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 re.sub(MC_MOTD_COLORFUL, "", server.description),
                 server.players.online,
                 server.players.max,
-                server.latency,
+                round(server.latency, 2),
                 re.sub(MC_MOTD_COLORFUL, "", server.version.name),
                 server.version.protocol
             )
