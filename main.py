@@ -713,7 +713,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                             mute_time = command_list[3]
                         if command_list[4] == 'h' or command_list[4] == '小时':
                             time_type = 'h'
-                            mute_time = command_list[3] * 1440
+                            mute_time = command_list[3] * 3600
 
                     mutePerson(command_list[1], command_list[2], mute_time)
                     msg.fast_reply(f"已尝试在群 {command_list[1]} 禁言 {command_list[2]} {command_list[3]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else '小时')}")
