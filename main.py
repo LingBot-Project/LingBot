@@ -403,7 +403,8 @@ def on_message2(ws, message):
             return
 
         if (msg.group.id, msg.sender.id) in REPEATER:
-            msg.fast_reply(msg.text, reply=False, at=False)
+            if not (command_list[0] == "!repeater" and (command_list[1] == "add" or command_list[1] == "remove")):
+                msg.fast_reply(msg.text, reply=False, at=False)
 
         if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
