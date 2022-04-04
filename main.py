@@ -706,7 +706,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     unmutePerson(command_list[1], command_list[2])
                 else:
                     mutePerson(command_list[1], command_list[2], command_list[3] * 60)
-                    msg.fast_reply("已尝试在群 {} 禁言 {} {}分钟".format(command_list[1], command_list[2], command_list[3]))
+                    msg.fast_reply("已尝试在群 {} 禁言 {} {}分钟 {}".format(command_list[1], command_list[2], command_list[3], command_list))
             else:
                 msg.fast_reply("你的权限不足!")
 
