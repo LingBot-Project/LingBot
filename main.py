@@ -21,7 +21,7 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 
 import tcping
-# hypixel.setKeys([""])
+hypixel.setKeys(["a4564ca3-4712-4a63-98ad-e22fbed541dd", "695eaa6a-bace-4ec8-bf3c-45d7d37dea26"])
 hypixel.setCacheTime(30.0)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
@@ -397,10 +397,6 @@ def on_message2(ws, message):
                 return
 
         command_list = msg.text.split(" ")
-        
-        if command_list[0] == "!hyp":
-            msg.fast_reply("该功能已经临时停用 汐洛找不到一个能提供正常服务 不是万人骑的Hypixel api-key")
-            return
 
         if (msg.group.id, msg.sender.id) in REPEATER:
             if not (command_list[0] == "!repeater" and (command_list[1] == "add" or command_list[1] == "remove")):
