@@ -300,6 +300,19 @@ def on_message2(ws, message):
         ALL_MESSAGE += 1
 
         logging.info("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
+        reScan = re.findall(
+            ANTI_AD,
+            msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
+        if len(msg.text) >= 33 and len(reScan) >= 2:
+            SPAM2_VL[msg.sender.id] += 4
+            if msg.sender.isadmin():
+                sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
+                            target_group=1019068934)
+                return
+            msg.mute(3600)
+            msg.recall()
+            ALL_AD += 1
+            return
 
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
@@ -330,20 +343,6 @@ def on_message2(ws, message):
             if SPAM2_VL[msg.sender.id] > 0:
                 SPAM2_VL[msg.sender.id] -= 2
 
-        reScan = re.findall(
-            ANTI_AD,
-            msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
-        if len(msg.text) >= 33 and len(reScan) >= 2:
-            SPAM2_VL[msg.sender.id] += 4
-            if msg.sender.isadmin():
-                sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
-                            target_group=1019068934)
-                return
-            msg.mute(3600)
-            msg.recall()
-            ALL_AD += 1
-            return
-
         sc_id_ad = re.search(ANTI_AD, msg.sender.name.replace(" ", "").replace(".", "").replace("\n", "").lower())
         if sc_id_ad is not None and not msg.sender.isadmin():
             msg.mute(600)
@@ -353,11 +352,12 @@ def on_message2(ws, message):
             ALL_AD += 1
             return
 
-        if len(msg.text) > 1500:
-            msg.mute(600)
-            msg.recall()
-            msg.fast_reply("消息太长了哟", reply=False)
-            SPAM2_VL[msg.sender.id] += 3
+        if len(msg.text) > 1000:
+            if msg.text.find("[CQ:xml") != -1 and msg.text.find("[CQ:json") != -1:
+                msg.mute(600)
+                msg.recall()
+                msg.fast_reply("消息太长了哟", reply=False)
+                SPAM2_VL[msg.sender.id] += 3
             return
 
         multiMsg = re.search(r'\[CQ:forward,id=(.*)]', msg.text)
