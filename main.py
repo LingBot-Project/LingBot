@@ -771,6 +771,16 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 sendMessage("您想自闭多久呢？", msg.sender.id, msg.group.id)
                 AUTISM.append((msg.group.id, msg.sender.id))
             else:
+                if command_list[2] == "help":
+                    sendMessage("""
+                    自闭指令 : !mute
+                    使用方法 :
+                        发送“!我要自闭 <时间> <单位>”
+                    使用方法② : 
+                        发送”!mute“
+                        然后再发送”<时间> <单位>“
+                    <单位> : 默认是分钟，可填 s (秒)、 h (时)、 d (天)
+                    """, target_group=msg.group.id)
                 command_list[1] = int(command_list[1])
                 mute_time = command_list[1] * 60
                 time_type = 'min'
