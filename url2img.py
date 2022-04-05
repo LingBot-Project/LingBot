@@ -42,30 +42,12 @@ def screenshot(url: str, img_path: str) -> None:
     chrome_options.add_argument("-lang=zh-cn")
     driver1 = webdriver.Chrome(chrome_options=chrome_options, executable_path="/root/chromedriver")
     driver1.get(url)
-    driver1.save_screenshot(img_path)
-    JS = {
-        '滚动到页尾': "window.scroll({top:document.body.clientHeight,left:0,behavior:'auto'});",
-        '滚动到': "window.scroll({top:%d,left:0,behavior:'auto'});",
-    }
     # 获取body大小
     body_h = int(driver1.find_element_by_xpath('//body').size.get('height'))
     body_w = int(driver1.find_element_by_xpath('//body').size.get('width'))
-    current_h = Image.open(img_path).size[1]
-    driver1.set_window_size(body_w, current_h)
+    driver1.set_window_size(body_w, body_h)
 
-    for i in range(1, int(body_h / current_h)):
-        # 1. 滚动到指定锚点
-        driver1.execute_script(JS['滚动到'] % (current_h * i))
-        # 2. 截图
-        driver1.save_screenshot(f'test_{i}.png')
-        join_images(img_path, f'test_{i}.png')
-        os.remove(f'test_{i}.png')
-    # 处理最后一张图
-    driver1.execute_script(JS['滚动到页尾'])
-    driver1.save_screenshot('test_end.png')
-    # 拼接图片
-    join_images(img_path, 'test_end.png', size=current_h - int(body_h % current_h))
-    os.remove('test_end.png')
+    driver1.save_screenshot(img_path)
     driver1.close()
     driver1.quit()
 
