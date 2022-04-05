@@ -746,7 +746,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("你的权限不足!")
 
         if command_list[0] == "!我要自闭":
-            command_list[1] == int(command_list[1])
+            command_list[1] = int(command_list[1])
             mute_time = command_list[1] * 60
             time_type = 'min'
             if len(command_list) > 2:
