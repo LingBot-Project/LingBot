@@ -771,7 +771,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 sendMessage("您想自闭多久呢？", msg.sender.id, msg.group.id)
                 AUTISM.append((msg.group.id, msg.sender.id))
             else:
-                if command_list[2] == "help":
+                if command_list[1] == "help":
                     sendMessage("""
                     自闭指令 : !mute
                     使用方法 :
