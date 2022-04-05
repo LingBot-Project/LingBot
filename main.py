@@ -781,6 +781,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                         然后再发送”<时间> <单位>“
                     <单位> : 默认是分钟，可填 s (秒)、 h (时)、 d (天)
                     """, target_group=msg.group.id)
+                    return
                 command_list[1] = int(command_list[1])
                 mute_time = command_list[1] * 60
                 time_type = 'min'
