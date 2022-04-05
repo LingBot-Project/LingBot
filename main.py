@@ -746,6 +746,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("你的权限不足!")
 
         if (msg.group.id, msg.sender.id) in AUTISM:
+            AUTISM.remove((msg.group.id, msg.sender.id))
             command_list[0] = int(command_list[0])
             mute_time = command_list[0] * 60
             time_type = 'min'
@@ -762,7 +763,6 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             mutePerson(msg.group.id, msg.sender.id, mute_time)
             msg.fast_reply(
                 f"您将要自闭{command_list[0]}{mute_type(time_type)}")
-            AUTISM.remove((msg.group.id, msg.sender.id))
 
         if command_list[0] == "!我要自闭":
             if len(command_list) <= 1:
