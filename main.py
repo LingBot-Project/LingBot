@@ -747,7 +747,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 
         if (msg.group.id, msg.sender.id) in AUTISM:
             AUTISM.remove((msg.group.id, msg.sender.id))
-            if command_list[0] == 0 or "不想自闭" in command_list[0]:
+            if command_list[0] == "0" or "不想自闭" in command_list[0]:
                 msg.fast_reply("那就别自闭了")
                 return
             command_list[0] = int(command_list[0])
