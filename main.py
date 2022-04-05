@@ -743,7 +743,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 
         if command_list[0] == "!我要自闭":
             if len(command_list) == 1:
-                msg.fast_reply("你想自闭多久呢？")：
+                msg.fast_reply("你想自闭多久呢？")
                 AUTISM.append((msg.group.id, msg.sender))
         
         if (msg.group.id, msg.sender) in AUTISM:
