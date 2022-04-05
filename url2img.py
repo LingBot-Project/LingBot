@@ -45,7 +45,7 @@ def screenshot(url: str, img_path: str) -> None:
     # 获取body大小
     body_h = int(driver1.find_element_by_xpath('//body').size.get('height'))
     body_w = int(driver1.find_element_by_xpath('//body').size.get('width'))
-    driver1.set_window_size(body_w, body_h)
+    driver1.set_window_size(body_w+150, body_h+30)
 
     driver1.save_screenshot(img_path)
     driver1.close()
