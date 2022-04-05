@@ -39,7 +39,6 @@ def screenshot(url: str, img_path: str) -> None:
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--headless')
-    chrome_options.add_argument("window-size=1920,1080")
     chrome_options.add_argument("-lang=zh-cn")
     driver1 = webdriver.Chrome(chrome_options=chrome_options, executable_path="/root/chromedriver")
     driver1.get(url)
@@ -50,7 +49,9 @@ def screenshot(url: str, img_path: str) -> None:
     }
     # 获取body大小
     body_h = int(driver1.find_element_by_xpath('//body').size.get('height'))
+    body_w = int(driver1.find_element_by_xpath('//body').size.get('width'))
     current_h = Image.open(img_path).size[1]
+    driver1.set_window_size(body_w, current_h)
 
     for i in range(1, int(body_h / current_h)):
         # 1. 滚动到指定锚点
