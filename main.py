@@ -744,11 +744,11 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
         if command_list[0] == "!我要自闭":
             if len(command_list) == 1:
                 msg.fast_reply("你想自闭多久呢？")：
-                AUTISM.append((msg.group.id, msg.sender.id))
+                AUTISM.append((msg.group.id, msg.sender))
         
-        if (msg.group.id, msg.sender.id) in AUTISM:
+        if (msg.group.id, msg.sender) in AUTISM:
             msg.fast_reply("还未制作完成")
-            AUTISM.remove((msg.group.id, msg.sender.id))
+            AUTISM.remove((msg.group.id, msg.sender))
 
         if command_list[0] == "!vl":
             if not msg.sender.isadmin():
