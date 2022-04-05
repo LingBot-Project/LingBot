@@ -751,13 +751,13 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             if len(command_list) > 2:
                 if command_list[2] == 's' or command_list[2] == '秒':
                     time_type = 's'
-                    mute_time = command_list[0]
+                    mute_time = command_list[1]
                 if command_list[2] == 'h' or command_list[2] == '小时':
                     time_type = 'h'
-                    mute_time = command_list[0] * 3600
+                    mute_time = command_list[1] * 3600
                 if command_list[2] == 'd' or command_list[2] == '天':
                     time_type = 'd'
-                    mute_time = command_list[0] * 86400
+                    mute_time = command_list[1] * 86400
             mutePerson(msg.group.id, msg.sender.id, mute_time)
             msg.fast_reply(
                 f"您将要自闭{command_list[1]}{mute_type(time_type)}")
