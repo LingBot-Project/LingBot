@@ -444,6 +444,12 @@ def on_message2(ws, message):
         if msg.text == "!random":
             msg.fast_reply(str(random.randint(1, 100)))
             return
+        
+        if command_list[0] == "!testchrome" and msg.sender.id == 1584784496:
+            msg.fast_reply("Trying...")
+            msg.fast_reply("[CQ:image,file=base64://{}]".format(
+                requests.post(url="http://localhost:25666/url2base64", data={"url": " ".join(command_list[1:]}).text.replace("\n", "")))
+            
 
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
