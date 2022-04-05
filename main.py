@@ -21,6 +21,7 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 
 import tcping
+
 hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
 hypixel.setCacheTime(30.0)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
@@ -50,7 +51,6 @@ AUTISM = []
 SPAM2_MSG = {}
 SPAM2_VL = {}
 SCREENSHOT_CD = 0
-
 
 # URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
 ANTI_AD = r"送福利|定制水影|加群.*[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群.*[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙.*[0-9]{5,10}|君羊.*[0-9]{5,10}|q(\:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*|vape"
@@ -272,12 +272,13 @@ def on_message2(ws, message):
         MESSAGE_PRE_MINUTE, ALL_MESSAGE, \
         ALL_AD, FEEDBACKS, \
         spam2_vl_reset_cool_down, SCREENSHOT_CD
-    
+
     a = json.loads(message)
-    if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and a["target_id"] == a["self_id"]:
+    if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and \
+            a["target_id"] == a["self_id"]:
         sendMessage("不要戳我啦 =w=", target_group=a["group_id"], target_qq=a["user_id"])
         return
-    
+
     msg = Message(message)
 
     try:
@@ -316,7 +317,7 @@ def on_message2(ws, message):
                 #         target_group=1019068934)
                 # msg.recall()
                 if SPAM2_VL[msg.sender.id] >= 200:
-                    msg.mute(43199*60)  # :259200
+                    msg.mute(43199 * 60)  # :259200
                     SPAM2_VL[msg.sender.id] -= 20
                     return
                 # else:
@@ -398,7 +399,6 @@ def on_message2(ws, message):
                 return
 
         command_list = msg.text.split(" ")
-        
 
         if (msg.group.id, msg.sender.id) in REPEATER:
             if not (command_list[0] == "!repeater" and (command_list[1] == "add" or command_list[1] == "remove")):
@@ -418,7 +418,7 @@ def on_message2(ws, message):
                     (ALL_AD / ALL_MESSAGE) * 100
                 )
             )
-        
+
         if command_list[0] == "!hyp":
             # return
             pass
@@ -445,33 +445,36 @@ def on_message2(ws, message):
         if msg.text == "!random":
             msg.fast_reply(str(random.randint(1, 100)))
             return
-        
+
         if command_list[0] == "!testchrome" and msg.sender.id == 1584784496:
             msg.fast_reply("Trying...")
             msg.fast_reply("[CQ:image,file=base64://{}]".format(
-                requests.post(url="http://localhost:25666/url2base64", data={"url": " ".join(command_list[1:])}).text.replace("\n", "")))
-            
+                requests.post(url="http://localhost:25666/url2base64",
+                              data={"url": " ".join(command_list[1:])}).text.replace("\n", "")))
 
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
             if msg.text.find('https://b23.tv/') != -1:
                 try:
                     str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
-                        re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
-                                   requests.get(json.loads(
-                                       re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace("&#44;", ","))[
-                                                    "meta"]["news"]["jumpUrl"]).text)[0].replace(
+                        re.findall(
+                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
+                            requests.get(json.loads(
+                                re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace(
+                                    "&#44;", ","))[
+                                             "meta"]["news"]["jumpUrl"]).text)[0].replace(
                             r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
                         :-3])).json()
                 except KeyError:
                     str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
-                        re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
-                                   requests.get(json.loads(
-                                       re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace("&#44;", ","))[
-                                                    "meta"]["detail_1"]["qqdocurl"]).text)[0].replace(
+                        re.findall(
+                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
+                            requests.get(json.loads(
+                                re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace(
+                                    "&#44;", ","))[
+                                             "meta"]["detail_1"]["qqdocurl"]).text)[0].replace(
                             r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
                         :-3])).json()
-
 
                 if str1["code"] != 0:
                     logging.warning("查询失败")
@@ -737,7 +740,8 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                             mute_time = command_list[3] * 86400
 
                     mutePerson(command_list[1], command_list[2], mute_time)
-                    msg.fast_reply(f"已尝试在群 {command_list[1]} 禁言 {command_list[2]} {command_list[3]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else ('小时' if time_type == 'h' else '天'))}")
+                    msg.fast_reply(
+                        f"已尝试在群 {command_list[1]} 禁言 {command_list[2]} {command_list[3]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else ('小时' if time_type == 'h' else '天'))}")
             else:
                 msg.fast_reply("你的权限不足!")
 
@@ -755,12 +759,10 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     time_type = 'd'
                     mute_time = command_list[0] * 86400
             mutePerson(msg.group.id, msg.sender.id, mute_time)
-            msg.fast_reply(f"您将要自闭{command_list[1]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else ('小时' if time_type == 'h' else '天'))}")
-            
-                
-        
+            msg.fast_reply(
+                f"您将要自闭{command_list[1]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else ('小时' if time_type == 'h' else '天'))}")
+
         if (msg.group.id, msg.sender.id) in AUTISM:
-            
             AUTISM.remove((msg.group.id, msg.sender.id))
 
         if command_list[0] == "!vl":
@@ -1077,7 +1079,8 @@ def on_close(ws, a, b):
 
 def goodmor(target=None):
     msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(
-        requests.post(url="http://localhost:25666/url2base64", data={"url": "https://news.topurl.cn/"}).text.replace("\n", ""))
+        requests.post(url="http://localhost:25666/url2base64", data={"url": "https://news.topurl.cn/"}).text.replace(
+            "\n", ""))
     s = getGroups()
     if target:
         sendMessage(msg1, target_group=target)
