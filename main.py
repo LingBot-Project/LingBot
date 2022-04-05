@@ -741,7 +741,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 
                     mutePerson(command_list[1], command_list[2], mute_time)
                     msg.fast_reply(
-                        f"已尝试在群 {command_list[1]} 禁言 {command_list[2]} {command_list[3]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else ('小时' if time_type == 'h' else '天'))}")
+                        f"已尝试在群 {command_list[1]} 禁言 {command_list[2]} {command_list[3]}{mute_type(time_type)}")
             else:
                 msg.fast_reply("你的权限不足!")
 
@@ -760,7 +760,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     mute_time = command_list[0] * 86400
             mutePerson(msg.group.id, msg.sender.id, mute_time)
             msg.fast_reply(
-                f"您将要自闭{command_list[1]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else ('小时' if time_type == 'h' else '天'))}")
+                f"您将要自闭{command_list[1]}{mute_type(time_type)}")
 
         if (msg.group.id, msg.sender.id) in AUTISM:
             AUTISM.remove((msg.group.id, msg.sender.id))
@@ -1034,6 +1034,17 @@ def getGroups():
 
 def permCheck(groupID, target):
     return True
+
+
+def mute_type(mute__type):
+    if mute__type == "s":
+        return "秒"
+    if mute__type == "min":
+        return "分钟"
+    if mute__type == "h":
+        return "小时"
+    if mute__type == "d":
+        return "天"
 
 
 def search_user(uid):
