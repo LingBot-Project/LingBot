@@ -765,9 +765,9 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             AUTISM.remove((msg.group.id, msg.sender.id))
 
         if command_list[0] == "!我要自闭":
-            if len(command_list) == 1:
-                AUTISM.append((msg.group.id, msg.sender.id))
+            if len(command_list) <= 1:
                 msg.fast_reply("您想自闭多久呢？")
+                AUTISM.append((msg.group.id, msg.sender.id))
             else:
                 command_list[1] = int(command_list[1])
                 mute_time = command_list[1] * 60
