@@ -742,12 +742,6 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("你的权限不足!")
 
         if command_list[0] == "!我要自闭":
-'''
-            if len(command_list) == 1:
-                msg.fast_reply("你想自闭多久呢？")
-                AUTISM.append((msg.group.id, msg.sender.id))
-            else:
-'''
             mute_time = command_list[0] * 60
             time_type = 'min'
             if len(command_list) > 2:
