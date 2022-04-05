@@ -749,23 +749,22 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             AUTISM.remove((msg.group.id, msg.sender.id))
             if command_list[0] == "0" or "不想自闭" in command_list[0]:
                 msg.fast_reply("那就别自闭了")
-                return
-            command_list[0] = int(command_list[0])
-            mute_time = command_list[0] * 60
-            time_type = 'min'
-            if len(command_list) > 1:
-                if command_list[1] == 's' or command_list[1] == '秒':
-                    time_type = 's'
-                    mute_time = command_list[1]
-                if command_list[1] == 'h' or command_list[1] == '小时':
-                    time_type = 'h'
-                    mute_time = command_list[1] * 3600
-                if command_list[1] == 'd' or command_list[1] == '天':
-                    time_type = 'd'
-                    mute_time = command_list[1] * 86400
-            mutePerson(msg.group.id, msg.sender.id, mute_time)
-            msg.fast_reply(
-                f"您将要自闭{command_list[0]}{mute_type(time_type)}")
+            else:
+                command_list[0] = int(command_list[0])
+                mute_time = command_list[0] * 60
+                time_type = 'min'
+                if len(command_list) > 1:
+                    if command_list[1] == 's' or command_list[1] == '秒':
+                        time_type = 's'
+                        mute_time = command_list[1]
+                    if command_list[1] == 'h' or command_list[1] == '小时':
+                        time_type = 'h'
+                        mute_time = command_list[1] * 3600
+                    if command_list[1] == 'd' or command_list[1] == '天':
+                        time_type = 'd'
+                        mute_time = command_list[1] * 86400
+                mutePerson(msg.group.id, msg.sender.id, mute_time)
+                msg.fast_reply(f"您将要自闭{command_list[0]}{mute_type(time_type)}")
 
         if command_list[0] == "!我要自闭":
             if len(command_list) <= 1:
