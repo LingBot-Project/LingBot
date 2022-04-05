@@ -742,13 +742,32 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("你的权限不足!")
 
         if command_list[0] == "!我要自闭":
+'''
             if len(command_list) == 1:
                 msg.fast_reply("你想自闭多久呢？")
-                AUTISM.append((msg.group.id, msg.sender))
+                AUTISM.append((msg.group.id, msg.sender.id))
+            else:
+'''
+            mute_time = command_list[0] * 60
+            time_type = 'min'
+            if len(command_list) > 2:
+                if command_list[2] == 's' or command_list[2] == '秒':
+                    time_type = 's'
+                    mute_time = command_list[0]
+                if command_list[2] == 'h' or command_list[2] == '小时':
+                    time_type = 'h'
+                    mute_time = command_list[0] * 3600
+                if command_list[2] == 'd' or command_list[2] == '天':
+                    time_type = 'd'
+                    mute_time = command_list[0] * 86400
+            mutePerson(msg.group.id, msg.sender.id, mute_type)
+            msg.fast_reply(f"您将要自闭{command_list[1]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else ('小时' if time_type == 'h' else '天'))}")
+            
+                
         
-        if (msg.group.id, msg.sender) in AUTISM:
-            msg.fast_reply("还未制作完成")
-            AUTISM.remove((msg.group.id, msg.sender))
+        if (msg.group.id, msg.sender.id) in AUTISM:
+            
+            AUTISM.remove((msg.group.id, msg.sender.id))
 
         if command_list[0] == "!vl":
             if not msg.sender.isadmin():
