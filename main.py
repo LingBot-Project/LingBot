@@ -46,6 +46,7 @@ ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 REPEATER = []
+AUTISM = []
 SPAM2_MSG = {}
 SPAM2_VL = {}
 SCREENSHOT_CD = 0
@@ -739,6 +740,15 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     msg.fast_reply(f"已尝试在群 {command_list[1]} 禁言 {command_list[2]} {command_list[3]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else ('小时' if time_type == 'h' else '天'))}")
             else:
                 msg.fast_reply("你的权限不足!")
+
+        if command_list[0] == "!我要自闭":
+            if len(command_list) == 1:
+                msg.fast_reply("你想自闭多久呢？")：
+                AUTISM.append((msg.group.id, msg.sender.id))
+        
+        if (msg.group.id, msg.sender.id) in AUTISM:
+            msg.fast_reply("还未制作完成")
+            AUTISM.remove((msg.group.id, msg.sender.id))
 
         if command_list[0] == "!vl":
             if not msg.sender.isadmin():
