@@ -731,9 +731,12 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                         if command_list[4] == 'h' or command_list[4] == '小时':
                             time_type = 'h'
                             mute_time = command_list[3] * 3600
+                        if command_list[4] == 'd' or command_list[4] == '天':
+                            time_type = 'd'
+                            mute_time = command_list[3] * 86400
 
                     mutePerson(command_list[1], command_list[2], mute_time)
-                    msg.fast_reply(f"已尝试在群 {command_list[1]} 禁言 {command_list[2]} {command_list[3]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else '小时')}")
+                    msg.fast_reply(f"已尝试在群 {command_list[1]} 禁言 {command_list[2]} {command_list[3]}{'分钟' if time_type == 'min' else ('秒' if time_type == 's' else ('小时' if time_type == 'h' else '天'))}")
             else:
                 msg.fast_reply("你的权限不足!")
 
