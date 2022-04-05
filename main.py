@@ -454,13 +454,23 @@ def on_message2(ws, message):
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
             if msg.text.find('https://b23.tv/') != -1:
-                str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
-                    re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
-                               requests.get(json.loads(
-                                   re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace("&#44;", ","))[
-                                                "meta"]["news"]["jumpUrl"]).text)[0].replace(
-                        r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
-                    :-3])).json()
+                try:
+                    str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
+                        re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
+                                   requests.get(json.loads(
+                                       re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace("&#44;", ","))[
+                                                    "meta"]["news"]["jumpUrl"]).text)[0].replace(
+                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
+                        :-3])).json()
+                except KeyError:
+                    str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
+                        re.findall(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
+                                   requests.get(json.loads(
+                                       re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace("&#44;", ","))[
+                                                    "meta"]["detail_1"]["qqdocurl"]).text)[0].replace(
+                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
+                        :-3])).json()
+
 
                 if str1["code"] != 0:
                     logging.warning("查询失败")
