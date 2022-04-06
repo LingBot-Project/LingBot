@@ -997,9 +997,9 @@ Coins: {coin_purse}
                     if msg.group.id in INTRODUCE[command_list[1]]:
                         sendMessage(f"的简介为 : \n{INTRODUCE[command_list[1]][msg.group.id]}", command_list[1], msg.group.id)
                     else:
-                        sendMessage(f"未在此群添加介绍", msg.group.id)
+                        sendMessage(f"未在此群添加介绍", target_group = msg.group.id)
                 else:
-                    sendMessage(command_list[1], msg.group.id)
+                    sendMessage(command_list[1], target_group = msg.group.id)
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] = msg.group.id
