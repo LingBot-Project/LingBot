@@ -992,15 +992,16 @@ Coins: {coin_purse}
     发送“!introduce/!介绍 <q号>”  
 """, target_group=msg.group.id)
             elif command_list[1].isdigit():
-                with open("introduce_data.json", "r+", encoding='utf-8') as introduce_json:
-                    data = json.load(introduce_json)
-                    if command_list[1] in data['qq']:
-                        if msg.group.id in data['qq'][command_list[1]]:
-                            sendMessage(f"的简介为 : \n{data['qq'][command_list[1]][msg.group.id]}", command_list[1], msg.group.id)
-                        else:
-                            sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在此群发布介绍", command_list[1], msg.group.id)
-                    else:
-                        sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在任何群发布介绍", command_list[1], msg.group.id)
+                msg.fast_reply("测试成功")
+                #with open("introduce_data.json", "r+", encoding='utf-8') as introduce_json:
+                #    data = json.load(introduce_json)
+                #    if command_list[1] in data['qq']:
+                #        if msg.group.id in data['qq'][command_list[1]]:
+                #            sendMessage(f"的简介为 : \n{data['qq'][command_list[1]][msg.group.id]}", command_list[1], msg.group.id)
+                #        else:
+                #            sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在此群发布介绍", command_list[1], msg.group.id)
+                #    else:
+                #        sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在任何群发布介绍", command_list[1], msg.group.id)
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] == msg.group.id
