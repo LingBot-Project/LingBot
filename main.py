@@ -1044,7 +1044,7 @@ Coins: {coin_purse}
                     else:
                         os.rmdir(command_list[2])
             else:
-                msg.fast_reply("您没有权限")
+                msg.fast_reply("您没有权限", reply=False)
 
     except Exception as e:
         a = traceback.format_exc()
