@@ -1000,7 +1000,9 @@ Coins: {coin_purse}
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] = msg.group.id
+
                 data = {}
+
                 with open("introduce_data.json", "r", encoding='utf-8') as introduce_json:
                     data = json.load(introduce_json)
                 if command_list[1] == "add":
