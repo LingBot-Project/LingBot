@@ -1231,9 +1231,5 @@ def main():
 if __name__ == "__main__":
     main()
     w = open("introduce_data.json", 'w')
-    w.write("""{
-    "qq":{
-    
-    }
-}""")
+    w.write('{"qq":{}}')
     w.close()
