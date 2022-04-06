@@ -48,6 +48,7 @@ IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 REPEATER = []
 AUTISM = []
+INTRODUCE = []
 SPAM2_MSG = {}
 SPAM2_VL = {}
 SCREENSHOT_CD = 0
@@ -780,6 +781,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
     发送”!我要自闭“
     然后再发送”<时间> <单位>“
 <单位> : 默认是分钟，可填 s (秒)、 h (时)、 d (天)
+        发送 0 或包含 “不想自闭” 可取消自闭
                     """, target_group=msg.group.id)
                     return
                 command_list[1] = int(command_list[1])
@@ -970,10 +972,51 @@ Coins: {coin_purse}
             except:
                 logging.error(traceback.format_exc())
             msg.fast_reply(pmsg)
-
-        if command_list[0] == "" or command_list[0] == "!介绍":
+        ssssssss = False
+        if command_list[0] == "!introduce" or command_list[0] == "!介绍":
             if command_list[1] == 'help':
-                sendMessage(msg, target_group=msg.group.id)
+                sendMessage(f"""
+自闭指令 : !introduce/!介绍
+编辑介绍 :
+    使用方法 :
+        发送“!introduce/!介绍 <type> <群号> <介绍>”
+    {'''使用方法② : 
+        可以一段一段发，顺序没错就行
+        比如 : /introduce add 123456 + xxxx
+        或者 : /introduce add + 123456 + xxxx
+        或者 : /introduce + remove + 123456 xxxx
+        等等等等
+''' if ssssssss else ""}<type> : add(添加) remove(删除) edit(编辑)
+    <群号> : 如果在本群可以填"this"
+    <介绍> : 随便填（支持CQ码）
+查看介绍 : 
+    发送“!introduce/!介绍 <q号>”  
+""", target_group=msg.group.id)
+            elif len(command_list) == 1:
+                # INTRODUCE.append[msg.group.id, msg.sender.id, 1]
+                pass
+                sendMessage("你想编辑你在哪个群的介绍呢？（在本群请发送this）", msg.sender.id, msg.group.id)
+            elif len(command_list) == 2:
+                # INTRODUCE.append[msg.group.id, msg.sender.id, 2]
+                pass
+            elif len(command_list) == 3:
+                # INTRODUCE.append[msg.group.id, msg.sender.id, 3]
+                pass
+            elif len(command_list) == 4:
+                if command_list[2] == "this":
+                    command_list[2] == msg.group.id
+                with open("introduce.json", "r+", encoding='utf-8') as introduce_json:
+                    data = json.load(introduce_json)
+                    if command_list[1] == "add":
+                        if data["qq"].has_key(msg.sender.id):
+                            if data["qq"][msg.sender.id].has_key(msg.group.id):
+                                msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit")
+                            else:
+                                data["qq"][msg.sender.id][msg.group.id] = command_list[3]
+                        else:
+                            data["qq"][msg.sender.id] = {}
+                            data["qq"][msg.sender.id][msg.group.id] = command_list[3]
+
 
     except Exception as e:
         a = traceback.format_exc()
