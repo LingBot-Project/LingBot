@@ -1021,6 +1021,7 @@ Coins: {coin_purse}
                     if str(msg.sender.id) in INTRODUCE:
                         if str(msg.group.id) in INTRODUCE[str(msg.sender.id)]:
                             del INTRODUCE[str(msg.sender.id)][str(msg.group.id)]
+                            msg.fast_reply("删除您在本群的介绍成功")
 
     except Exception as e:
         a = traceback.format_exc()
