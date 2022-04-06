@@ -971,9 +971,9 @@ Coins: {coin_purse}
                 logging.error(traceback.format_exc())
             msg.fast_reply(pmsg)
 
-        if command_list[0] == "!introduce" or command_list[0] == "!介绍":
+        if command_list[0] == "" or command_list[0] == "!介绍":
             if command_list[1] == 'help':
-                sendMessage(msg, msg.group.id)
+                sendMessage(msg, target_group=msg.group.id)
 
     except Exception as e:
         a = traceback.format_exc()
