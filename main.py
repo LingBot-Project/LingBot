@@ -166,7 +166,7 @@ def save_config():
     config["DEFAULT"] = {
         "admin": ",".join('%s' % _id for _id in ADMIN_LIST),
         "blacklist": ",".join('%s' % _id for _id in BLACK_LIST),
-        "introduce": json.dumps(INTRODUCE)
+        "introduce": ''.join(json.dumps(INTRODUCE))
     }
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
@@ -990,22 +990,25 @@ Coins: {coin_purse}
     <群号> : 如果在本群可以填"this"
     <介绍> : 随便填（支持CQ码）
 查看介绍 : 
-    发送“!introduce/!介绍 <q号>”  
+    发送“!introduce/!介绍 <Q号>” 
+    <Q号> : 填"me"介绍自己
 """, target_group=msg.group.id)
-            elif command_list[1].isdigit():
+            elif command_list[1].isdigit() or command_list[1] == 'me':
+                if command_list[1] == 'me':
+                    command_list[1] = str(msg.sender.id)
                 if str(command_list[1]) in INTRODUCE:
                     if str(msg.group.id) in INTRODUCE[str(command_list[1])]:
-                        sendMessage(f"的简介为 : \n{INTRODUCE[str(command_list[1])][str(msg.group.id)]}", command_list[1], msg.group.id)
+                        sendMessage(f"的介绍为 : \n{INTRODUCE[str(command_list[1])][str(msg.group.id)]}", command_list[1], msg.group.id)
                     else:
                         sendMessage(f"未在此群添加介绍", command_list[1], msg.group.id)
                 else:
                     sendMessage(f"未在任何群添加介绍", command_list[1], msg.group.id)
             elif len(command_list) == 4:
                 if command_list[2] == "this":
-                    command_list[2] = msg.group.id
+                    command_list[2] = str(msg.group.id)
                 if command_list[1] == "add":
-                    if msg.sender.id in INTRODUCE:
-                        if msg.group.id in INTRODUCE[msg.sender.id]:
+                    if str(msg.sender.id) in INTRODUCE:
+                        if str(msg.group.id) in INTRODUCE[str(msg.sender.id)]:
                             msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit")
                         else:
                             INTRODUCE[str(msg.sender.id)][str(msg.group.id)] = command_list[3]
@@ -1014,8 +1017,10 @@ Coins: {coin_purse}
                         INTRODUCE[str(msg.sender.id)] = {}
                         INTRODUCE[str(msg.sender.id)][str(msg.group.id)] = command_list[3]
                         msg.fast_reply("添加成功")
-            elif len(command_list) == 2 or len(command_list) == 3:
-                msg.fast_reply("请输入完整指令，查看详情请输入!introduce/!介绍 help")
+                if command_list[1] == "remove":
+                    if str(msg.sender.id) in INTRODUCE:
+                        if str(msg.group.id) in INTRODUCE[str(msg.sender.id)]:
+                            del INTRODUCE[str(msg.sender.id)][str(msg.group.id)]
 
     except Exception as e:
         a = traceback.format_exc()
