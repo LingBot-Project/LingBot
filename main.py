@@ -993,13 +993,13 @@ Coins: {coin_purse}
     发送“!introduce/!介绍 <q号>”  
 """, target_group=msg.group.id)
             elif command_list[1].isdigit():
-                    if command_list[1] in INTRODUCE:
-                        if msg.group.id in INTRODUCE[command_list[1]]:
-                            sendMessage(f"的简介为 : \n{INTRODUCE[command_list[1]][msg.group.id]}", command_list[1], msg.group.id)
-                        else:
-                            sendMessage(f"{INTRODUCE[command_list[1]][msg.group.id]}未在此群发布介绍", command_list[1], msg.group.id)
+                if command_list[1] in INTRODUCE:
+                    if msg.group.id in INTRODUCE[command_list[1]]:
+                        sendMessage(f"的简介为 : \n{INTRODUCE[command_list[1]][msg.group.id]}", command_list[1], msg.group.id)
                     else:
-                        sendMessage(f"{INTRODUCE[command_list[1]][msg.group.id]}未在任何群发布介绍", command_list[1], msg.group.id)
+                        sendMessage(f"{INTRODUCE[command_list[1]][msg.group.id]}未在此群添加介绍", command_list[1], msg.group.id)
+                else:
+                    sendMessage(f"{INTRODUCE[command_list[1]][msg.group.id]}未在任何群添加介绍", command_list[1], msg.group.id)
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] = msg.group.id
