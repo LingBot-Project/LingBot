@@ -1000,21 +1000,22 @@ Coins: {coin_purse}
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] = msg.group.id
+                data = {}
                 with open("introduce_data.json", "r", encoding='utf-8') as introduce_json:
                     data = json.load(introduce_json)
-                    if command_list[1] == "add":
-                        if msg.sender.id in data["qq"]:
-                            if msg.group.id in data["qq"][msg.sender.id]:
-                                msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit")
-                            else:
-                                data["qq"][msg.sender.id][msg.group.id] = command_list[3]
-                                json.dump(data, introduce_json, ensure_ascii=False)
-                                msg.fast_reply("添加成功")
+                if command_list[1] == "add":
+                    if msg.sender.id in data["qq"]:
+                        if msg.group.id in data["qq"][msg.sender.id]:
+                            msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit")
                         else:
-                            data["qq"][msg.sender.id] = {}
                             data["qq"][msg.sender.id][msg.group.id] = command_list[3]
                             json.dump(data, introduce_json, ensure_ascii=False)
                             msg.fast_reply("添加成功")
+                    else:
+                        data["qq"][msg.sender.id] = {}
+                        data["qq"][msg.sender.id][msg.group.id] = command_list[3]
+                        json.dump(data, introduce_json, ensure_ascii=False)
+                        msg.fast_reply("添加成功")
             elif len(command_list) == 2 or len(command_list) == 3:
                 msg.fast_reply("请输入完整指令，查看详情请输入!introduce/!介绍 help")
 
