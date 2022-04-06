@@ -1008,14 +1008,16 @@ Coins: {coin_purse}
                 with open("introduce.json", "r+", encoding='utf-8') as introduce_json:
                     data = json.load(introduce_json)
                     if command_list[1] == "add":
-                        if data["qq"].has_key(msg.sender.id):
-                            if data["qq"][msg.sender.id].has_key(msg.group.id):
+                        if msg.sender.id in data["qq"]:
+                            if msg.group.id in data["qq"][msg.sender.id]:
                                 msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit")
                             else:
                                 data["qq"][msg.sender.id][msg.group.id] = command_list[3]
+                                msg.fast_reply("添加成功")
                         else:
                             data["qq"][msg.sender.id] = {}
                             data["qq"][msg.sender.id][msg.group.id] = command_list[3]
+                            msg.fast_reply("添加成功")
 
 
     except Exception as e:
