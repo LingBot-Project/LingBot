@@ -975,10 +975,6 @@ Coins: {coin_purse}
             msg.fast_reply(pmsg)
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
-            #if not os.path.exists("introduce_data.json"):
-            #    w = open("introduce_data.json", 'w')
-            #    w.write("""{"qq":{}}""")
-            #    w.close()
             if command_list[1] == 'help':
                 sendMessage(f"""
 介绍指令 : !introduce/!介绍
