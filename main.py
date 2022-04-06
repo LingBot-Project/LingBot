@@ -9,6 +9,7 @@ import re
 import threading
 import time
 import traceback
+import os
 from io import BytesIO
 
 import hypixel
@@ -974,34 +975,34 @@ Coins: {coin_purse}
             msg.fast_reply(pmsg)
         ssssssss = False
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
+            if not os.path.exists("introduce.json"):
+                w = open("introduce.json", 'w')
+                w.write("""{"qq":{}}""")
+                w.close()
             if command_list[1] == 'help':
                 sendMessage(f"""
 自闭指令 : !introduce/!介绍
 编辑介绍 :
     使用方法 :
         发送“!introduce/!介绍 <type> <群号> <介绍>”
-    {'''使用方法② : 
-        可以一段一段发，顺序没错就行
-        比如 : /introduce add 123456 + xxxx
-        或者 : /introduce add + 123456 + xxxx
-        或者 : /introduce + remove + 123456 xxxx
-        等等等等
-''' if ssssssss else ""}<type> : add(添加) remove(删除) edit(编辑)
+    <type> : add(添加) remove(删除) edit(编辑)
     <群号> : 如果在本群可以填"this"
     <介绍> : 随便填（支持CQ码）
 查看介绍 : 
     发送“!introduce/!介绍 <q号>”  
 """, target_group=msg.group.id)
-            elif len(command_list) == 1:
-                # INTRODUCE.append[msg.group.id, msg.sender.id, 1]
-                pass
-                sendMessage("你想编辑你在哪个群的介绍呢？（在本群请发送this）", msg.sender.id, msg.group.id)
-            elif len(command_list) == 2:
-                # INTRODUCE.append[msg.group.id, msg.sender.id, 2]
-                pass
-            elif len(command_list) == 3:
-                # INTRODUCE.append[msg.group.id, msg.sender.id, 3]
-                pass
+            elif command_list[1].isdigit():
+                with open("introduce.json", "r+", encoding='utf-8') as introduce_json:
+                    data = json.load(introduce_json)
+                    if command_list[1] in data['qq']:
+                        if msg.group.id in data['qq'][command_list[1]]:
+                            sendMessage(f"的简介为 : \n{data['qq'][command_list[1]][msg.group.id]}", command_list[1], msg.group.id)
+                        else:
+                            sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在此群发布介绍", command_list[1], msg.group.id)
+                    else:
+                        sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在任何群发布介绍", command_list[1], msg.group.id)
+
+
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] == msg.group.id
@@ -1013,11 +1014,15 @@ Coins: {coin_purse}
                                 msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit")
                             else:
                                 data["qq"][msg.sender.id][msg.group.id] = command_list[3]
+                                json.dump(data, introduce_json, ensure_ascii=False)
                                 msg.fast_reply("添加成功")
                         else:
                             data["qq"][msg.sender.id] = {}
                             data["qq"][msg.sender.id][msg.group.id] = command_list[3]
+                            json.dump(data, introduce_json, ensure_ascii=False)
                             msg.fast_reply("添加成功")
+            elif len(command_list) == 2 or len(command_list) == 3:
+                msg.fast_reply("请输入完整指令，查看详情请输入!introduce/!介绍 help")
 
 
     except Exception as e:
