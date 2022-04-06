@@ -995,11 +995,11 @@ Coins: {coin_purse}
             elif command_list[1].isdigit():
                 if command_list[1] in INTRODUCE:
                     if msg.group.id in INTRODUCE[command_list[1]]:
-                        sendMessage(f"的简介为 : \n{INTRODUCE[command_list[1]][msg.group.id]}", command_list[1], msg.group.id)
+                        sendMessage(f"的简介为 : \n{INTRODUCE[command_list[1]][msg.group.id]}", int(command_list[1]), msg.group.id)
                     else:
-                        sendMessage(f"未在此群添加介绍", target_group = msg.group.id)
+                        sendMessage(f"未在此群添加介绍", int(command_list[1]), msg.group.id)
                 else:
-                    sendMessage(f"字典里有{json.dumps(INTRODUCE)}", target_group = msg.group.id)
+                    sendMessage(f"字典里有{json.dumps(INTRODUCE)}", command_list[1], msg.group.id)
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] = msg.group.id
