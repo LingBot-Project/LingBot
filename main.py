@@ -973,10 +973,10 @@ Coins: {coin_purse}
             except:
                 logging.error(traceback.format_exc())
             msg.fast_reply(pmsg)
-        ssssssss = False
+
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
-            if not os.path.exists("introduce.json"):
-                w = open("introduce.json", 'w')
+            if not os.path.exists("introduce_data.json"):
+                w = open("introduce_data.json", 'w')
                 w.write("""{"qq":{}}""")
                 w.close()
             if command_list[1] == 'help':
@@ -992,7 +992,7 @@ Coins: {coin_purse}
     发送“!introduce/!介绍 <q号>”  
 """, target_group=msg.group.id)
             elif command_list[1].isdigit():
-                with open("introduce.json", "r+", encoding='utf-8') as introduce_json:
+                with open("introduce_data.json", "r+", encoding='utf-8') as introduce_json:
                     data = json.load(introduce_json)
                     if command_list[1] in data['qq']:
                         if msg.group.id in data['qq'][command_list[1]]:
@@ -1004,7 +1004,7 @@ Coins: {coin_purse}
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] == msg.group.id
-                with open("intuce.json", "r+", encoding='utf-8') as introduce_json:
+                with open("introduce_data.json", "r", encoding='utf-8') as introduce_json:
                     data = json.load(introduce_json)
                     if command_list[1] == "add":
                         if msg.sender.id in data["qq"]:
