@@ -49,7 +49,7 @@ IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 REPEATER = []
 AUTISM = []
-INTRODUCE = []
+INTRODUCE = {}
 SPAM2_MSG = {}
 SPAM2_VL = {}
 SCREENSHOT_CD = 0
@@ -147,6 +147,10 @@ def read_config():
         BLACK_LIST = [int(i) for i in s["blacklist"].split(",")]
     except:
         pass
+    try:
+        INTRODUCE = {json.loads(s["introduce"])}
+    except:
+        pass
     config = configparser.ConfigParser()
     config.read("feedback.ini")
     try:
@@ -161,7 +165,8 @@ def save_config():
     config = configparser.ConfigParser()
     config["DEFAULT"] = {
         "admin": ",".join('%s' % _id for _id in ADMIN_LIST),
-        "blacklist": ",".join('%s' % _id for _id in BLACK_LIST)
+        "blacklist": ",".join('%s' % _id for _id in BLACK_LIST),
+        "introduce": json.dumps(INTRODUCE)
     }
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
@@ -988,35 +993,26 @@ Coins: {coin_purse}
     发送“!introduce/!介绍 <q号>”  
 """, target_group=msg.group.id)
             elif command_list[1].isdigit():
-                with open("introduce_data.json", "r", encoding='utf-8') as introduce_json:
-                    data = json.load(introduce_json)
-                    if command_list[1] in data['qq']:
-                        if msg.group.id in data['qq'][command_list[1]]:
-                            sendMessage(f"的简介为 : \n{data['qq'][command_list[1]][msg.group.id]}", command_list[1], msg.group.id)
+                    if command_list[1] in INTRODUCE:
+                        if msg.group.id in INTRODUCE[command_list[1]]:
+                            sendMessage(f"的简介为 : \n{INTRODUCE[command_list[1]][msg.group.id]}", command_list[1], msg.group.id)
                         else:
-                            sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在此群发布介绍", command_list[1], msg.group.id)
+                            sendMessage(f"{INTRODUCE[command_list[1]][msg.group.id]}未在此群发布介绍", command_list[1], msg.group.id)
                     else:
-                        sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在任何群发布介绍", command_list[1], msg.group.id)
+                        sendMessage(f"{INTRODUCE[command_list[1]][msg.group.id]}未在任何群发布介绍", command_list[1], msg.group.id)
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] = msg.group.id
-
-                data = {}
-
-                with open("introduce_data.json", "r", encoding='utf-8') as introduce_json:
-                    data = json.load(introduce_json)
                 if command_list[1] == "add":
-                    if msg.sender.id in data["qq"]:
-                        if msg.group.id in data["qq"][msg.sender.id]:
+                    if msg.sender.id in INTRODUCE:
+                        if msg.group.id in INTRODUCE[msg.sender.id]:
                             msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit")
                         else:
-                            data["qq"][msg.sender.id][msg.group.id] = command_list[3]
-                            json.dump(data, introduce_json, ensure_ascii=False)
+                            INTRODUCE[msg.sender.id][msg.group.id] = command_list[3]
                             msg.fast_reply("添加成功")
                     else:
-                        data["qq"][msg.sender.id] = {}
-                        data["qq"][msg.sender.id][msg.group.id] = command_list[3]
-                        json.dump(data, introduce_json, ensure_ascii=False)
+                        INTRODUCE[msg.sender.id] = {}
+                        INTRODUCE[msg.sender.id][msg.group.id] = command_list[3]
                         msg.fast_reply("添加成功")
             elif len(command_list) == 2 or len(command_list) == 3:
                 msg.fast_reply("请输入完整指令，查看详情请输入!introduce/!介绍 help")
