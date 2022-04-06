@@ -1031,7 +1031,7 @@ Coins: {coin_purse}
                         if os.path.isdir(p):
                             ls.append(p+"/")
                             path.remove(p)
-                    ls.append(path)
+                    ls.join(path)
                     sendMessage(' '.join(ls), target_group=msg.group.id)
                 if command_list[1] == "mkdir":
                     if not os.path.exists(command_list[2]):
