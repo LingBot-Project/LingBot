@@ -1001,8 +1001,6 @@ Coins: {coin_purse}
                             sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在此群发布介绍", command_list[1], msg.group.id)
                     else:
                         sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在任何群发布介绍", command_list[1], msg.group.id)
-
-
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] == msg.group.id
@@ -1023,7 +1021,6 @@ Coins: {coin_purse}
                             msg.fast_reply("添加成功")
             elif len(command_list) == 2 or len(command_list) == 3:
                 msg.fast_reply("请输入完整指令，查看详情请输入!introduce/!介绍 help")
-
 
     except Exception as e:
         a = traceback.format_exc()
