@@ -1004,7 +1004,7 @@ Coins: {coin_purse}
             elif len(command_list) == 4:
                 if command_list[2] == "this":
                     command_list[2] == msg.group.id
-                with open("introduce_data.json", "r", encoding='utf-8') as introduce_json:
+                with open("introduce_data.json", "r+", encoding='utf-8') as introduce_json:
                     data = json.load(introduce_json)
                     if command_list[1] == "add":
                         if msg.sender.id in data["qq"]:
