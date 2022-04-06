@@ -988,7 +988,7 @@ Coins: {coin_purse}
     发送“!introduce/!介绍 <q号>”  
 """, target_group=msg.group.id)
             elif command_list[1].isdigit():
-                with open("introduce_data.json", "r+", encoding='utf-8') as introduce_json:
+                with open("introduce_data.json", "r", encoding='utf-8') as introduce_json:
                     data = json.load(introduce_json)
                     if command_list[1] in data['qq']:
                         if msg.group.id in data['qq'][command_list[1]]:
@@ -999,8 +999,8 @@ Coins: {coin_purse}
                         sendMessage(f"{data['qq'][command_list[1]][msg.group.id]}未在任何群发布介绍", command_list[1], msg.group.id)
             elif len(command_list) == 4:
                 if command_list[2] == "this":
-                    command_list[2] == msg.group.id
-                with open("introduce_data.json", "r+", encoding='utf-8') as introduce_json:
+                    command_list[2] = msg.group.id
+                with open("introduce_data.json", "r", encoding='utf-8') as introduce_json:
                     data = json.load(introduce_json)
                     if command_list[1] == "add":
                         if msg.sender.id in data["qq"]:
