@@ -973,7 +973,7 @@ Coins: {coin_purse}
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
             if command_list[1] == 'help':
-                pass
+                sendMessage(msg, msg.group.id)
 
     except Exception as e:
         a = traceback.format_exc()
