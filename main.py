@@ -1003,7 +1003,7 @@ Coins: {coin_purse}
                         sendMessage(f"未在此群添加介绍", command_list[1], msg.group.id)
                 else:
                     sendMessage(f"未在任何群添加介绍", command_list[1], msg.group.id)
-            elif len(command_list) == 4:
+            elif len(command_list) >= 4:
                 if command_list[2] == "this":
                     command_list[2] = str(msg.group.id)
                 if command_list[1] == "add":
