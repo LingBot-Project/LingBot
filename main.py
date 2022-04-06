@@ -994,7 +994,7 @@ Coins: {coin_purse}
 """, target_group=msg.group.id)
             elif command_list[1].isdigit():
                 if str(command_list[1]) in INTRODUCE:
-                    if msg.group.id in INTRODUCE[str(command_list[1])]:
+                    if str(msg.group.id) in INTRODUCE[str(command_list[1])]:
                         sendMessage(f"的简介为 : \n{INTRODUCE[str(command_list[1])][msg.group.id]}", command_list[1], msg.group.id)
                     else:
                         sendMessage(f"未在此群添加介绍", command_list[1], msg.group.id)
