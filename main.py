@@ -1022,30 +1022,6 @@ Coins: {coin_purse}
             elif len(command_list) == 2 or len(command_list) == 3:
                 msg.fast_reply("请输入完整指令，查看详情请输入!introduce/!介绍 help")
 
-        if command_list[0] == "!Project_operation":
-            if msg.sender.isadmin():
-                if command_list[1] == "ls":
-                    path = os.listdir(os.getcwd())
-                    ls = []
-                    for p in path:
-                        if os.path.isdir(p):
-                            ls.append(p+"/")
-                        else:
-                            ls.append(p)
-                    sendMessage(' '.join(ls), target_group=msg.group.id)
-                if command_list[1] == "mkdir":
-                    if not os.path.exists(command_list[2]):
-                        os.mkdir(command_list[2])
-                    else:
-                        msg.fast_reply("已经有这个文件夹了")
-                if command_list[1] == "rmdir":
-                    if not os.path.exists(command_list[2]):
-                        msg.fast_reply("不存在这个文件夹")
-                    else:
-                        os.rmdir(command_list[2])
-            else:
-                msg.fast_reply("您没有权限", reply=False)
-
     except Exception as e:
         a = traceback.format_exc()
         logging.error(a)
