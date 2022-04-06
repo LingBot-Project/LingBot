@@ -981,7 +981,7 @@ Coins: {coin_purse}
                 w.close()
             if command_list[1] == 'help':
                 sendMessage(f"""
-自闭指令 : !introduce/!介绍
+介绍指令 : !introduce/!介绍
 编辑介绍 :
     使用方法 :
         发送“!introduce/!介绍 <type> <群号> <介绍>”
@@ -992,7 +992,7 @@ Coins: {coin_purse}
     发送“!introduce/!介绍 <q号>”  
 """, target_group=msg.group.id)
             elif command_list[1].isdigit():
-                msg.fast_reply("测试成功")
+                sendMessage("测试成功", target_group=msg.group.id)
                 #with open("introduce_data.json", "r+", encoding='utf-8') as introduce_json:
                 #    data = json.load(introduce_json)
                 #    if command_list[1] in data['qq']:
