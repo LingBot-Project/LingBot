@@ -1021,7 +1021,20 @@ Coins: {coin_purse}
                     if str(msg.sender.id) in INTRODUCE:
                         if str(msg.group.id) in INTRODUCE[str(msg.sender.id)]:
                             del INTRODUCE[str(msg.sender.id)][str(msg.group.id)]
-                            msg.fast_reply("删除您在本群的介绍成功")
+                            msg.fast_reply("已删除您在本群的介绍")
+                        else:
+                            msg.fast_reply("您还未在此群添加介绍")
+                    else:
+                        msg.fast_reply("您还未在任何群添加介绍")
+                if command_list[1] == "edit":
+                    if str(msg.sender.id) in INTRODUCE:
+                        if str(msg.group.id) in INTRODUCE[str(msg.sender.id)]:
+                            INTRODUCE[str(msg.sender.id)][str(msg.group.id)] = command_list[3]
+                            msg.fast_reply("已修改您在本群的介绍")
+                        else:
+                            msg.fast_reply("您还未在此群添加介绍")
+                    else:
+                        msg.fast_reply("您还未在任何群添加介绍")
 
     except Exception as e:
         a = traceback.format_exc()
