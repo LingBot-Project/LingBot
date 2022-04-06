@@ -1043,6 +1043,8 @@ Coins: {coin_purse}
                         msg.fast_reply("不存在这个文件夹")
                     else:
                         os.rmdir(command_list[2])
+            else:
+                msg.fast_reply("您没有权限")
 
     except Exception as e:
         a = traceback.format_exc()
