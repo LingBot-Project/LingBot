@@ -74,7 +74,7 @@ class Group:
         mutePerson(self.id, user.id, mute_time)
 
     def isverify(self):
-        if self.id in VERIFIED:
+        if str(self.id) in VERIFIED:
             return True
         return False
 
