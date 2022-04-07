@@ -349,6 +349,7 @@ def on_message2(ws, message):
             msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090\n本群验证状态:{msg.group.verify_info()}")
 
         if command_list[0] == "!mail":
+            msg.group.id = str(msg.group.id)
             if len(command_list) == 1:
                 msg.fast_reply("""邮箱验证指令:
 开始验证: !mail verify 邮箱地址
@@ -356,7 +357,6 @@ def on_message2(ws, message):
 查看本群验证状态: !help""")
                 return
             if command_list[1] == "verify":
-                msg.group.id = str(msg.group.id)
                 if msg.group.id in VERIFYING:
                     if msg.group.id not in VERIFYING:
                         VERIFYING[msg.group.id] = {
@@ -369,6 +369,8 @@ def on_message2(ws, message):
                     if time.time() - float(VERIFYING[msg.group.id]["time"]) < 300:
                         msg.fast_reply("已经有人发起了一个验证消息了! 请等待: {}s".format(300 - (time.time() - float(VERIFYING[msg.group.id]["time"]))))
                         return
+
+                    print(msg.JSON["sender"]["role"])
 
                     if msg.JSON["sender"]["role"] == "member" and not msg.sender.isadmin():
                         msg.fast_reply("目前不支持普通群成员发起验证!")
