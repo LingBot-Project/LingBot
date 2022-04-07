@@ -25,7 +25,7 @@ import tcping
 
 hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
 hypixel.setCacheTime(30.0)
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
 SERVER_ADDR = "127.0.0.1"
 ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566, 1474002938]
@@ -311,6 +311,7 @@ def on_message2(ws, message):
         VERIFYING, VERIFIED
 
     a = json.loads(message)
+    logging.debug(a)
     if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and \
             a["target_id"] == a["self_id"]:
         sendMessage("不要戳我啦 =w=", target_group=a["group_id"], target_qq=a["user_id"])
