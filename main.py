@@ -79,9 +79,9 @@ class Group:
         return False
 
     def verify_info(self):
-        if self.id in VERIFIED:
-            return f"已验证 绑定邮箱:{VERIFIED[self.id]}"
-        elif self.id in VERIFYING:
+        if str(self.id) in VERIFIED:
+            return f"已验证 绑定邮箱:{VERIFIED[str(self.id)]}"
+        elif str(self.id) in VERIFYING:
             return f"正在验证..."
         else:
             return f"未验证! 请使用 !mail 指令查看如何激活"
@@ -356,6 +356,7 @@ def on_message2(ws, message):
 查看本群验证状态: !help""")
                 return
             if command_list[1] == "verify":
+                msg.group.id = str(msg.group.id)
                 if msg.group.id in VERIFYING:
                     if msg.group.id not in VERIFYING:
                         VERIFYING[msg.group.id] = {
