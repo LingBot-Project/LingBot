@@ -133,12 +133,6 @@ class Message:
 
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
 
-def del_this(list):
-    if list == "this":
-        return ""
-    else:
-        return list
-
 def read_config():
     global ADMIN_LIST, BLACK_LIST, FEEDBACKS
     config = configparser.ConfigParser()
@@ -297,6 +291,11 @@ def on_message2(ws, message):
 
     try:
         # 处理消息内容
+        def del_this(list):
+            if list == "this":
+                return msg.group.id
+            else:
+                return list
         if msg.text == "":
             return
 
