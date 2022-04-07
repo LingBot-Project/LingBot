@@ -1033,7 +1033,7 @@ Coins: {coin_purse}
                     sendMessage(f"未在任何群添加介绍", command_list[1], msg.group.id)
             elif len(command_list) >= 3:
                 introduce = msg.text
-                command_list = list(map(replace_target, command_list, 'this', msg.group.id))
+                command_list = list(map(replace_target, command_list, 'this', str(msg.group.id)))
                 if command_list[1] == "add":
                     if str(msg.sender.id) in INTRODUCE['qq']:
                         if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
