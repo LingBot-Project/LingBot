@@ -371,9 +371,9 @@ def on_message2(ws, message):
                         msg.fast_reply("已经有人发起了一个验证消息了! 请等待: {}s".format(300 - (time.time() - float(VERIFYING[msg.group.id]["time"]))))
                         return
 
-                    print(msg.JSON["sender"]["role"])
+                    print(a["sender"]["role"])
 
-                    if msg.JSON["sender"]["role"] == "member" and not msg.sender.isadmin():
+                    if a["sender"]["role"] == "member" and not msg.sender.isadmin():
                         msg.fast_reply("目前不支持普通群成员发起验证!")
                         return
 
