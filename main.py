@@ -1018,6 +1018,9 @@ Coins: {coin_purse}
 查看介绍 : 
     发送“!introduce/!介绍 <Q号>” 
     <Q号> : 填"me"介绍自己
+超管功能 ： 
+    可编辑某人的介绍
+    使用方法 : !introduce/!介绍 edit_sb <Q号> <群号> <介绍>
 """, target_group=msg.group.id)
             elif len(command_list) == 2 and (command_list[1].isdigit() or command_list[1] == 'me'):
                 if command_list[1] == 'me':
@@ -1033,6 +1036,10 @@ Coins: {coin_purse}
             elif len(command_list) >= 3:
                 introduce = msg.text
                 command_list = list(map(del_this, command_list))
+                atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
+                if atcq is not None:
+                    command_list = msg.text.replace(f"[CQ:at,qq={atcq.group(1)}]", str(atcq.group(1))).split(
+                        " ")
                 if command_list[1] == "add":
                     if str(msg.sender.id) in INTRODUCE['qq']:
                         if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
@@ -1086,6 +1093,10 @@ Coins: {coin_purse}
                         if int(command_list[2]) not in ADMIN_LIST:
                             INTRODUCE["qq"][command_list[2]][command_list[3]] = introduce
                             msg.fast_reply(f"已修改{command_list[2]}在本群的介绍" if command_list[3] == str(msg.group.id) else f"已修改{command_list[2]}在群{command_list[3]}的介绍")
+                        else:
+                            msg.fast_reply("不可编辑超管的介绍！！")
+                    else:
+                        msg.fast_reply("权限不足！！")
 
 
         if command_list[0] == "!msg_test":
