@@ -32,6 +32,7 @@ ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566, 147400293
 HYPBAN_COOKIE = None
 SEND_AD_LIST = {}
 BLACK_LIST = []
+INTRODUCE = {"qq": {}, "waiting": []}
 CACHE_MESSAGE = []
 BANCHECK_UID = {}
 WSURL = SERVER_ADDR + ":10540"
@@ -49,7 +50,6 @@ IGNORE_GROUP = [1079822858]
 FEEDBACKS = {}
 REPEATER = []
 AUTISM = []
-INTRODUCE = {}
 SPAM2_MSG = {}
 SPAM2_VL = {}
 SCREENSHOT_CD = 0
@@ -148,7 +148,8 @@ def read_config():
     except:
         pass
     try:
-        INTRODUCE = {json.loads(s["introduce"])}
+        with open('json.txt', mode="r", encoding="UTF-8") as jsonfile:
+            INTRODUCE["qq"] = json.loads(jsonfile.read())
     except:
         pass
     config = configparser.ConfigParser()
@@ -165,11 +166,12 @@ def save_config():
     config = configparser.ConfigParser()
     config["DEFAULT"] = {
         "admin": ",".join('%s' % _id for _id in ADMIN_LIST),
-        "blacklist": ",".join('%s' % _id for _id in BLACK_LIST),
-        "introduce": ''.join(json.dumps(INTRODUCE))
+        "blacklist": ",".join('%s' % _id for _id in BLACK_LIST)
     }
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
+    with open('json.txt', 'w', encoding='UTF-8') as jsonfile:
+        jsonfile.write(json.dumps(INTRODUCE['qq']))
     config = configparser.ConfigParser()
     config["FEEDBACKS"] = FEEDBACKS
     with open('feedback.ini', 'w') as configfile:
@@ -996,9 +998,10 @@ Coins: {coin_purse}
             elif command_list[1].isdigit() or command_list[1] == 'me':
                 if command_list[1] == 'me':
                     command_list[1] = str(msg.sender.id)
-                if str(command_list[1]) in INTRODUCE:
-                    if str(msg.group.id) in INTRODUCE[str(command_list[1])]:
-                        sendMessage(f"的介绍为 : \n{INTRODUCE[str(command_list[1])][str(msg.group.id)]}", command_list[1], msg.group.id)
+                if str(command_list[1]) in INTRODUCE['qq']:
+                    if str(msg.group.id) in INTRODUCE['qq'][str(command_list[1])]:
+                        sendMessage(f"的介绍为 : \n{INTRODUCE['qq'][str(command_list[1])][str(msg.group.id)]}", command_list[1],
+                                    msg.group.id)
                     else:
                         sendMessage(f"未在此群添加介绍", command_list[1], msg.group.id)
                 else:
@@ -1007,29 +1010,29 @@ Coins: {coin_purse}
                 if command_list[2] == "this":
                     command_list[2] = str(msg.group.id)
                 if command_list[1] == "add":
-                    if str(msg.sender.id) in INTRODUCE:
-                        if str(msg.group.id) in INTRODUCE[str(msg.sender.id)]:
+                    if str(msg.sender.id) in INTRODUCE['qq']:
+                        if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
                             msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit")
                         else:
-                            INTRODUCE[str(msg.sender.id)][str(msg.group.id)] = command_list[3]
+                            INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = command_list[3]
                             msg.fast_reply("添加成功")
                     else:
-                        INTRODUCE[str(msg.sender.id)] = {}
-                        INTRODUCE[str(msg.sender.id)][str(msg.group.id)] = command_list[3]
+                        INTRODUCE['qq'][str(msg.sender.id)] = {}
+                        INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = command_list[3]
                         msg.fast_reply("添加成功")
                 if command_list[1] == "remove":
-                    if str(msg.sender.id) in INTRODUCE:
-                        if str(msg.group.id) in INTRODUCE[str(msg.sender.id)]:
-                            del INTRODUCE[str(msg.sender.id)][str(msg.group.id)]
+                    if str(msg.sender.id) in INTRODUCE['qq']:
+                        if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
+                            del INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)]
                             msg.fast_reply("已删除您在本群的介绍")
                         else:
                             msg.fast_reply("您还未在此群添加介绍")
                     else:
                         msg.fast_reply("您还未在任何群添加介绍")
                 if command_list[1] == "edit":
-                    if str(msg.sender.id) in INTRODUCE:
-                        if str(msg.group.id) in INTRODUCE[str(msg.sender.id)]:
-                            INTRODUCE[str(msg.sender.id)][str(msg.group.id)] = command_list[3]
+                    if str(msg.sender.id) in INTRODUCE['qq']:
+                        if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
+                            INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = command_list[3]
                             msg.fast_reply("已修改您在本群的介绍")
                         else:
                             msg.fast_reply("您还未在此群添加介绍")
