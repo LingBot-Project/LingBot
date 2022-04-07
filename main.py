@@ -1102,6 +1102,13 @@ Coins: {coin_purse}
                             msg.fast_reply("不可编辑超管的介绍！！")
                     else:
                         msg.fast_reply("权限不足！！")
+                if command_list[1] == "empty":
+                    if msg.sender.isadmin():
+                        INTRODUCE["qq"] = {}
+                        INTRODUCE["waiting"] = []
+                        msg.fast_reply("已清空所有人的介绍")
+                    else:
+                        msg.fast_reply("您的权限不足")
 
 
         if command_list[0] == "!msg_test":
