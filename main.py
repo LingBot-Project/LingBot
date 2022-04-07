@@ -1029,6 +1029,13 @@ Coins: {coin_purse}
     可编辑某人的介绍
     使用方法 : !introduce/!介绍 edit_sb <Q号> <群号> <介绍>
 """, reply=False, at=False)
+            elif command_list[1] == "empty":
+                if msg.sender.isadmin():
+                    INTRODUCE["qq"] = {}
+                    INTRODUCE["waiting"] = []
+                    msg.fast_reply("已清空所有人的介绍")
+                else:
+                    msg.fast_reply("您的权限不足")
             elif len(command_list) == 2 and (command_list[1].isdigit() or command_list[1] == 'me'):
                 if command_list[1] == 'me':
                     command_list[1] = str(msg.sender.id)
@@ -1102,13 +1109,6 @@ Coins: {coin_purse}
                             msg.fast_reply("不可编辑超管的介绍！！")
                     else:
                         msg.fast_reply("权限不足！！")
-                if command_list[1] == "empty":
-                    if msg.sender.isadmin():
-                        INTRODUCE["qq"] = {}
-                        INTRODUCE["waiting"] = []
-                        msg.fast_reply("已清空所有人的介绍")
-                    else:
-                        msg.fast_reply("您的权限不足")
 
 
         if command_list[0] == "!msg_test":
