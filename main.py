@@ -1039,6 +1039,10 @@ Coins: {coin_purse}
                     else:
                         msg.fast_reply("您还未在任何群添加介绍")
 
+            if command_list[0] == "!msg_test":
+                msg.fast_reply(f"""{' '.join(json.dumps(command_list))}
+{msg.text}""")
+
     except Exception as e:
         a = traceback.format_exc()
         logging.error(a)
