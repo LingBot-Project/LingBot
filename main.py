@@ -1005,8 +1005,9 @@ Coins: {coin_purse}
             return
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
-            atcq = str(re.search(r'\[CQ:at,qq=(.*)]', msg.text).group(1))
-            command_list[command_list.index(f'[CQ:at,qq={atcq}]')] = atcq
+            atcq = str(re.search(r'\[CQ:at,qq=(.*)]', msg.text))
+            if atcq is not None:
+                command_list[command_list.index(f'[CQ:at,qq={atcq.group(1)}]')] = atcq
             introduce = msg.text
             if len(command_list) == 1:
                 msg.fast_reply("您想看谁的介绍呢？")
