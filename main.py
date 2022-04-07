@@ -362,14 +362,13 @@ def on_message2(ws, message):
                     msg.fast_reply("本群已经验证过了! 输入 !help 可以查询激活状态")
                     return
 
-                if msg.group.id in VERIFYING:
-                    if msg.group.id not in VERIFYING:
-                        VERIFYING[msg.group.id] = {
-                            "time": 0,
-                            "code": "",
-                            "user": 0,
-                            "mail": ""
-                        }
+                if msg.group.id not in VERIFYING:
+                    VERIFYING[msg.group.id] = {
+                        "time": 0,
+                        "code": "",
+                        "user": 0,
+                        "mail": ""
+                    }
 
                 if time.time() - float(VERIFYING[msg.group.id]["time"]) < 300:
                     msg.fast_reply("已经有人发起了一个验证消息了! 请等待: {}s".format(300 - (time.time() - float(VERIFYING[msg.group.id]["time"]))))
