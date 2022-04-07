@@ -986,6 +986,9 @@ Coins: {coin_purse}
             msg.fast_reply(pmsg)
 
         if msg.sender.id in INTRODUCE['waiting']:
+            introduce = msg.text
+            if atcq is not None:
+                command_list = msg.text.replace(f"[CQ:at,qq={atcq.group(1)}]", str(atcq.group(1))).split(" ")
             INTRODUCE["waiting"].remove(msg.sender.id)
             if command_list[0].isdigit() or command_list[0] == 'me':
                 if command_list[0] == 'me':
@@ -1003,6 +1006,12 @@ Coins: {coin_purse}
             return
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
+            introduce = msg.text
+            if atcq is not None:
+                command_list = msg.text.replace(f"[CQ:at,qq={atcq.group(1)}]", str(atcq.group(1))).split(" ")
+            if command_list[2] == "this":
+                command_list[2] = str(command_list[2])
+            atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
             if len(command_list) == 1:
                 msg.fast_reply("您想看谁的介绍呢？")
                 INTRODUCE['waiting'].append(msg.sender.id)
@@ -1034,13 +1043,6 @@ Coins: {coin_purse}
                 else:
                     sendMessage(f"未在任何群添加介绍", command_list[1], msg.group.id)
             elif len(command_list) >= 3:
-                introduce = msg.text
-                if command_list[2] == "this":
-                    command_list[2] = str(command_list[2])
-                atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
-                if atcq is not None:
-                    command_list = msg.text.replace(f"[CQ:at,qq={atcq.group(1)}]", str(atcq.group(1))).split(
-                        " ")
                 if command_list[1] == "add":
                     if str(msg.sender.id) in INTRODUCE['qq']:
                         if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
