@@ -1021,7 +1021,7 @@ Coins: {coin_purse}
 超管功能 ： 
     可编辑某人的介绍
     使用方法 : !introduce/!介绍 edit_sb <Q号> <群号> <介绍>
-""", reply=False)
+""", reply=False, at=False)
             elif len(command_list) == 2 and (command_list[1].isdigit() or command_list[1] == 'me'):
                 if command_list[1] == 'me':
                     command_list[1] = str(msg.sender.id)
