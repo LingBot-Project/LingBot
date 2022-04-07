@@ -989,7 +989,7 @@ Coins: {coin_purse}
                 if str(command_list[0]) in INTRODUCE['qq']:
                     if str(msg.group.id) in INTRODUCE['qq'][str(command_list[0])]:
                         sendMessage(f"的介绍为 : \n{INTRODUCE['qq'][str(command_list[0])][str(msg.group.id)]}",
-                                    command_list[1], msg.group.id)
+                                    command_list[0], msg.group.id)
                     else:
                         sendMessage(f"未在此群添加介绍", command_list[0], msg.group.id)
                 else:
