@@ -84,7 +84,7 @@ class Group:
         elif self.id in VERIFYING:
             return f"正在验证..."
         else:
-            return f"未验证"
+            return f"未验证! 请使用 !mail 指令查看如何激活"
 
 
 class User:
