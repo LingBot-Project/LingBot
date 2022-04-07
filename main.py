@@ -981,6 +981,23 @@ Coins: {coin_purse}
                 logging.error(traceback.format_exc())
             msg.fast_reply(pmsg)
 
+        if msg.sender.id in INTRODUCE['waiting']:
+            INTRODUCE["waiting"].remove(msg.sender.id)
+            if command_list[0].isdigit() or command_list[0] == 'me':
+                if command_list[0] == 'me':
+                    command_list[0] = str(msg.sender.id)
+                if str(command_list[0]) in INTRODUCE['qq']:
+                    if str(msg.group.id) in INTRODUCE['qq'][str(command_list[0])]:
+                        sendMessage(f"的介绍为 : \n{INTRODUCE['qq'][str(command_list[0])][str(msg.group.id)]}",
+                                    command_list[1], msg.group.id)
+                    else:
+                        sendMessage(f"未在此群添加介绍", command_list[0], msg.group.id)
+                else:
+                    sendMessage(f"未在任何群添加介绍", command_list[0], msg.group.id)
+            else:
+                msg.fast_reply("请发送QQ号或'me'!!!")
+            return
+
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
             if command_list[1] == 'help':
                 sendMessage(f"""
@@ -995,13 +1012,15 @@ Coins: {coin_purse}
     发送“!introduce/!介绍 <Q号>” 
     <Q号> : 填"me"介绍自己
 """, target_group=msg.group.id)
+            elif len(command_list) == 1:
+                msg.fast_reply("您想看谁的介绍呢？")
+                INTRODUCE['waiting'].append(msg.sender.id)
             elif command_list[1].isdigit() or command_list[1] == 'me':
                 if command_list[1] == 'me':
                     command_list[1] = str(msg.sender.id)
                 if str(command_list[1]) in INTRODUCE['qq']:
                     if str(msg.group.id) in INTRODUCE['qq'][str(command_list[1])]:
-                        sendMessage(f"的介绍为 : \n{INTRODUCE['qq'][str(command_list[1])][str(msg.group.id)]}", command_list[1],
-                                    msg.group.id)
+                        sendMessage(f"的介绍为 : \n{INTRODUCE['qq'][str(command_list[1])][str(msg.group.id)]}", command_list[1], msg.group.id)
                     else:
                         sendMessage(f"未在此群添加介绍", command_list[1], msg.group.id)
                 else:
@@ -1014,11 +1033,11 @@ Coins: {coin_purse}
                         if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
                             msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit")
                         else:
-                            INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = command_list[3]
+                            INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = msg.text.replace(f"{command_list[0]} {command_list[1]} {command_list[2]} ", '')
                             msg.fast_reply("添加成功")
                     else:
                         INTRODUCE['qq'][str(msg.sender.id)] = {}
-                        INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = command_list[3]
+                        INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = msg.text.replace(f"{command_list[0]} {command_list[1]} {command_list[2]} ", '')
                         msg.fast_reply("添加成功")
                 if command_list[1] == "remove":
                     if str(msg.sender.id) in INTRODUCE['qq']:
@@ -1032,7 +1051,7 @@ Coins: {coin_purse}
                 if command_list[1] == "edit":
                     if str(msg.sender.id) in INTRODUCE['qq']:
                         if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
-                            INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = command_list[3]
+                            INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = msg.text.replace(f"{command_list[0]} {command_list[1]} {command_list[2]} ", '')
                             msg.fast_reply("已修改您在本群的介绍")
                         else:
                             msg.fast_reply("您还未在此群添加介绍")
@@ -1040,7 +1059,7 @@ Coins: {coin_purse}
                         msg.fast_reply("您还未在任何群添加介绍")
 
         if command_list[0] == "!msg_test":
-            msg.fast_reply(f"""{' '.join(json.dumps(command_list))}
+            msg.fast_reply(f"""{''.join(json.dumps(command_list))}
 {msg.text}""")
 
     except Exception as e:
