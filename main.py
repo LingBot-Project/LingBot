@@ -4,12 +4,12 @@ import configparser
 import datetime
 import json
 import logging
+import os
 import random
 import re
 import threading
 import time
 import traceback
-import os
 from io import BytesIO
 
 import hypixel
@@ -53,6 +53,9 @@ AUTISM = []
 SPAM2_MSG = {}
 SPAM2_VL = {}
 SCREENSHOT_CD = 0
+EMAIL_DELAY = {}
+VERIFIED = {}
+VERIFYING = {}
 
 # URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
 ANTI_AD = r"送福利|定制水影|加群.*[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群.*[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙.*[0-9]{5,10}|君羊.*[0-9]{5,10}|q(\:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*|vape"
@@ -69,6 +72,19 @@ class Group:
 
     def mute(self, user, mute_time):
         mutePerson(self.id, user.id, mute_time)
+
+    def isverify(self):
+        if self.id in VERIFIED:
+            return True
+        return False
+
+    def verify_info(self):
+        if self.id in VERIFIED:
+            return f"已验证 绑定邮箱:{VERIFIED[self.id]}"
+        elif self.id in VERIFYING:
+            return f"正在验证..."
+        else:
+            return f"未验证"
 
 
 class User:
@@ -104,6 +120,7 @@ class Message:
         self.text = 0
         self.sender = None
         self.group = None
+        self.JSON = json2msg
         if json2msg is not None:
             a = json.loads(json2msg)
             ad = a
@@ -133,8 +150,9 @@ class Message:
 
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
 
+
 def read_config():
-    global ADMIN_LIST, BLACK_LIST, FEEDBACKS
+    global ADMIN_LIST, BLACK_LIST, FEEDBACKS, VERIFIED
     config = configparser.ConfigParser()
     config.read("config.ini")
     s = config["DEFAULT"]
@@ -157,6 +175,12 @@ def read_config():
         FEEDBACKS = config["FEEDBACKS"]
     except:
         pass
+
+    config.read("verify.ini")
+    try:
+        VERIFIED = config["VERIFIED"]
+    except:
+        pass
     sendMessage("restart successful", target_group=1019068934)
 
 
@@ -174,6 +198,10 @@ def save_config():
     config = configparser.ConfigParser()
     config["FEEDBACKS"] = FEEDBACKS
     with open('feedback.ini', 'w') as configfile:
+        config.write(configfile)
+    config = configparser.ConfigParser()
+    config["VERIFIED"] = VERIFIED
+    with open("verify.ini", 'w') as configfile:
         config.write(configfile)
 
 
@@ -279,7 +307,8 @@ def on_message2(ws, message):
         CACHE_MESSAGE, timePreMessage, \
         MESSAGE_PRE_MINUTE, ALL_MESSAGE, \
         ALL_AD, FEEDBACKS, \
-        spam2_vl_reset_cool_down, SCREENSHOT_CD
+        spam2_vl_reset_cool_down, SCREENSHOT_CD, \
+        VERIFYING, VERIFIED
 
     a = json.loads(message)
     if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and \
@@ -312,7 +341,68 @@ def on_message2(ws, message):
             MESSAGE_PRE_MINUTE[1] += 1
         ALL_MESSAGE += 1
 
+        command_list = msg.text.split(" ")
+
         logging.info("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
+
+        if msg.text in ["!help", "菜单"]:
+            msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090\n本群验证状态:{msg.group.verify_info()}")
+
+        if command_list[0] == "!mail":
+            if len(command_list) == 1:
+                msg.fast_reply("""邮箱验证指令:
+开始验证: !mail verify 邮箱地址
+完成验证: !mail code 验证码
+查看本群验证状态: !help""")
+                return
+            if command_list[1] == "verify":
+                if msg.group.id in VERIFYING:
+                    if msg.group.id not in VERIFYING:
+                        VERIFYING[msg.group.id] = {
+                            "time": 0,
+                            "code": "",
+                            "user": 0,
+                            "mail": ""
+                        }
+
+                    if time.time() - float(VERIFYING[msg.group.id]["time"]) < 300:
+                        msg.fast_reply("已经有人发起了一个验证消息了! 请等待: {}s".format(300 - (time.time() - float(VERIFYING[msg.group.id]["time"]))))
+                        return
+
+                    if msg.JSON["sender"]["role"] == "member" and not msg.sender.isadmin():
+                        msg.fast_reply("目前不支持普通群成员发起验证!")
+                        return
+
+                    VERIFYING[msg.group.id]["mail"] = command_list[2]
+                    VERIFYING[msg.group.id]["user"] = msg.sender.id
+                    VERIFYING[msg.group.id]["code"] = str(random.randint(100000000, 999999999))
+                    VERIFYING[msg.group.id]["time"] = time.time()
+                    send_email(command_list[2], f"[LingBot Team] 群{msg.group.id} - 激活", f"""您好, {msg.sender.name}:
+    感谢您使用 LingBot 机器人, 您正在尝试给群 {msg.group.id} 激活! 您的验证码是: {VERIFYING[msg.group.id]["code"]}
+    请您在群内使用指令 !mail code {VERIFYING[msg.group.id]["code"]} 来激活!
+    此验证码 30 分钟内有效.""")
+                    msg.fast_reply("我们已经尝试发送一封电子邮件到您的邮箱 请按照邮箱内容操作")
+                    return
+
+                if command_list[1] == "code":
+                    if msg.group.id not in VERIFYING:
+                        msg.fast_reply("没有查到本群的激活信息!")
+                        return
+
+                    if time.time() - VERIFYING[msg.group.id]["time"] >= 1800:
+                        msg.fast_reply("""本群的验证码已经过期了!
+邮箱验证指令:
+开始验证: !mail verify 邮箱地址
+完成验证: !mail code 验证码
+查看本群验证状态: !help""")
+                        return
+
+                    if str(command_list[2]) == VERIFYING[msg.group.id]["code"]:
+                        msg.fast_reply("激活成功!")
+                        VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
+
+        if not msg.group.isverify():
+            return
 
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
@@ -411,8 +501,6 @@ def on_message2(ws, message):
                 msg.fast_reply("太...太多图片了..", reply=False)
                 return
 
-        command_list = msg.text.split(" ")
-
         if (msg.group.id, msg.sender.id) in REPEATER:
             if not (command_list[0] == "!repeater" and (command_list[1] == "add" or command_list[1] == "remove")):
                 msg.fast_reply(msg.text, reply=False, at=False)
@@ -431,13 +519,6 @@ def on_message2(ws, message):
                     (ALL_AD / ALL_MESSAGE) * 100
                 )
             )
-
-        if command_list[0] == "!hyp":
-            # return
-            pass
-
-        if command_list[0] in ["!help", "菜单"]:
-            msg.fast_reply("请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090")
 
         if msg.text == "一语":
             msg.fast_reply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])
@@ -1245,6 +1326,10 @@ def temps_message(ws, message):
         timePreMessage = sfl_time
     else:
         timePreMessage = (timePreMessage + sfl_time) / 2
+
+
+def send_email(mail, title, text):
+    os.system(f"echo \"{text}\" | mail -s \"{title}\" {mail}")
 
 
 # 定义一个用来接收监听数据的方法
