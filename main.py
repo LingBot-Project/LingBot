@@ -986,9 +986,8 @@ Coins: {coin_purse}
             msg.fast_reply(pmsg)
 
         if msg.sender.id in INTRODUCE['waiting']:
-            atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
-            if atcq is not None:
-                command_list = msg.text.replace(f"[CQ:at,qq={atcq.group(1)}]", str(atcq.group(1))).split(" ")
+            atcq = str(re.search(r'\[CQ:at,qq=(.*)]', msg.text).group(1))
+            command_list[1] = atcq
             INTRODUCE["waiting"].remove(msg.sender.id)
             if command_list[0].isdigit() or command_list[0] == 'me':
                 if command_list[0] == 'me':
@@ -1006,10 +1005,9 @@ Coins: {coin_purse}
             return
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
-            atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
+            atcq = str(re.search(r'\[CQ:at,qq=(.*)]', msg.text).group(1))
+            command_list[command_list.index(f'[CQ:at,qq={atcq}')] = atcq
             introduce = msg.text
-            if atcq is not None:
-                command_list = msg.text.replace(f"[CQ:at,qq={atcq.group(1)}]", str(atcq.group(1))).split(" ")
             if len(command_list) == 1:
                 msg.fast_reply("您想看谁的介绍呢？")
                 INTRODUCE['waiting'].append(msg.sender.id)
