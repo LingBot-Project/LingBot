@@ -1030,8 +1030,6 @@ Coins: {coin_purse}
     使用方法 : !introduce/!介绍 edit_sb <Q号> <群号> <介绍>
 """, reply=False, at=False)
             elif len(command_list) == 2 and (command_list[1].isdigit() or command_list[1] == 'me'):
-                if command_list[2] == "this":
-                    command_list[2] = str(command_list[2])
                 if command_list[1] == 'me':
                     command_list[1] = str(msg.sender.id)
                 if str(command_list[1]) in INTRODUCE['qq']:
@@ -1043,6 +1041,8 @@ Coins: {coin_purse}
                 else:
                     sendMessage(f"未在任何群添加介绍", command_list[1], msg.group.id)
             elif len(command_list) >= 3:
+                if command_list[2] == "this":
+                    command_list[2] = str(command_list[2])
                 if command_list[1] == "add":
                     if str(msg.sender.id) in INTRODUCE['qq']:
                         if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
