@@ -999,7 +999,10 @@ Coins: {coin_purse}
             return
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
-            if command_list[1] == 'help':
+            if len(command_list) == 1:
+                msg.fast_reply("您想看谁的介绍呢？")
+                INTRODUCE['waiting'].append(msg.sender.id)
+            elif command_list[1] == 'help':
                 sendMessage(f"""
 介绍指令 : !introduce/!介绍
 编辑介绍 :
@@ -1012,9 +1015,6 @@ Coins: {coin_purse}
     发送“!introduce/!介绍 <Q号>” 
     <Q号> : 填"me"介绍自己
 """, target_group=msg.group.id)
-            elif len(command_list) == 1:
-                msg.fast_reply("您想看谁的介绍呢？")
-                INTRODUCE['waiting'].append(msg.sender.id)
             elif command_list[1].isdigit() or command_list[1] == 'me':
                 if command_list[1] == 'me':
                     command_list[1] = str(msg.sender.id)
