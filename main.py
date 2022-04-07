@@ -133,9 +133,9 @@ class Message:
 
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
 
-def replace_target(list, target, id):
-    if list == target:
-        return id
+def del_this(list):
+    if list == "this":
+        return ""
     else:
         return list
 
@@ -1033,7 +1033,7 @@ Coins: {coin_purse}
                     sendMessage(f"未在任何群添加介绍", command_list[1], msg.group.id)
             elif len(command_list) >= 3:
                 introduce = msg.text
-                command_list = list(map(replace_target, command_list, 'this', str(msg.group.id)))
+                command_list = list(map(del_this, command_list))
                 if command_list[1] == "add":
                     if str(msg.sender.id) in INTRODUCE['qq']:
                         if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
@@ -1082,9 +1082,12 @@ Coins: {coin_purse}
                         introduce = introduce.replace(f"{command_list[0]} {command_list[1]} {command_list[2]} ", '')
                         introduce = introduce.replace(f"{command_list[3]} ", '')
                         introduce = introduce.replace("this ", '')
-                        INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = introduce
-                        msg.fast_reply(f"已修改{command_list[2]}在本群的介绍" if command_list[2] == str(
-                            msg.group.id) else f"已修改{command_list[2]}在群{command_list[3]}的介绍")
+                        if command_list[2] not in INTRODUCE["qq"]:
+                            INTRODUCE["qq"][command_list[2]] = {}
+                        if int(command_list[2]) not in ADMIN_LIST:
+                            INTRODUCE["qq"][command_list[2]][command_list[3]] = introduce
+                            msg.fast_reply(f"已修改{command_list[2]}在本群的介绍" if command_list[3] == str(msg.group.id) else f"已修改{command_list[2]}在群{command_list[3]}的介绍")
+
 
         if command_list[0] == "!msg_test":
             msg.fast_reply(f"""{''.join(json.dumps(command_list))}
