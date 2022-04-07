@@ -1035,7 +1035,8 @@ Coins: {coin_purse}
                     sendMessage(f"未在任何群添加介绍", command_list[1], msg.group.id)
             elif len(command_list) >= 3:
                 introduce = msg.text
-                command_list = list(map(del_this, command_list))
+                if command_list[2] == "this":
+                    command_list[2] = str(command_list[2])
                 atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
                 if atcq is not None:
                     command_list = msg.text.replace(f"[CQ:at,qq={atcq.group(1)}]", str(atcq.group(1))).split(
@@ -1085,6 +1086,8 @@ Coins: {coin_purse}
                         msg.fast_reply("您还未在任何群添加介绍")
                 if command_list[1] == "edit_sb":
                     if msg.sender.isadmin():
+                        if command_list[3] == "this":
+                            command_list[3] = str(msg.group.id)
                         introduce = introduce.replace(f"{command_list[0]} {command_list[1]} {command_list[2]} ", '')
                         introduce = introduce.replace(f"{command_list[3]} ", '')
                         introduce = introduce.replace("this ", '')
