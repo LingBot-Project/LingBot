@@ -25,7 +25,7 @@ import tcping
 
 hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
 hypixel.setCacheTime(30.0)
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
 SERVER_ADDR = "127.0.0.1"
 ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566, 1474002938]
@@ -358,6 +358,10 @@ def on_message2(ws, message):
 查看本群验证状态: !help""")
                 return
             if command_list[1] == "verify":
+                if msg.group.id in VERIFIED:
+                    msg.fast_reply("本群已经验证过了! 输入 !help 可以查询激活状态")
+                    return
+
                 if msg.group.id in VERIFYING:
                     if msg.group.id not in VERIFYING:
                         VERIFYING[msg.group.id] = {
@@ -367,43 +371,43 @@ def on_message2(ws, message):
                             "mail": ""
                         }
 
-                    if time.time() - float(VERIFYING[msg.group.id]["time"]) < 300:
-                        msg.fast_reply("已经有人发起了一个验证消息了! 请等待: {}s".format(300 - (time.time() - float(VERIFYING[msg.group.id]["time"]))))
-                        return
-
-                    print(a["sender"]["role"])
-
-                    if a["sender"]["role"] == "member" and not msg.sender.isadmin():
-                        msg.fast_reply("目前不支持普通群成员发起验证!")
-                        return
-
-                    VERIFYING[msg.group.id]["mail"] = command_list[2]
-                    VERIFYING[msg.group.id]["user"] = msg.sender.id
-                    VERIFYING[msg.group.id]["code"] = str(random.randint(100000000, 999999999))
-                    VERIFYING[msg.group.id]["time"] = time.time()
-                    send_email(command_list[2], f"[LingBot Team] 群{msg.group.id} - 激活", f"""您好, {msg.sender.name}:
-    感谢您使用 LingBot 机器人, 您正在尝试给群 {msg.group.id} 激活! 您的验证码是: {VERIFYING[msg.group.id]["code"]}
-    请您在群内使用指令 !mail code {VERIFYING[msg.group.id]["code"]} 来激活!
-    此验证码 30 分钟内有效.""")
-                    msg.fast_reply("我们已经尝试发送一封电子邮件到您的邮箱 请按照邮箱内容操作")
+                if time.time() - float(VERIFYING[msg.group.id]["time"]) < 300:
+                    msg.fast_reply("已经有人发起了一个验证消息了! 请等待: {}s".format(300 - (time.time() - float(VERIFYING[msg.group.id]["time"]))))
                     return
 
-                if command_list[1] == "code":
-                    if msg.group.id not in VERIFYING:
-                        msg.fast_reply("没有查到本群的激活信息!")
-                        return
+                print(a["sender"]["role"])
 
-                    if time.time() - VERIFYING[msg.group.id]["time"] >= 1800:
-                        msg.fast_reply("""本群的验证码已经过期了!
+                if a["sender"]["role"] == "member" and not msg.sender.isadmin():
+                    msg.fast_reply("目前不支持普通群成员发起验证!")
+                    return
+
+                VERIFYING[msg.group.id]["mail"] = command_list[2]
+                VERIFYING[msg.group.id]["user"] = msg.sender.id
+                VERIFYING[msg.group.id]["code"] = str(random.randint(100000000, 999999999))
+                VERIFYING[msg.group.id]["time"] = time.time()
+                send_email(command_list[2], f"[LingBot Team] 群{msg.group.id} - 激活", f"""您好, {msg.sender.name}:
+感谢您使用 LingBot 机器人, 您正在尝试给群 {msg.group.id} 激活! 您的验证码是: {VERIFYING[msg.group.id]["code"]}
+请您在群内使用指令 !mail code {VERIFYING[msg.group.id]["code"]} 来激活!
+此验证码 30 分钟内有效.""")
+                msg.fast_reply("我们已经尝试发送一封电子邮件到您的邮箱 请按照邮箱内容操作")
+                return
+
+            if command_list[1] == "code":
+                if msg.group.id not in VERIFYING:
+                    msg.fast_reply("没有查到本群的激活信息!")
+                    return
+
+                if time.time() - VERIFYING[msg.group.id]["time"] >= 1800:
+                    msg.fast_reply("""本群的验证码已经过期了!
 邮箱验证指令:
 开始验证: !mail verify 邮箱地址
 完成验证: !mail code 验证码
 查看本群验证状态: !help""")
-                        return
+                    return
 
-                    if str(command_list[2]) == VERIFYING[msg.group.id]["code"]:
-                        msg.fast_reply("激活成功!")
-                        VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
+                if str(command_list[2]) == VERIFYING[msg.group.id]["code"]:
+                    msg.fast_reply("激活成功!")
+                    VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
 
         if not msg.group.isverify():
             return
