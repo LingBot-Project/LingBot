@@ -133,6 +133,11 @@ class Message:
 
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
 
+def replace_target(list, target, id):
+    if list == target:
+        return id
+    else:
+        return list
 
 def read_config():
     global ADMIN_LIST, BLACK_LIST, FEEDBACKS
@@ -1015,48 +1020,71 @@ Coins: {coin_purse}
     发送“!introduce/!介绍 <Q号>” 
     <Q号> : 填"me"介绍自己
 """, target_group=msg.group.id)
-            elif command_list[1].isdigit() or command_list[1] == 'me':
+            elif len(command_list) == 2 and (command_list[1].isdigit() or command_list[1] == 'me'):
                 if command_list[1] == 'me':
                     command_list[1] = str(msg.sender.id)
                 if str(command_list[1]) in INTRODUCE['qq']:
                     if str(msg.group.id) in INTRODUCE['qq'][str(command_list[1])]:
-                        sendMessage(f"的介绍为 : \n{INTRODUCE['qq'][str(command_list[1])][str(msg.group.id)]}", command_list[1], msg.group.id)
+                        sendMessage(f"的介绍为 : \n{INTRODUCE['qq'][str(command_list[1])][str(msg.group.id)]}",
+                                    command_list[1], msg.group.id)
                     else:
                         sendMessage(f"未在此群添加介绍", command_list[1], msg.group.id)
                 else:
                     sendMessage(f"未在任何群添加介绍", command_list[1], msg.group.id)
             elif len(command_list) >= 3:
-                if command_list[2] == "this":
-                    command_list[2] = str(msg.group.id)
+                introduce = msg.text
+                command_list = list(map(replace_target, command_list, 'this', msg.group.id))
                 if command_list[1] == "add":
                     if str(msg.sender.id) in INTRODUCE['qq']:
                         if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
-                            msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit")
+                            msg.fast_reply("您已经在这个群添加过介绍了，若要编辑请把add改为edit" if command_list[2] == str(
+                                msg.group.id) else f"您已经在群{command_list[2]}添加过介绍了，")
                         else:
-                            INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = msg.text.replace(f"{command_list[0]} {command_list[1]} {command_list[2]} ", '')
+                            introduce = introduce.replace(f"{command_list[0]} {command_list[1]} ", '')
+                            introduce = introduce.replace(f"{command_list[2]} ", '')
+                            introduce = introduce.replace("this ", '')
+                            INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = introduce
                             msg.fast_reply("添加成功")
                     else:
                         INTRODUCE['qq'][str(msg.sender.id)] = {}
-                        INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = msg.text.replace(f"{command_list[0]} {command_list[1]} {command_list[2]} ", '')
+                        introduce = introduce.replace(f"{command_list[0]} {command_list[1]} ", '')
+                        introduce = introduce.replace(f"{command_list[2]} ", '')
+                        introduce = introduce.replace("this ", '')
+                        INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = introduce
                         msg.fast_reply("添加成功")
                 if command_list[1] == "remove":
                     if str(msg.sender.id) in INTRODUCE['qq']:
                         if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
                             del INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)]
-                            msg.fast_reply("已删除您在本群的介绍")
+                            msg.fast_reply(
+                                "已删除您在本群的介绍" if command_list[2] == str(msg.group.id) else f"已删除您在群{command_list[2]}的介绍")
                         else:
-                            msg.fast_reply("您还未在此群添加介绍")
+                            msg.fast_reply("您还未在此群添加介绍，请先把remove改为add添加后重试" if command_list[2] == str(
+                                msg.group.id) else f"您还未在群{command_list[2]}添加介绍，请先把remove改为add添加后重试")
                     else:
-                        msg.fast_reply("您还未在任何群添加介绍")
+                        msg.fast_reply("您还未在任何群添加介绍，请先把remove改为add添加后重试")
                 if command_list[1] == "edit":
                     if str(msg.sender.id) in INTRODUCE['qq']:
                         if str(msg.group.id) in INTRODUCE['qq'][str(msg.sender.id)]:
-                            INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = msg.text.replace(f"{command_list[0]} {command_list[1]} {command_list[2]} ", '')
-                            msg.fast_reply("已修改您在本群的介绍")
+                            introduce = introduce.replace(f"{command_list[0]} {command_list[1]} ", '')
+                            introduce = introduce.replace(f"{command_list[2]} ", '')
+                            introduce = introduce.replace("this ", '')
+                            INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = introduce
+                            msg.fast_reply(
+                                "已修改您在本群的介绍" if command_list[2] == str(msg.group.id) else f"已修改您在群{command_list[2]}的介绍")
                         else:
-                            msg.fast_reply("您还未在此群添加介绍")
+                            msg.fast_reply("您还未在此群添加介绍,请把edit改为add重试" if command_list[2] == str(
+                                msg.group.id) else f"您还未在群{command_list[2]}添加介绍,请把edit改为add重试")
                     else:
                         msg.fast_reply("您还未在任何群添加介绍")
+                if command_list[1] == "edit_sb":
+                    if msg.sender.isadmin():
+                        introduce = introduce.replace(f"{command_list[0]} {command_list[1]} {command_list[2]} ", '')
+                        introduce = introduce.replace(f"{command_list[3]} ", '')
+                        introduce = introduce.replace("this ", '')
+                        INTRODUCE['qq'][str(msg.sender.id)][str(msg.group.id)] = introduce
+                        msg.fast_reply(f"已修改{command_list[2]}在本群的介绍" if command_list[2] == str(
+                            msg.group.id) else f"已修改{command_list[2]}在群{command_list[3]}的介绍")
 
         if command_list[0] == "!msg_test":
             msg.fast_reply(f"""{''.join(json.dumps(command_list))}
@@ -1068,7 +1096,6 @@ Coins: {coin_purse}
         msg.fast_reply(
             "很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(
                 text2image(a)))
-
 
 def mutePerson(group, qq_number, mute_time):
     if mute_time > (43199 * 60):
