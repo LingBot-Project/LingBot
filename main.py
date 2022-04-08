@@ -193,10 +193,9 @@ def read_config():
     except:
         pass
     try:
-        with open('json.txt', mode="r", encoding="UTF-8") as jsonfile:
+        with open('json_list.txt', mode="r", encoding="UTF-8") as jsonfile:
             json_list = json.loads(jsonfile.read())
             INTRODUCE["qq"] = json_list["INTRODUCE"]
-            ACCOMPLISHMENT = json_list["ACCOMPLISHMENT"]
     except:
         pass
     config = configparser.ConfigParser()
