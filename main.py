@@ -48,6 +48,7 @@ recordTime = int(time.time())
 isChatBypassOpened = False
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
+ACCOMPLISHMENT = {}
 FEEDBACKS = {}
 REPEATER = []
 AUTISM = []
@@ -220,8 +221,12 @@ def save_config():
     }
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
-    with open('json.txt', 'w', encoding='UTF-8') as jsonfile:
-        jsonfile.write(json.dumps(INTRODUCE['qq']))
+    json_list = {
+        "INTRODUCE": INTRODUCE['qq'],
+        "ACCOMPLISHMENT": ACCOMPLISHMENT
+    }
+    with open('json_list.txt', 'w', encoding='UTF-8') as jsonfile:
+        jsonfile.write(json.dumps(json_list))
     config = configparser.ConfigParser()
     config["FEEDBACKS"] = FEEDBACKS
     with open('feedback.ini', 'w') as configfile:
@@ -1275,6 +1280,8 @@ Coins: {coin_purse}
                             msg.fast_reply("不可编辑超管的介绍！！")
                     else:
                         msg.fast_reply("权限不足！！")
+
+
 
 
         if command_list[0] == "!msg_test":
