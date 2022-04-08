@@ -16,7 +16,7 @@ import hypixel
 import psutil
 import requests
 import websocket
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from apscheduler.schedulers.blocking import BlockingScheduler
 from mcstatus import MinecraftServer
 from simhash import Simhash
@@ -151,6 +151,31 @@ class Message:
             temp1[1] = self.id
 
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
+
+
+
+def crop_max_square(pil_img):
+    return crop_center(pil_img, min(pil_img.size), min(pil_img.size))
+
+
+def crop_center(pil_img, crop_width, crop_height):
+    img_width, img_height = pil_img.size
+    return pil_img.crop(((img_width - crop_width) // 2,
+                         (img_height - crop_height) // 2,
+                         (img_width + crop_width) // 2,
+                         (img_height + crop_height) // 2))
+
+
+def mask_sircle_transparent(pil_img, blur_radius, offset=0):
+    offset += blur_radius * 2
+    mask = Image.new("L", pil_img.size, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.ellipse((offset, offset, pil_img.size[0] - offset, pil_img.size[1] - offset), fill=255)
+    mask = mask.filter(ImageFilter.GaussianBlur(blur_radius))
+
+    result = pil_img.copy()
+    result.putalpha(mask)
+    return result, mask
 
 
 def read_config():
@@ -560,7 +585,19 @@ def on_message2(ws, message):
         if command_list[0] == "!丢":
             # 图片/灵感来源: https://github.com/MoeMegu/ThrowIt-Mirai
             # 图片文件: r2gac549.bmp
-            pass
+            atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
+            if atcq is not None:
+                command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(
+                    " ")
+            tx_image = requests.get(url=f"http://qlogo4.store.qq.com/qzone/{command_list[1]}/{command_list[1]}/100")
+            ima = Image.open(BytesIO(tx_image.content))
+            ima = ima.resize((136, 136), Image.ANTIALIAS)
+            imc = Image.open("r2gac549.bmp")
+            imb, mask1 = mask_sircle_transparent(ima.rotate(-160), 0, 2)
+            imc.paste(imb, (19, 181), mask=mask1)
+            _temp = BytesIO()
+            imc.save(_temp)
+            msg.fast_reply("[CQ:image,file=base64://{}]".format(base64.b64encode(_temp.getvalue()).decode()))
 
         if command_list[0] == "!music":
             # Netease API: http://cloud-music.pl-fe.cn/search?keywords={" ".join(command_list[1:])}
