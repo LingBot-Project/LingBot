@@ -596,7 +596,7 @@ def on_message2(ws, message):
             imb, mask1 = mask_sircle_transparent(ima.rotate(-160), 0, 2)
             imc.paste(imb, (19, 181), mask=mask1)
             _temp = BytesIO()
-            imc.save(_temp)
+            imc.save(_temp, format="PNG")
             msg.fast_reply("[CQ:image,file=base64://{}]".format(base64.b64encode(_temp.getvalue()).decode()))
 
         if command_list[0] == "!music":
