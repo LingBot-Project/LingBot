@@ -553,7 +553,15 @@ def on_message2(ws, message):
             pass
 
         if command_list[0] == "!music":
-            pass
+            # Netease API: http://cloud-music.pl-fe.cn/search?keywords={" ".join(command_list[1:])}
+            search_result = requests.get(
+                url=f'http://cloud-music.pl-fe.cn/search?keywords={" ".join(command_list[1:])}').json()
+            if search_result["code"] != 200:
+                msg.fast_reply(f"搜索失败! {search_result['code']}")
+                return
+
+            msg.fast_reply("这是你要找的歌吗?")
+            msg.fast_reply(f"[CQ:music,type=163,id={search_result['result'][0]['id']}]")
 
         if command_list[0] == "!5k":
             # 图片/灵感来源: https://github.com/SAGIRI-kawaii/saya_plugins_collection/tree/master/modules/5000zhao
