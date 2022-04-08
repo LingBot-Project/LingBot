@@ -21,6 +21,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from mcstatus import MinecraftServer
 from simhash import Simhash
 
+import five_k_utils
 import tcping
 
 hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
@@ -314,9 +315,9 @@ def on_message2(ws, message):
     logging.debug(a)
     if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and \
             a["target_id"] == a["self_id"] and Group(a["group_id"]).isverify():
+        sendMessage(f"[CQ:poke,qq={a['user_id']}]", target_group=a["group_id"])
         sendMessage(random.choice(["不要戳我啦 =w=", "不要动我!", "唔...", "Hentai!", "再戳...会...会变奇怪的..", "啊啊啊不要再戳我辣!!!", "好痛! 呜~", "Nya~"]),
                     target_group=a["group_id"], target_qq=a["user_id"])
-        sendMessage(f"[CQ:poke,qq={a['user_id']}]", target_group=a["group_id"])
         return
 
     msg = Message(message)
@@ -409,6 +410,10 @@ def on_message2(ws, message):
                 if str(command_list[2]) == VERIFYING[msg.group.id]["code"]:
                     msg.fast_reply("激活成功!")
                     VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
+
+        if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
+            msg.fast_reply("Restarting...")
+            stop()
 
         if not msg.group.isverify():
             return
@@ -514,9 +519,6 @@ def on_message2(ws, message):
             if not (command_list[0] == "!repeater" and (command_list[1] == "add" or command_list[1] == "remove")):
                 msg.fast_reply(msg.text, reply=False, at=False)
 
-        if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
-            msg.fast_reply("Restarting...")
-            stop()
 
         if msg.text in ["!test", "凌状态"]:
             msg.fast_reply(
@@ -544,6 +546,22 @@ def on_message2(ws, message):
         #     msg.fast_reply("https://lsp.abcdcreeper.xyz")
         #     # 愚人节彩蛋LOL
         #     return
+
+        if command_list[0] == "!丢":
+            # 图片/灵感来源: https://github.com/MoeMegu/ThrowIt-Mirai
+            # 图片文件: r2gac549.bmp
+            pass
+
+        if command_list[0] == "!music":
+            pass
+
+        if command_list[0] == "!5k":
+            # 图片/灵感来源: https://github.com/SAGIRI-kawaii/saya_plugins_collection/tree/master/modules/5000zhao
+            # 字体文件: ./5k_fonts
+            imageuid = str(random.randint(10000000, 9999999999))
+            five_k_utils.genImage(word_a="你爸", word_b="你爸").save(imageuid + ".cache.png")
+            with open(imageuid + ".cache.png", "rb") as f:
+                msg.fast_reply("[CQ:image,file=base64://{}]".format(base64.b64encode(f.read()).decode()))
 
         if msg.text == "!random":
             msg.fast_reply(str(random.randint(1, 100)))
