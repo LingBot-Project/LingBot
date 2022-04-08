@@ -341,9 +341,9 @@ def on_message2(ws, message):
     logging.debug(a)
     if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and \
             a["target_id"] == a["self_id"] and Group(a["group_id"]).isverify():
-        sendMessage(f"[CQ:poke,qq={a['user_id']}]", target_group=a["group_id"])
         sendMessage(random.choice(["不要戳我啦 =w=", "不要动我!", "唔...", "Hentai!", "再戳...会...会变奇怪的..", "啊啊啊不要再戳我辣!!!", "好痛! 呜~", "Nya~"]),
                     target_group=a["group_id"], target_qq=a["user_id"])
+        sendMessage(f"[CQ:poke,qq={a['user_id']}]", target_group=a["group_id"])
         return
 
     msg = Message(message)
