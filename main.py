@@ -590,6 +590,8 @@ def on_message2(ws, message):
             if atcq is not None:
                 command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(
                     " ")
+            if command_list[1] == "me":
+                command_list[1] == msg.sender.id
             tx_image = requests.get(url=f"http://qlogo4.store.qq.com/qzone/{command_list[1]}/{command_list[1]}/100")
             ima = Image.open(BytesIO(tx_image.content))
             ima = ima.resize((136, 136), Image.ANTIALIAS)
@@ -1150,8 +1152,10 @@ Coins: {coin_purse}
             msg.fast_reply(pmsg)
 
         if msg.sender.id in INTRODUCE['waiting']:
-            atcq = str(re.search(r'\[CQ:at,qq=(.*)]', msg.text).group(1))
-            command_list[1] = atcq
+            atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
+            if atcq is not None:
+                command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(
+                    " ")
             INTRODUCE["waiting"].remove(msg.sender.id)
             if command_list[0].isdigit() or command_list[0] == 'me':
                 if command_list[0] == 'me':
@@ -1171,7 +1175,8 @@ Coins: {coin_purse}
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
             atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
             if atcq is not None:
-                command_list[command_list.index(f'[CQ:at,qq={str(atcq.group(1))}]')] = atcq
+                command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(
+                    " ")
             introduce = msg.text
             if len(command_list) == 1:
                 msg.fast_reply("您想看谁的介绍呢？")
