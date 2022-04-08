@@ -561,7 +561,7 @@ def on_message2(ws, message):
                 return
 
             msg.fast_reply("这是你要找的歌吗?")
-            msg.fast_reply(f"[CQ:music,type=163,id={search_result['result'][0]['id']}]")
+            msg.fast_reply(f"[CQ:music,type=163,id={search_result['result']['songs'][0]['id']}]")
 
         if command_list[0] == "!5k":
             # 图片/灵感来源: https://github.com/SAGIRI-kawaii/saya_plugins_collection/tree/master/modules/5000zhao
