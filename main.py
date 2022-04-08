@@ -559,7 +559,7 @@ def on_message2(ws, message):
             # 图片/灵感来源: https://github.com/SAGIRI-kawaii/saya_plugins_collection/tree/master/modules/5000zhao
             # 字体文件: ./5k_fonts
             imageuid = str(random.randint(10000000, 9999999999))
-            five_k_utils.genImage(word_a="你爸", word_b="你爸").save(imageuid + ".cache.png")
+            five_k_utils.genImage(word_a=command_list[1], word_b=command_list[2]).save(imageuid + ".cache.png")
             with open(imageuid + ".cache.png", "rb") as f:
                 msg.fast_reply("[CQ:image,file=base64://{}]".format(base64.b64encode(f.read()).decode()))
 
