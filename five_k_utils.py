@@ -226,7 +226,7 @@ def genImage(word_a="5000兆円", word_b="欲しい!", default_width=1500, heigh
     # previmg.paste(tiltres[1], (subset, _round(height/2)))
     previmg.alpha_composite(tiltres[0], (0, 50), (0, 0))
     previmg.alpha_composite(tiltres[1], (subset, _round(height/2) + 50), (0, 0))
-    previmg.save("./modules/5000zhao/test1.png")
+    previmg.save("./test1.png")
     croprange = previmg.getbbox()
     img = previmg.crop(croprange)
     final_image = Image.new("RGB", (img.size[0] + 100, img.size[1] + 100), bg)
