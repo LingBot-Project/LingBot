@@ -57,6 +57,7 @@ SCREENSHOT_CD = 0
 EMAIL_DELAY = {}
 VERIFIED = {}
 VERIFYING = {}
+VERIFY_TIPS = {}
 
 # URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
 ANTI_AD = r"送福利|定制水影|加群.*[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群.*[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙.*[0-9]{5,10}|君羊.*[0-9]{5,10}|q(\:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*|vape"
@@ -309,7 +310,7 @@ def on_message2(ws, message):
         MESSAGE_PRE_MINUTE, ALL_MESSAGE, \
         ALL_AD, FEEDBACKS, \
         spam2_vl_reset_cool_down, SCREENSHOT_CD, \
-        VERIFYING, VERIFIED
+        VERIFYING, VERIFIED, VERIFY_TIPS
 
     a = json.loads(message)
     logging.debug(a)
@@ -416,7 +417,15 @@ def on_message2(ws, message):
             stop()
 
         if not msg.group.isverify():
-            return
+            try:
+                if str(msg.group.id) not in VERIFY_TIPS:
+                    VERIFY_TIPS[str(msg.group.id)] = 0
+                if time.time() - VERIFY_TIPS[str(msg.group.id)] >= 120:
+                    msg.fast_reply("本群还没有激活! 请及时联系管理员激活!!", reply=False, at=False)
+            except:
+                pass
+            finally:
+                return
 
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
