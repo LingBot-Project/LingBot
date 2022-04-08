@@ -421,7 +421,7 @@ def on_message2(ws, message):
                 if str(msg.group.id) not in VERIFY_TIPS:
                     VERIFY_TIPS[str(msg.group.id)] = 0
                 if time.time() - VERIFY_TIPS[str(msg.group.id)] >= 120:
-                    msg.fast_reply("本群还没有激活! 请及时联系管理员激活!!", reply=False, at=False)
+                    msg.fast_reply("本群还没有激活! 请及时联系管理员激活!! 激活方式 !mail verify 邮箱地址", reply=False, at=False)
             except:
                 pass
             finally:
