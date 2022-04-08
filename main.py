@@ -439,7 +439,7 @@ def on_message2(ws, message):
 
         if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
-            print(requests.post("http://"+HTTPURL+"/set_restart"))
+            print(requests.get("http://"+HTTPURL+"/set_restart").text)
             stop()
 
         if not msg.group.isverify():
