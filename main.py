@@ -304,6 +304,21 @@ def on_message2(ws, message):
                 text2image(a)))
 
 
+def temps_message(ws, message):
+    global timePreMessage
+    a = time.time()
+    try:
+        on_message2(ws, message)
+    except:
+        pass
+    b = time.time()
+    sfl_time = b - a
+    if timePreMessage == 0:
+        timePreMessage = sfl_time
+    else:
+        timePreMessage = (timePreMessage + sfl_time) / 2
+
+
 # 定义一个用来接收监听数据的方法
 def on_message(ws, message):
     threading.Thread(target=temps_message, args=(ws, message)).start()
@@ -359,18 +374,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-def temps_message(ws, message):
-    global timePreMessage
-    a = time.time()
-    try:
-        on_message2(ws, message)
-    except:
-        pass
-    b = time.time()
-    sfl_time = b - a
-    if timePreMessage == 0:
-        timePreMessage = sfl_time
-    else:
-        timePreMessage = (timePreMessage + sfl_time) / 2
