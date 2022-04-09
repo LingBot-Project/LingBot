@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import random
 import threading
 import time
@@ -7,6 +8,7 @@ import time
 import psutil
 import requests
 
+from main import on_message2
 from modules.achievements import ACCOMPLISHMENT
 from utils import config
 from utils.anti_spam import strQ2B
@@ -238,3 +240,43 @@ def stop():
 def get_runtime():
     nowtime = int(time.time())
     return "{}秒".format(int(nowtime - recordTime))
+
+
+def temps_message(ws, message):
+    global timePreMessage
+    a = time.time()
+    try:
+        on_message2(ws, message)
+    except:
+        pass
+    b = time.time()
+    sfl_time = b - a
+    if timePreMessage == 0:
+        timePreMessage = sfl_time
+    else:
+        timePreMessage = (timePreMessage + sfl_time) / 2
+
+
+def send_email(mail, title, text):
+    os.system(f"echo \"{text}\" | mail -s \"{title}\" {mail}")
+
+
+def goodmor(target=None):
+    msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(
+        requests.post(url="http://localhost:25666/url2base64", data={"url": "https://news.topurl.cn/"}).text.replace(
+            "\n", ""))
+    s = getGroups()
+    if target:
+        sendMessage(msg1, target_group=target)
+    else:
+        for i in s:
+            sendMessage(msg1, target_group=i)
+            time.sleep(random.randint(1500, 2000) / 1000)
+
+
+def goodnig():
+    msg1 = "很晚了!该睡了!"
+    s = getGroups()
+    for i in s:
+        sendMessage(msg1, target_group=i)
+        time.sleep(random.randint(700, 1100) / 1000)

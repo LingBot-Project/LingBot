@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 import json
 import logging
-import os
 import random
 import re
 import threading
@@ -16,7 +15,7 @@ from modules import achievements, bilibili, bot_utils, imgs, introduce, math, mu
 from utils import config
 from utils.anti_spam import spammer_checker, simhash_similarity
 from utils.image import text2image
-from utils.qqbot import sendMessage, getGroups, Group, Message, stop
+from utils.qqbot import sendMessage, Group, Message, stop, temps_message, send_email, goodmor, goodnig
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
@@ -305,25 +304,6 @@ def on_message2(ws, message):
                 text2image(a)))
 
 
-def temps_message(ws, message):
-    global timePreMessage
-    a = time.time()
-    try:
-        on_message2(ws, message)
-    except:
-        pass
-    b = time.time()
-    sfl_time = b - a
-    if timePreMessage == 0:
-        timePreMessage = sfl_time
-    else:
-        timePreMessage = (timePreMessage + sfl_time) / 2
-
-
-def send_email(mail, title, text):
-    os.system(f"echo \"{text}\" | mail -s \"{title}\" {mail}")
-
-
 # 定义一个用来接收监听数据的方法
 def on_message(ws, message):
     threading.Thread(target=temps_message, args=(ws, message)).start()
@@ -339,27 +319,6 @@ def on_error(ws, error):
 def on_close(ws, a, b):
     logging.error("-------连接已关闭------")
     stop()
-
-
-def goodmor(target=None):
-    msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(
-        requests.post(url="http://localhost:25666/url2base64", data={"url": "https://news.topurl.cn/"}).text.replace(
-            "\n", ""))
-    s = getGroups()
-    if target:
-        sendMessage(msg1, target_group=target)
-    else:
-        for i in s:
-            sendMessage(msg1, target_group=i)
-            time.sleep(random.randint(1500, 2000) / 1000)
-
-
-def goodnig():
-    msg1 = "很晚了!该睡了!"
-    s = getGroups()
-    for i in s:
-        sendMessage(msg1, target_group=i)
-        time.sleep(random.randint(700, 1100) / 1000)
 
 
 def main():

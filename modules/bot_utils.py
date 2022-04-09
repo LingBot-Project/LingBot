@@ -7,13 +7,13 @@ from mcstatus import MinecraftServer
 
 from utils import tcping
 from utils.image import text2image
-from utils.qqbot import get_runtime, sendMessage, getGroups, mutePerson, mute_type, search_user, unmutePerson
+from utils.qqbot import get_runtime, sendMessage, getGroups, mutePerson, mute_type, search_user, unmutePerson, goodmor
 
 SCREENSHOT_CD = 0
 MC_MOTD_COLORFUL = re.compile(r"§.")
 
 if __name__ == '__main__':
-    from main import goodmor
+    pass
 
 
 def on_message(msg, command_list):
