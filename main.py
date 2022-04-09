@@ -49,6 +49,10 @@ isChatBypassOpened = False
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
 def get_achievement_image(block, title, string1, string2=None):
+    title = title.replace("..", " ")
+    string1 = string1.replace("..", " ")
+    if string2 is not None:
+        string2 = string2.replace("..", " ")
     return f'https://minecraft-api.com/api/achivements/{block}/{title}/{string1}/{string2 if string2 is not None else ""}'
 ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
     "i_m_stupid": get_achievement_image('sand', 'STUPID', 'I am stupid')
@@ -1301,7 +1305,7 @@ Coins: {coin_purse}
                 if command_list[2] == "me":
                     acmsg = ""
                     for aclist in ACCOMPLISHMENT["qq"][str(msg.sender.id)]:
-                        acmsg += aclist
+                        acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
                     msg.fast_reply("您获得的成就有\n"+acmsg)
 
         if command_list[0] == "我是傻逼" or command_list[0] == "我是傻子" or str.lower(
