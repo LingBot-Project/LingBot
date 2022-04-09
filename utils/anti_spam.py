@@ -2,9 +2,10 @@ import time
 
 from simhash import Simhash
 
+from main import ANTISPAMMER, SPAM2_VL
+
 
 def spammer_checker(msg):
-    global ANTISPAMMER, SPAM2_VL
     group = msg.group.id
     user = msg.sender.id
     if group not in ANTISPAMMER:

@@ -1,23 +1,24 @@
 # -*- coding: UTF-8 -*-
-import json
-import logging
-import os
-import random
-import re
-import threading
-import time
-import traceback
+if __name__ == '__main__':
+    import json
+    import logging
+    import os
+    import random
+    import re
+    import threading
+    import time
+    import traceback
 
-import hypixel
-import requests
-import websocket
-from apscheduler.schedulers.blocking import BlockingScheduler
+    import hypixel
+    import requests
+    import websocket
+    from apscheduler.schedulers.blocking import BlockingScheduler
 
-import utils.qqbot
-from modules import achievements, bilibili, bot_utils, imgs, introduce, math, music, one_line, play
-from utils.anti_spam import spammer_checker, simhash_similarity
-from utils.image import text2image
-from utils.qqbot import sendMessage, getGroups, Group, Message, stop
+    import utils.qqbot
+    from modules import achievements, bilibili, bot_utils, imgs, introduce, math, music, one_line, play
+    from utils.anti_spam import spammer_checker, simhash_similarity
+    from utils.image import text2image
+    from utils.qqbot import sendMessage, getGroups, Group, Message, stop
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
