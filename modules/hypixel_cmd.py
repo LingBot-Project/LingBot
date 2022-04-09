@@ -8,7 +8,7 @@ import requests
 
 from utils.image import text2image
 
-hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
+# hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
 hypixel.setCacheTime(30.0)
 
 
