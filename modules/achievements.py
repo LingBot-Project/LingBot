@@ -1,5 +1,6 @@
 import re
 
+from main import ACCOMPLISHMENT
 from utils.qqbot import sendMessage
 
 
@@ -55,6 +56,3 @@ def get_achievement_image(block, title, string1, string2=None):
     return f'https://minecraft-api.com/api/achivements/{block}/{title}/{string1}/{string2 if string2 is not None else ""}'
 
 
-ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
-    "i_m_stupid": get_achievement_image("sand", "STUPID", "I am stupid")
-}}
