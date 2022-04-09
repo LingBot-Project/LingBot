@@ -1318,7 +1318,7 @@ Coins: {coin_purse}
                         command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)),str(atcq.group(1))).split(" ")
                     for aclist in ACCOMPLISHMENT["qq"][command_list[2]]:
                         acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
-                    msg.fast_reply("您获得的成就有\n" + acmsg)
+                    msg.fast_reply(f"{f'[CQ:at,qq={command_list[2]}]' if atcq is not None else command_list[2]}获得的成就有\n{acmsg}")
             elif command_list[1] == "empty":
                 ACCOMPLISHMENT["qq"][str(msg.sender.id)] = []
                 msg.fast_reply("已清空您的成就")
