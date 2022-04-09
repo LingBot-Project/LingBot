@@ -1318,6 +1318,7 @@ Coins: {coin_purse}
                         command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)),str(atcq.group(1))).split(" ")
                     if command_list[2] not in ACCOMPLISHMENT["qq"] or len(ACCOMPLISHMENT["qq"][command_list[2]]) == 0:
                         msg.fast_reply(f"{f'[CQ:at,qq={command_list[2]}]' if atcq is not None else command_list[2]}还未获得任何成就")
+                        return
                     for aclist in ACCOMPLISHMENT["qq"][command_list[2]]:
                         acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
                     msg.fast_reply(f"{f'[CQ:at,qq={command_list[2]}]' if atcq is not None else command_list[2]}获得的成就有\n{acmsg}")
