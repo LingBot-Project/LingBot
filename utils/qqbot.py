@@ -7,6 +7,8 @@ import time
 import psutil
 import requests
 
+from main import HTTPURL, VERIFIED, VERIFYING, BLACK_LIST, ADMIN_LIST, INTRODUCE, recordTime
+from modules.achievements import ACCOMPLISHMENT
 from utils import config
 from utils.anti_spam import strQ2B
 
@@ -22,13 +24,11 @@ class Group:
         mutePerson(self.id, user.id, mute_time)
 
     def isverify(self):
-        global VERIDIED
         if str(self.id) in VERIFIED:
             return True
         return False
 
     def verify_info(self):
-        global VERIFIED, VERIFYING
         if str(self.id) in VERIFIED:
             return f"已验证 绑定邮箱:{VERIFIED[str(self.id)]}"
         elif str(self.id) in VERIFYING:
@@ -43,29 +43,23 @@ class User:
         self.name = nickname
 
     def add2blacklist(self):
-        global BLACK_LIST
         if self.id not in BLACK_LIST and self.id != 1584784496:
             BLACK_LIST.append(self.id)
 
     def remove4blacklist(self):
-        global BLACK_LIST
         BLACK_LIST.remove(self.id)
 
     def isblack(self):
-        global BLACK_LIST
         return self.id in BLACK_LIST
 
     def isadmin(self):
-        global ADMIN_LIST
         return self.id in ADMIN_LIST
 
     def add2admin(self):
-        global ADMIN_LIST
         if self.id not in ADMIN_LIST:
             ADMIN_LIST.append(self.id)
 
     def remove4admin(self):
-        global ADMIN_LIST
         if self.id != 1584784496:
             ADMIN_LIST.remove(self.id)
 
@@ -108,7 +102,6 @@ class Message:
 
 
 def mutePerson(group, qq_number, mute_time):
-    global HTTPURL
     if mute_time > (43199 * 60):
         mute_time = 43199 * 60
     data1 = {
@@ -124,7 +117,6 @@ def unmutePerson(group, qq_number):
 
 
 def recall(msg_id):
-    global HTTPURL
     data1 = {
         "message_id": int(msg_id)
     }
@@ -132,7 +124,6 @@ def recall(msg_id):
 
 
 def sendMessage(message, target_qq=None, target_group=None, message_id=None):
-    global HTTPURL
     if target_qq is None and target_group is None:
         raise Exception()
 
@@ -175,7 +166,6 @@ def sendTempMsg(target1, target2, text):
 
 
 def getGroupUser(groupID: int):
-    global HTTPURL
     users = []
     a = requests.get(url="http://" + HTTPURL + "/get_group_member_list?group_id={}".format(groupID))
     if a.status_code != 200:
@@ -187,7 +177,6 @@ def getGroupUser(groupID: int):
 
 
 def getGroups():
-    global HTTPURL
     groups = []
     a = requests.get(url="http://" + HTTPURL + "/get_group_list")
     if a.status_code != 200:
@@ -235,13 +224,11 @@ def healthy_check():
 
 
 def stop():
-    global ADMIN_LIST, BLACK_LIST, VERIFIED, INTRODUCE, ACCOMPLISHMENT
     logging.info("Restarting...")
     config.save_config(ADMIN_LIST, BLACK_LIST, VERIFIED, INTRODUCE, ACCOMPLISHMENT)
     psutil.Process().kill()
 
 
 def get_runtime():
-    global recordTime
     nowtime = int(time.time())
     return "{}秒".format(int(nowtime - recordTime))
