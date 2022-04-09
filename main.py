@@ -48,7 +48,9 @@ recordTime = int(time.time())
 isChatBypassOpened = False
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
-ACCOMPLISHMENT = {}
+ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
+    "i_m_stupid": "https://minecraft-api.com/api/achivements/sand/STUPID/I..am..a..stupid!"
+}}
 FEEDBACKS = {}
 REPEATER = []
 AUTISM = []
@@ -154,7 +156,6 @@ class Message:
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
 
 
-
 def crop_max_square(pil_img):
     return crop_center(pil_img, min(pil_img.size), min(pil_img.size))
 
@@ -196,6 +197,7 @@ def read_config():
         with open('json_list.txt', mode="r", encoding="UTF-8") as jsonfile:
             json_list = json.loads(jsonfile.read())
             INTRODUCE["qq"] = json_list["INTRODUCE"]
+            ACCOMPLISHMENT["qq"] = json_list["ACCOMPLISHMENT"]
     except:
         pass
     config = configparser.ConfigParser()
@@ -224,7 +226,7 @@ def save_config():
         config.write(configfile)
     json_list = {
         "INTRODUCE": INTRODUCE['qq'],
-        "ACCOMPLISHMENT": ACCOMPLISHMENT
+        "ACCOMPLISHMENT": ACCOMPLISHMENT['qq']
     }
     with open('json_list.txt', 'w', encoding='UTF-8') as jsonfile:
         jsonfile.write(json.dumps(json_list))
@@ -347,7 +349,8 @@ def on_message2(ws, message):
     logging.debug(a)
     if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and \
             a["target_id"] == a["self_id"] and Group(a["group_id"]).isverify():
-        sendMessage(random.choice(["不要戳我啦 =w=", "不要动我!", "唔...", "Hentai!", "再戳...会...会变奇怪的..", "啊啊啊不要再戳我辣!!!", "好痛! 呜~", "Nya~"]),
+        sendMessage(random.choice(
+            ["不要戳我啦 =w=", "不要动我!", "唔...", "Hentai!", "再戳...会...会变奇怪的..", "啊啊啊不要再戳我辣!!!", "好痛! 呜~", "Nya~"]),
                     target_group=a["group_id"], target_qq=a["user_id"])
         sendMessage(f"[CQ:poke,qq={a['user_id']}]", target_group=a["group_id"])
         return
@@ -361,6 +364,7 @@ def on_message2(ws, message):
                 return msg.group.id
             else:
                 return list
+
         if msg.text == "":
             return
 
@@ -406,7 +410,8 @@ def on_message2(ws, message):
                     }
 
                 if time.time() - float(VERIFYING[msg.group.id]["time"]) < 300:
-                    msg.fast_reply("已经有人发起了一个验证消息了! 请等待: {}s".format(300 - (time.time() - float(VERIFYING[msg.group.id]["time"]))))
+                    msg.fast_reply(
+                        "已经有人发起了一个验证消息了! 请等待: {}s".format(300 - (time.time() - float(VERIFYING[msg.group.id]["time"]))))
                     return
 
                 print(a["sender"]["role"])
@@ -445,7 +450,7 @@ def on_message2(ws, message):
 
         if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
-            print(requests.get("http://"+HTTPURL+"/set_restart").text)
+            print(requests.get("http://" + HTTPURL + "/set_restart").text)
             stop()
 
         if not msg.group.isverify():
@@ -453,7 +458,8 @@ def on_message2(ws, message):
                 if str(msg.group.id) not in VERIFY_TIPS:
                     VERIFY_TIPS[str(msg.group.id)] = 0
                 if time.time() - VERIFY_TIPS[str(msg.group.id)] <= 120:
-                    msg.fast_reply("本群还没有激活! 请及时联系管理员激活!! 激活方式 !mail verify 邮箱地址\n注意 禁言机器人会进入黑名单!", reply=False, at=False)
+                    msg.fast_reply("本群还没有激活! 请及时联系管理员激活!! 激活方式 !mail verify 邮箱地址\n注意 禁言机器人会进入黑名单!", reply=False,
+                                   at=False)
                     VERIFY_TIPS[str(msg.group.id)] = time.time()
             except:
                 pass
@@ -561,7 +567,6 @@ def on_message2(ws, message):
             if not (command_list[0] == "!repeater" and (command_list[1] == "add" or command_list[1] == "remove")):
                 msg.fast_reply(msg.text, reply=False, at=False)
 
-
         if msg.text in ["!test", "凌状态"]:
             msg.fast_reply(
                 "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(
@@ -594,7 +599,8 @@ def on_message2(ws, message):
             # 图片文件: r2gac549.bmp
             atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
             if atcq is not None:
-                command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).replace("me", str(msg.sender.id)).split(
+                command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).replace("me",
+                                                                                                                   str(msg.sender.id)).split(
                     " ")
             tx_image = requests.get(url=f"http://qlogo4.store.qq.com/qzone/{command_list[1]}/{command_list[1]}/100")
             ima = Image.open(BytesIO(tx_image.content))
@@ -1276,14 +1282,22 @@ Coins: {coin_purse}
                             INTRODUCE["qq"][command_list[2]] = {}
                         if int(command_list[2]) not in ADMIN_LIST:
                             INTRODUCE["qq"][command_list[2]][command_list[3]] = introduce
-                            msg.fast_reply(f"已修改{command_list[2]}在本群的介绍" if command_list[3] == str(msg.group.id) else f"已修改{command_list[2]}在群{command_list[3]}的介绍")
+                            msg.fast_reply(f"已修改{command_list[2]}在本群的介绍" if command_list[3] == str(
+                                msg.group.id) else f"已修改{command_list[2]}在群{command_list[3]}的介绍")
                         else:
                             msg.fast_reply("不可编辑超管的介绍！！")
                     else:
                         msg.fast_reply("权限不足！！")
 
-
-
+        if command_list[0] == "我是傻逼" or command_list[0] == "我是傻子" or str.lower(
+                command_list[0]) == "i am stupid" or str.lower(command_list[0]) == "i'm stupid" or str.lower(
+                command_list[0]) == "i'm a fool" or str.lower(command_list[0]) == "i am a fool " or str.lower(
+                command_list[0]) == "i‘m an idiot" or str.lower(command_list[0]) == "i am an idiot":
+            if str(msg.sender.id) not in ACCOMPLISHMENT["qq"]:
+                ACCOMPLISHMENT["qq"][str(msg.sender.id)] = []
+                get_achievements(msg.sender.id, msg, "i_m_stupid")
+            if "i_m_stupid" not in ACCOMPLISHMENT["qq"][str(msg.sender.id)]:
+                get_achievements(msg.sender.id, msg, "i_m_stupid")
 
         if command_list[0] == "!msg_test":
             msg.fast_reply(f"""{''.join(json.dumps(command_list))}
@@ -1295,6 +1309,12 @@ Coins: {coin_purse}
         msg.fast_reply(
             "很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(
                 text2image(a)))
+
+
+def get_achievements(qq, msg, achievements):
+    ACCOMPLISHMENT["qq"][str(qq)].append(achievements)
+    msg.fast_reply(f'恭喜你获得了一个成就！！\n[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][achievements]}]')
+
 
 def mutePerson(group, qq_number, mute_time):
     if mute_time > (43199 * 60):
