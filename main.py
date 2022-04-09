@@ -20,7 +20,7 @@ if __name__ == '__main__':
     from utils.image import text2image
     from utils.qqbot import sendMessage, getGroups, Group, Message, stop
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
 SERVER_ADDR = "127.0.0.1"
 ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566, 1474002938]
