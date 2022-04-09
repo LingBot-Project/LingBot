@@ -7,10 +7,9 @@ import time
 import psutil
 import requests
 
-import config
-
 if __name__ == '__main__':
     from anti_spam import strQ2B
+    import config
 
 
 class Group:
