@@ -2,7 +2,7 @@ import configparser
 import json
 
 if __name__ == '__main__':
-    from qqbot import sendMessage
+    pass
 
 
 def read_config():
@@ -32,7 +32,6 @@ def read_config():
         verified = config["VERIFIED"]
     except:
         pass
-    sendMessage("restart successful", target_group=1019068934)
 
     return admin_list, black_list, verified, introduce, accomplishment
 
