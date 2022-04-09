@@ -1300,31 +1300,34 @@ Coins: {coin_purse}
                         msg.fast_reply("权限不足！！")
 
         if command_list[0] in ["!achievements", "!成就"]:
-            if command_list[1] == "help":
-                sendMessage("""成就指令 : !achievements/!成就
+            try:
+                if command_list[1] == "help":
+                    sendMessage("""成就指令 : !achievements/!成就
 列出自己的成就 : !achievements/!成就 list me
 列出他人的成就 : !achievements/!成就 list <QQ|@>
 清空自己的成就 : !achievements/!成就 empty
 成就大全 : 这要你自己探索了""", target_group=msg.group.id)
-            if command_list[1] == "list":
-                acmsg = ""
-                if command_list[2] == "me":
-                    for aclist in ACCOMPLISHMENT["qq"][str(msg.sender.id)]:
-                        acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
-                    msg.fast_reply("您获得的成就有\n" + acmsg)
-                else:
-                    atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
-                    if atcq is not None:
-                        command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)),str(atcq.group(1))).split(" ")
-                    if command_list[2] not in ACCOMPLISHMENT["qq"] or len(ACCOMPLISHMENT["qq"][command_list[2]]) == 0:
-                        msg.fast_reply(f"{f'[CQ:at,qq={command_list[2]}]' if atcq is not None else command_list[2]}还未获得任何成就")
-                        return
-                    for aclist in ACCOMPLISHMENT["qq"][command_list[2]]:
-                        acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
-                    msg.fast_reply(f"{f'[CQ:at,qq={command_list[2]}]' if atcq is not None else command_list[2]}获得的成就有\n{acmsg}")
-            elif command_list[1] == "empty":
-                ACCOMPLISHMENT["qq"][str(msg.sender.id)] = []
-                msg.fast_reply("已清空您的成就")
+                if command_list[1] == "list":
+                    acmsg = ""
+                    if command_list[2] == "me":
+                        for aclist in ACCOMPLISHMENT["qq"][str(msg.sender.id)]:
+                            acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
+                        msg.fast_reply("您获得的成就有\n" + acmsg)
+                    else:
+                        atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
+                        if atcq is not None:
+                            command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)),str(atcq.group(1))).split(" ")
+                        if command_list[2] not in ACCOMPLISHMENT["qq"] or len(ACCOMPLISHMENT["qq"][command_list[2]]) == 0:
+                            msg.fast_reply(f"{f'[CQ:at,qq={command_list[2]}]' if atcq is not None else command_list[2]}还未获得任何成就")
+                            return
+                        for aclist in ACCOMPLISHMENT["qq"][command_list[2]]:
+                            acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
+                        msg.fast_reply(f"{f'[CQ:at,qq={command_list[2]}]' if atcq is not None else command_list[2]}获得的成就有\n{acmsg}")
+                elif command_list[1] == "empty":
+                    ACCOMPLISHMENT["qq"][str(msg.sender.id)] = []
+                    msg.fast_reply("已清空您的成就")
+            except:
+                msg.fast_reply("指令错误，请输入!achievements/!成就 help查看正确使用方法")
 
         if re.search(r"我是傻逼|我是傻子|i am stupid|i'm stupid|i'm a fool|i‘m an idiot|i am a fool|i am an idiot", msg.text):
             if str(msg.sender.id) not in ACCOMPLISHMENT["qq"]:
