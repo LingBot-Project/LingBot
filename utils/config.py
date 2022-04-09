@@ -1,7 +1,8 @@
 import configparser
 import json
 
-from utils.qqbot import sendMessage
+if __name__ == '__main__':
+    from qqbot import sendMessage
 
 
 def read_config():
