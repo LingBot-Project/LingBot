@@ -12,7 +12,7 @@ import requests
 import websocket
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-from modules import achievements, bilibili, bot_utils, hypixel, imgs, introduce, math, music, one_line, play
+from modules import achievements, bilibili, bot_utils, imgs, introduce, math, music, one_line, play
 from utils import config
 from utils.anti_spam import spammer_checker, simhash_similarity
 from utils.image import text2image
