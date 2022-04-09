@@ -13,8 +13,8 @@ import requests
 import websocket
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+import utils.qqbot
 from modules import achievements, bilibili, bot_utils, imgs, introduce, math, music, one_line, play
-from utils import config
 from utils.anti_spam import spammer_checker, simhash_similarity
 from utils.image import text2image
 from utils.qqbot import sendMessage, getGroups, Group, Message, stop
@@ -367,7 +367,7 @@ def main():
     global ADMIN_LIST, BLACK_LIST, VERIFIED, INTRODUCE
     try:
         logging.info("Starting... (0/5)")
-        ADMIN_LIST, BLACK_LIST, VERIFIED, INTRODUCE, achievements.ACCOMPLISHMENT = config.read_config()
+        ADMIN_LIST, BLACK_LIST, VERIFIED, INTRODUCE, achievements.ACCOMPLISHMENT = utils.qqbot.read_config()
         logging.info("Starting... (1/5)")
         ws = websocket.WebSocketApp("ws://" + WSURL + "/all?verifyKey=uThZyFeQwJbD&qq=3026726134",
                                     on_message=on_message,
