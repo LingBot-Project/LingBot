@@ -8,6 +8,7 @@ import threading
 import time
 import traceback
 
+import hypixel
 import requests
 import websocket
 from apscheduler.schedulers.blocking import BlockingScheduler

@@ -3,10 +3,12 @@ import datetime
 import logging
 import traceback
 
-import hypixel
 import requests
 
 from utils.image import text2image
+
+if __name__ == '__main__':
+    import hypixel
 
 hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
 hypixel.setCacheTime(30.0)
