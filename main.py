@@ -12,7 +12,7 @@ import requests
 import websocket
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-from modules import achievements, bilibili, bot_utils, imgs, introduce, math, music, one_line, play
+from modules import achievements, bilibili, bot_utils, imgs, introduce, math, music, one_line, play, hypixel_cmd
 from utils import config
 from utils.anti_spam import spammer_checker, simhash_similarity
 from utils.image import text2image
@@ -289,7 +289,7 @@ def on_message2(ws, message):
         achievements.on_message(msg, command_list)
         bilibili.on_message(msg, command_list)
         bot_utils.on_message(msg, command_list)
-        hypixel.on_message(msg, command_list)
+        hypixel_cmd.on_message(msg, command_list)
         imgs.on_message(msg, command_list)
         introduce.on_message(msg, command_list)
         math.on_message(msg, command_list)
