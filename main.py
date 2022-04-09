@@ -55,7 +55,7 @@ def get_achievement_image(block, title, string1, string2=None):
         string2 = string2.replace("..", " ")
     return f'https://minecraft-api.com/api/achivements/{block}/{title}/{string1}/{string2 if string2 is not None else ""}'
 ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
-    "i_m_stupid": get_achievement_image('sand', 'STUPID', 'I am stupid')
+    "i_m_stupid": "https://minecraft-api.com/api/achivements/sang/STUPID/I..m..stupid"
 }}
 FEEDBACKS = {}
 REPEATER = []
