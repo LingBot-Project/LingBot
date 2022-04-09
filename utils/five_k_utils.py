@@ -233,6 +233,3 @@ def genImage(word_a="5000兆円", word_b="欲しい!", default_width=1500, heigh
     final_image.paste(img, (50, 50))
 
     return final_image
-
-
-# genImage(word_a="你爸", word_b="你爸").save("./temp.png")
