@@ -1,8 +1,6 @@
 import configparser
 import json
 
-from utils.qqbot import sendMessage
-
 
 def read_config():
     config = configparser.ConfigParser()
@@ -31,7 +29,6 @@ def read_config():
         verified = config["VERIFIED"]
     except:
         pass
-    sendMessage("restart successful", target_group=1019068934)
 
     return admin_list, black_list, verified, introduce, accomplishment
 

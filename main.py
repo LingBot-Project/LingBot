@@ -345,6 +345,7 @@ def main():
         logging.info("Starting... (4/5)")
         t3.start()
         logging.info("Starting... (5/5)")
+        sendMessage("restart successful", target_group=1019068934)
         logging.info("Bot Ready!")
         while True:
             time.sleep(3600)
