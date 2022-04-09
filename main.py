@@ -1301,7 +1301,7 @@ Coins: {coin_purse}
                 if command_list[2] == "me":
                     acmsg = ""
                     for aclist in ACCOMPLISHMENT["qq"][str(msg.sender.id)]:
-                        acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
+                        acmsg += aclist
                     msg.fast_reply("您获得的成就有\n"+acmsg)
 
         if command_list[0] == "我是傻逼" or command_list[0] == "我是傻子" or str.lower(
