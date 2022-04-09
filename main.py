@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+from modules.achievements import get_achievement_image
+
 SERVER_ADDR = "127.0.0.1"
 ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566, 1474002938]
 HYPBAN_COOKIE = None
@@ -26,6 +28,9 @@ VERIFIED = {}
 VERIFYING = {}
 VERIFY_TIPS = {}
 spam2_vl_reset_cool_down = __import__("time").time()
+ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
+    "i_m_stupid": get_achievement_image("sand", "STUPID", "I am stupid")
+}}
 
 if __name__ == '__main__':
     import json
@@ -367,7 +372,7 @@ if __name__ == '__main__':
         global ADMIN_LIST, BLACK_LIST, VERIFIED, INTRODUCE
         try:
             logging.info("Starting... (0/5)")
-            ADMIN_LIST, BLACK_LIST, VERIFIED, INTRODUCE, achievements.ACCOMPLISHMENT = utils.qqbot.read_config()
+            ADMIN_LIST, BLACK_LIST, VERIFIED, INTRODUCE, ACCOMPLISHMENT = utils.qqbot.read_config()
             logging.info("Starting... (1/5)")
             ws = websocket.WebSocketApp("ws://" + WSURL + "/all?verifyKey=uThZyFeQwJbD&qq=3026726134",
                                         on_message=on_message,

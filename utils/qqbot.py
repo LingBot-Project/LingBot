@@ -8,8 +8,7 @@ import time
 import psutil
 import requests
 
-from main import ADMIN_LIST, VERIFIED, INTRODUCE, recordTime, BLACK_LIST, HTTPURL, VERIFYING
-from modules.achievements import ACCOMPLISHMENT
+from main import ADMIN_LIST, VERIFIED, INTRODUCE, recordTime, BLACK_LIST, HTTPURL, VERIFYING, ACCOMPLISHMENT
 
 if __name__ == '__main__':
     from anti_spam import strQ2B
