@@ -21,8 +21,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from mcstatus import MinecraftServer
 from simhash import Simhash
 
-import five_k_utils
-import tcping
+from utils import five_k_utils, tcping
 
 hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
 hypixel.setCacheTime(30.0)
@@ -188,6 +187,17 @@ def mask_sircle_transparent(pil_img, blur_radius, offset=0):
     result = pil_img.copy()
     result.putalpha(mask)
     return result, mask
+
+
+def healthy_check():
+    score = 10.0
+    threads = threading.active_count()
+    if threads >= 40:
+        score -= 4
+    else:
+        score -= threads/10
+
+    menory = psutil.Process().memory_info()
 
 
 def read_config():
@@ -1316,12 +1326,9 @@ Coins: {coin_purse}
                     atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
                     if atcq is not None:
                         command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)),str(atcq.group(1))).split(" ")
-                    if command_list[2] not in ACCOMPLISHMENT["qq"] or len(ACCOMPLISHMENT["qq"][command_list[2]]) == 0:
-                        msg.fast_reply(f"{f'[CQ:at,qq={command_list[2]}]' if atcq is not None else command_list[2]}还未获得任何成就")
-                        return
                     for aclist in ACCOMPLISHMENT["qq"][command_list[2]]:
                         acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
-                    msg.fast_reply(f"{f'[CQ:at,qq={command_list[2]}]' if atcq is not None else command_list[2]}获得的成就有\n{acmsg}")
+                    msg.fast_reply("您获得的成就有\n" + acmsg)
             elif command_list[1] == "empty":
                 ACCOMPLISHMENT["qq"][str(msg.sender.id)] = []
                 msg.fast_reply("已清空您的成就")
