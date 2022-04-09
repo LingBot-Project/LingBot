@@ -1,10 +1,10 @@
 import re
 
-from main import INTRODUCE, ADMIN_LIST
 from utils.qqbot import sendMessage
 
 
 def on_message(msg, command_list):
+    global INTRODUCE, ADMIN_LIST
     if msg.sender.id in INTRODUCE['waiting']:
         atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
         if atcq is not None:

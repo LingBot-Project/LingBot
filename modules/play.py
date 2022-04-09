@@ -1,11 +1,13 @@
 import requests
 
-from main import AUTISM
 from utils.image import text2image
 from utils.qqbot import mutePerson, sendMessage, mute_type
 
+AUTISM = []
+
 
 def on_message(msg, command_list):
+    global AUTISM
     if (msg.group.id, msg.sender.id) in AUTISM:
         AUTISM.remove((msg.group.id, msg.sender.id))
         if command_list[0] == "0" or "不想自闭" in command_list[0]:
