@@ -48,8 +48,10 @@ recordTime = int(time.time())
 isChatBypassOpened = False
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
+def get_achievement_image(block, title, string1, string2=None):
+    return f'https://minecraft-api.com/api/achivements/{block}/{title}/{string1}/{string2 if string2 is not None else ""}'
 ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
-    "i_m_stupid": "https://minecraft-api.com/api/achivements/sand/STUPID/I..am..a..stupid!"
+    "i_m_stupid": get_achievement_image('sand', 'STUPID', 'I am stupid')
 }}
 FEEDBACKS = {}
 REPEATER = []
@@ -158,7 +160,6 @@ class Message:
 
 def crop_max_square(pil_img):
     return crop_center(pil_img, min(pil_img.size), min(pil_img.size))
-
 
 def crop_center(pil_img, crop_width, crop_height):
     img_width, img_height = pil_img.size
@@ -1289,6 +1290,20 @@ Coins: {coin_purse}
                     else:
                         msg.fast_reply("权限不足！！")
 
+        if command_list[0] == "!achievements" or command_list[0] == "!成就":
+            if command_list[1] == "help":
+                sendMessage("""成就指令 : !achievements/!成就
+列出自己的成就 : !achievements/!成就 list me
+列出他人的成就 : !achievements/!成就 list <QQ|@>
+清空自己的成就 : !achievements/!成就 empty
+成就大全 : 这要你自己探索了""", target_group=msg.group.id)
+            if command_list[1] == "list":
+                if command_list[2] == "me":
+                    acmsg = ""
+                    for aclist in ACCOMPLISHMENT["qq"][str(msg.sender.id)]:
+                        acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
+                    msg.fast_reply("您获得的成就有\n"+acmsg)
+
         if command_list[0] == "我是傻逼" or command_list[0] == "我是傻子" or str.lower(
                 command_list[0]) == "i am stupid" or str.lower(command_list[0]) == "i'm stupid" or str.lower(
                 command_list[0]) == "i'm a fool" or str.lower(command_list[0]) == "i am a fool " or str.lower(
@@ -1314,7 +1329,6 @@ Coins: {coin_purse}
 def get_achievements(qq, msg, achievements):
     ACCOMPLISHMENT["qq"][str(qq)].append(achievements)
     msg.fast_reply(f'恭喜你获得了一个成就！！\n[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][achievements]}]')
-
 
 def mutePerson(group, qq_number, mute_time):
     if mute_time > (43199 * 60):
