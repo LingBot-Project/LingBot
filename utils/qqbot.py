@@ -7,7 +7,6 @@ import time
 import psutil
 import requests
 
-from main import HTTPURL, VERIFIED, VERIFYING, BLACK_LIST, ADMIN_LIST, INTRODUCE, recordTime
 from modules.achievements import ACCOMPLISHMENT
 from utils import config
 from utils.anti_spam import strQ2B
@@ -24,11 +23,13 @@ class Group:
         mutePerson(self.id, user.id, mute_time)
 
     def isverify(self):
+        global VERIDIED
         if str(self.id) in VERIFIED:
             return True
         return False
 
     def verify_info(self):
+        global VERIFIED, VERIFYING
         if str(self.id) in VERIFIED:
             return f"已验证 绑定邮箱:{VERIFIED[str(self.id)]}"
         elif str(self.id) in VERIFYING:
@@ -43,19 +44,24 @@ class User:
         self.name = nickname
 
     def add2blacklist(self):
+        global BLACK_LIST
         if self.id not in BLACK_LIST and self.id != 1584784496:
             BLACK_LIST.append(self.id)
 
     def remove4blacklist(self):
+        global BLACK_LIST
         BLACK_LIST.remove(self.id)
 
     def isblack(self):
+        global BLACK_LIST
         return self.id in BLACK_LIST
 
     def isadmin(self):
+        global ADMIN_LIST
         return self.id in ADMIN_LIST
 
     def add2admin(self):
+        global ADMIN_LIST
         if self.id not in ADMIN_LIST:
             ADMIN_LIST.append(self.id)
 
