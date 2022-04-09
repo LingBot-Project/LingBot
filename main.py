@@ -15,7 +15,7 @@ from modules import achievements, bilibili, bot_utils, imgs, introduce, math, mu
 from utils import config
 from utils.anti_spam import spammer_checker, simhash_similarity
 from utils.image import text2image
-from utils.qqbot import sendMessage, Group, Message, stop, temps_message, send_email, goodmor, goodnig
+from utils.qqbot import sendMessage, Group, Message, stop, send_email, goodmor, goodnig
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
@@ -358,3 +358,18 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def temps_message(ws, message):
+    global timePreMessage
+    a = time.time()
+    try:
+        on_message2(ws, message)
+    except:
+        pass
+    b = time.time()
+    sfl_time = b - a
+    if timePreMessage == 0:
+        timePreMessage = sfl_time
+    else:
+        timePreMessage = (timePreMessage + sfl_time) / 2

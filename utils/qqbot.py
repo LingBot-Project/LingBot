@@ -8,8 +8,6 @@ import time
 import psutil
 import requests
 
-from main import on_message2
-from modules.achievements import ACCOMPLISHMENT
 from utils import config
 from utils.anti_spam import strQ2B
 
@@ -110,6 +108,7 @@ class Message:
 
 
 def mutePerson(group, qq_number, mute_time):
+    global HTTPURL
     if mute_time > (43199 * 60):
         mute_time = 43199 * 60
     data1 = {
@@ -125,6 +124,7 @@ def unmutePerson(group, qq_number):
 
 
 def recall(msg_id):
+    global HTTPURL
     data1 = {
         "message_id": int(msg_id)
     }
@@ -132,6 +132,7 @@ def recall(msg_id):
 
 
 def sendMessage(message, target_qq=None, target_group=None, message_id=None):
+    global HTTPURL
     if target_qq is None and target_group is None:
         raise Exception()
 
@@ -174,6 +175,7 @@ def sendTempMsg(target1, target2, text):
 
 
 def getGroupUser(groupID: int):
+    global HTTPURL
     users = []
     a = requests.get(url="http://" + HTTPURL + "/get_group_member_list?group_id={}".format(groupID))
     if a.status_code != 200:
@@ -185,6 +187,7 @@ def getGroupUser(groupID: int):
 
 
 def getGroups():
+    global HTTPURL
     groups = []
     a = requests.get(url="http://" + HTTPURL + "/get_group_list")
     if a.status_code != 200:
@@ -232,29 +235,16 @@ def healthy_check():
 
 
 def stop():
+    global ADMIN_LIST, BLACK_LIST, VERIFIED, INTRODUCE, ACCOMPLISHMENT
     logging.info("Restarting...")
     config.save_config(ADMIN_LIST, BLACK_LIST, VERIFIED, INTRODUCE, ACCOMPLISHMENT)
     psutil.Process().kill()
 
 
 def get_runtime():
+    global recordTime
     nowtime = int(time.time())
     return "{}秒".format(int(nowtime - recordTime))
-
-
-def temps_message(ws, message):
-    global timePreMessage
-    a = time.time()
-    try:
-        on_message2(ws, message)
-    except:
-        pass
-    b = time.time()
-    sfl_time = b - a
-    if timePreMessage == 0:
-        timePreMessage = sfl_time
-    else:
-        timePreMessage = (timePreMessage + sfl_time) / 2
 
 
 def send_email(mail, title, text):
