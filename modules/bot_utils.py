@@ -5,6 +5,8 @@ import time
 import requests
 from mcstatus import MinecraftServer
 
+from main import ALL_MESSAGE, timePreMessage, ALL_AD, goodmor, REPEATER, ADMIN_LIST, BLACK_LIST, IGNORE_GROUP, SPAM2_VL, \
+    ANTISPAMMER
 from utils import tcping
 from utils.image import text2image
 from utils.qqbot import get_runtime, sendMessage, getGroups, mutePerson, mute_type, search_user, unmutePerson
@@ -12,12 +14,9 @@ from utils.qqbot import get_runtime, sendMessage, getGroups, mutePerson, mute_ty
 SCREENSHOT_CD = 0
 MC_MOTD_COLORFUL = re.compile(r"§.")
 
-if __name__ == '__main__':
-    from main import goodmor
-
 
 def on_message(msg, command_list):
-    global SCREENSHOT_CD, ALL_MESSAGE, timePreMessage, ALL_AD, REPEATER, ADMIN_LIST, BLACK_LIST, IGNORE_GROUP, ANTISPAMMER, SPAM2_VL
+    global SCREENSHOT_CD
     if msg.text in ["!test", "凌状态"]:
         msg.fast_reply(
             "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(
