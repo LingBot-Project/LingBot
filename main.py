@@ -21,6 +21,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from mcstatus import MinecraftServer
 from simhash import Simhash
 
+import chinese_sensitive_vocabulary.word_filter
 from utils import five_k_utils, tcping
 
 hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
@@ -70,6 +71,7 @@ EMAIL_DELAY = {}
 VERIFIED = {}
 VERIFYING = {}
 VERIFY_TIPS = {}
+msg_scanner = chinese_sensitive_vocabulary.word_filter.SensitiveWordModel(chinese_sensitive_vocabulary.word_filter.word_url)
 
 # URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
 ANTI_AD = r"送福利|定制水影|加群.*[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群.*[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙.*[0-9]{5,10}|君羊.*[0-9]{5,10}|q(\:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*|vape"
@@ -379,11 +381,6 @@ def on_message2(ws, message):
 
     try:
         # 处理消息内容
-        def del_this(list):
-            if list == "this":
-                return msg.group.id
-            else:
-                return list
 
         if msg.text == "":
             return
@@ -537,6 +534,13 @@ def on_message2(ws, message):
             msg.fast_reply("您的名称中似乎存在广告", reply=False)
             ALL_AD += 1
             return
+
+        scan_lv = msg_scanner.predict(msg.text)
+        if scan_lv >= 0.8:
+            msg.fast_reply(f"您的消息貌似有违法内容?\nLevel: {round(scan_lv, 3)}", reply=False)
+            if scan_lv >= 0.9:
+                msg.recall()
+                msg.mute(600)
 
         if len(msg.text) > 1500:
             msg.mute(600)
