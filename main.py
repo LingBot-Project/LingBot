@@ -145,6 +145,7 @@ class Message:
                 self.sender = User(ad["sender"]["user_id"], ad["sender"]["nickname"])
                 self.group = Group(ad["group_id"])
                 self.id = ad["message_id"]
+                self.text_nocq = re.sub(r"\[CQ:.*]", '', self.text)
                 self.success = True
             else:
                 raise Exception()
@@ -534,14 +535,14 @@ def on_message2(ws, message):
             msg.fast_reply("您的名称中似乎存在广告", reply=False)
             ALL_AD += 1
             return
-        """
-        scan_lv = msg_scanner.predict(msg.text)
+
+        scan_lv = msg_scanner.predict(msg.text_nocq)
         if scan_lv >= 0.8:
             msg.fast_reply(f"您的消息貌似有违法内容?\nLevel: {round(scan_lv, 3)}", reply=False)
             if scan_lv >= 0.9:
                 msg.recall()
                 msg.mute(600)
-"""
+
         if len(msg.text) > 1500:
             msg.mute(600)
             msg.recall()
