@@ -48,6 +48,7 @@ recordTime = int(time.time())
 isChatBypassOpened = False
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
+FOLLOW_MUTE = {}
 
 
 def get_achievement_image(block, title, string1, string2=None):
@@ -366,7 +367,7 @@ def on_message2(ws, message):
         MESSAGE_PRE_MINUTE, ALL_MESSAGE, \
         ALL_AD, FEEDBACKS, \
         spam2_vl_reset_cool_down, SCREENSHOT_CD, \
-        VERIFYING, VERIFIED, VERIFY_TIPS
+        VERIFYING, VERIFIED, VERIFY_TIPS, FOLLOW_MUTE
 
     a = json.loads(message)
     logging.debug(a)
@@ -1348,6 +1349,17 @@ Coins: {coin_purse}
         if command_list[0] == "!msg_test":
             msg.fast_reply(f"""{''.join(json.dumps(command_list))}
 {msg.text}""")
+
+        if command_list[0] == "!fmute":
+            if command_list[1] == "list":
+                msg.fast_reply(f"FOLLOW_MUTE: {FOLLOW_MUTE}")
+
+            if not msg.sender.isadmin():
+                msg.fast_reply("Hey! You don't have permission to do it!")
+                return
+
+            FOLLOW_MUTE[str(command_list[1])] = str(int(time.time()) + (int(command_list[2]) * 60))
+            msg.fast_reply(f'Success!\nEnded Time:{datetime.datetime.utcfromtimestamp(int(FOLLOW_MUTE[str(command_list[1])])).strftime("%Y-%m-%d %H:%M:%S")}')
 
     except Exception as e:
         a = traceback.format_exc()
