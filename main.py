@@ -24,7 +24,7 @@ from simhash import Simhash
 import chinese_sensitive_vocabulary.word_filter
 from utils import five_k_utils, tcping
 
-# hypixel.setKeys(["bc67e230-01a3-45c6-8177-c9b256b0ef3a"])
+hypixel.setKeys(["bc67e230-01a3-45c6-8177-c9b256b0ef3a"])
 hypixel.setCacheTime(30.0)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
