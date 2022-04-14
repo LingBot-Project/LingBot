@@ -24,7 +24,7 @@ from simhash import Simhash
 import chinese_sensitive_vocabulary.word_filter
 from utils import five_k_utils, tcping
 
-hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
+# hypixel.setKeys(["4860b82e-1424-4c91-80cf-86e7b902bd63"])
 hypixel.setCacheTime(30.0)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
 
@@ -615,10 +615,9 @@ def on_message2(ws, message):
             else:
                 msg.fast_reply("Too fast!")
 
-        # if msg.text == "!rickroll":
-        #     msg.fast_reply("https://lsp.abcdcreeper.xyz")
-        #     # 愚人节彩蛋LOL
-        #     return
+        if msg.text == "!hyp":
+            msg.fast_reply("咱没有Hypixel-Apikey了")
+            return
 
         if command_list[0] == "!丢":
             # 图片/灵感来源: https://github.com/MoeMegu/ThrowIt-Mirai
