@@ -1382,7 +1382,7 @@ def mutePerson(group, qq_number, mute_time):
         "user_id": int(qq_number),
         "duration": int(mute_time)
     }
-    requests.post(url="http://" + HTTPURL + "/set_group_ban", data=data1)
+    post2http("/set_group_ban", data=data1)
 
 
 def unmutePerson(group, qq_number):
@@ -1393,7 +1393,7 @@ def recall(msg_id):
     data1 = {
         "message_id": int(msg_id)
     }
-    requests.post(url="http://" + HTTPURL + "/delete_msg", data=data1)
+    post2http("/delete_msg", data=data1)
 
 
 def sendMessage(message, target_qq=None, target_group=None, message_id=None):
@@ -1417,7 +1417,7 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None):
         }
 
         # 发送消息
-        s = requests.post(url="http://" + HTTPURL + "/send_group_msg", data=data1)
+        s = post2http("/send_group_msg", data=data1)
         if not s.ok:
             # 如果请求失败
             s.raise_for_status()
@@ -1540,6 +1540,10 @@ def goodnig():
     for i in s:
         sendMessage(msg1, target_group=i)
         time.sleep(random.randint(700, 1100) / 1000)
+
+        
+def post2http(url, data):
+    return requests.post(url=f"http://{HTTPURL}{url}", data=data)
 
 
 def main():
