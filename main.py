@@ -615,8 +615,8 @@ def on_message2(ws, message):
             else:
                 msg.fast_reply("Too fast!")
 
-        if msg.text == "!hyp":
-            msg.fast_reply("Test Hypixel-Apikey .ing")
+        # if msg.text == "!hyp":
+            # msg.fast_reply("Test Hypixel-Apikey .ing")
             # return
 
         if command_list[0] == "!丢":
