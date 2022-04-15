@@ -240,6 +240,8 @@ def read_config():
     try:
         with open("fillow_mute.json", 'r') as f:
             FOLLOW_MUTE = json.loads(f.read())
+    except:
+        pass
     sendMessage("restart successful", target_group=1019068934)
 
 
@@ -269,6 +271,8 @@ def save_config():
     try:
         with open("fillow_mute.json", 'w') as f:
             f.write(json.dumps(FOLLOW_MUTE))
+     except:
+        pass
 
 
 def stop():
