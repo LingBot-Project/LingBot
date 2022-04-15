@@ -504,13 +504,13 @@ def on_message2(ws, message):
             pass
 
         if msg.sender.id not in SPAM2_MSG:
-            SPAM2_MSG[msg.sender.id] = msg.text
+            SPAM2_MSG[msg.sender.id] = "the first/default text lol~~"  # msg.text
             SPAM2_VL[msg.sender.id] = 0
         _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
         if _simhash_dis >= 0.836:
-            SPAM2_VL[msg.sender.id] += 10
+            SPAM2_VL[msg.sender.id] += 10 * (_simhash_dis + 0.5)  # :10
             if _simhash_dis >= 0.99:
-                SPAM2_VL[msg.sender.id] += 10
+                SPAM2_VL[msg.sender.id] += 5
 
             if SPAM2_VL[msg.sender.id] >= 55:
                 # if msg.sender.isadmin():
@@ -518,9 +518,10 @@ def on_message2(ws, message):
                 #         f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度: {_simhash_dis}\nVL: {SPAM2_VL[msg.sender.id]}",
                 #         target_group=1019068934)
                 # msg.recall()
-                if SPAM2_VL[msg.sender.id] >= 200:
+                if SPAM2_VL[msg.sender.id] >= 100:
+                    msg.recall()
                     msg.mute(43199 * 60)  # :259200
-                    SPAM2_VL[msg.sender.id] -= 20
+                    SPAM2_VL[msg.sender.id] -= 15
                     return
                 # else:
                 #     msg.mute(600)
@@ -530,7 +531,7 @@ def on_message2(ws, message):
         else:
             SPAM2_MSG[msg.sender.id] = msg.text
             if SPAM2_VL[msg.sender.id] > 0:
-                SPAM2_VL[msg.sender.id] -= 2
+                SPAM2_VL[msg.sender.id] -= 2 * (1 - _simhash_dis)  # :2
 
         reScan = re.findall(
             ANTI_AD,
