@@ -26,7 +26,7 @@ from utils import five_k_utils, tcping
 
 hypixel.setKeys(["bc67e230-01a3-45c6-8177-c9b256b0ef3a"])
 hypixel.setCacheTime(30.0)
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S %p")
+logging.basicConfig(level=logging.INFO, format="[%(asctime)s][%(levelname)s] %(message)s", datefmt="%H:%M:%S %p")
 
 SERVER_ADDR = "127.0.0.1"
 ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566, 1474002938]
@@ -205,7 +205,7 @@ def healthy_check():
 
 
 def read_config():
-    global ADMIN_LIST, BLACK_LIST, FEEDBACKS, VERIFIED
+    global ADMIN_LIST, BLACK_LIST, FEEDBACKS, VERIFIED, FOLLOW_MUTE
     config = configparser.ConfigParser()
     config.read("config.ini")
     s = config["DEFAULT"]
@@ -236,11 +236,15 @@ def read_config():
         VERIFIED = config["VERIFIED"]
     except:
         pass
+    
+    try:
+        with open("fillow_mute.json", 'r') as f:
+            FOLLOW_MUTE = json.loads(f.read())
     sendMessage("restart successful", target_group=1019068934)
 
 
 def save_config():
-    global ADMIN_LIST, BLACK_LIST, FEEDBACKS
+    global ADMIN_LIST, BLACK_LIST, FEEDBACKS, FOLLOW_MUTE
     config = configparser.ConfigParser()
     config["DEFAULT"] = {
         "admin": ",".join('%s' % _id for _id in ADMIN_LIST),
@@ -262,6 +266,9 @@ def save_config():
     config["VERIFIED"] = VERIFIED
     with open("verify.ini", 'w') as configfile:
         config.write(configfile)
+    try:
+        with open("fillow_mute.json", 'w') as f:
+            f.write(json.dumps(FOLLOW_MUTE))
 
 
 def stop():
@@ -403,6 +410,8 @@ def on_message2(ws, message):
         command_list = msg.text.split(" ")
 
         logging.info("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
+        
+        
 
         if msg.text in ["!help", "菜单"]:
             msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090\n本群验证状态:{msg.group.verify_info()}")
@@ -480,10 +489,13 @@ def on_message2(ws, message):
                     msg.fast_reply("本群还没有激活! 请及时联系管理员激活!! 激活方式 !mail verify 邮箱地址\n注意 禁言机器人会进入黑名单!", reply=False,
                                    at=False)
                     VERIFY_TIPS[str(msg.group.id)] = time.time()
+                    return
             except:
                 pass
-            finally:
-                return
+        
+        if FOLLOW_MUTE[str(msg.sender.id)] > time.time():
+            msg.recall()
+            msg.mute(int(FOLLOW_MUTE[str(msg.sender.id)] - time.time()))
 
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
