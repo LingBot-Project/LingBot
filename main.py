@@ -496,10 +496,12 @@ def on_message2(ws, message):
                     return
             except:
                 pass
-        
-        if FOLLOW_MUTE[str(msg.sender.id)] > time.time():
-            msg.recall()
-            msg.mute(int(FOLLOW_MUTE[str(msg.sender.id)] - time.time()))
+        try:
+            if FOLLOW_MUTE[str(msg.sender.id)] > time.time():
+                msg.recall()
+                msg.mute(int(FOLLOW_MUTE[str(msg.sender.id)] - time.time()))
+        except:
+            pass
 
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = msg.text
