@@ -49,6 +49,7 @@ isChatBypassOpened = False
 ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
 FOLLOW_MUTE = {}
+MESSAGE_COUNTER = {}
 
 
 def get_achievement_image(block, title, string1, string2=None):
@@ -97,7 +98,7 @@ class Group:
 
     def verify_info(self):
         if str(self.id) in VERIFIED:
-            return f"已验证 绑定邮箱:{VERIFIED[str(self.id)]}"
+            return f"已验证 绑定邮箱:{''.join(VERIFIED[str(self.id)][0:3])}******{''.join(VERIFIED[str(self.id)][-3:])}"
         elif str(self.id) in VERIFYING:
             return f"正在验证..."
         else:
@@ -191,17 +192,6 @@ def mask_sircle_transparent(pil_img, blur_radius, offset=0):
     result = pil_img.copy()
     result.putalpha(mask)
     return result, mask
-
-
-def healthy_check():
-    score = 10.0
-    threads = threading.active_count()
-    if threads >= 40:
-        score -= 4
-    else:
-        score -= threads/10
-
-    menory = psutil.Process().memory_info()
 
 
 def read_config():
@@ -611,6 +601,15 @@ def on_message2(ws, message):
         if (msg.group.id, msg.sender.id) in REPEATER:
             if not (command_list[0] == "!repeater" and (command_list[1] == "add" or command_list[1] == "remove")):
                 msg.fast_reply(msg.text, reply=False, at=False)
+        try:
+            if str(msg.group.id) not in MESSAGE_COUNTER:
+                MESSAGE_COUNTER = {}
+            if str(msg.sender.id) not in MESSAGE_COUNTER[str(msg.group.id)]:
+                MESSAGE_COUNTER[str(msg.group.id)][str(msg.sender.id)] = 0
+            MESSAGE_COUNTER[str(msg.group.id)][str(msg.sender.id)] += 1
+        except:
+            pass
+        
 
         if msg.text in ["!test", "凌状态"]:
             msg.fast_reply(
@@ -1364,10 +1363,6 @@ Coins: {coin_purse}
             if "i_m_stupid" not in ACCOMPLISHMENT["qq"][str(msg.sender.id)]:
                 get_achievements(msg.sender.id, msg, "i_m_stupid")
 
-        if command_list[0] == "!msg_test":
-            msg.fast_reply(f"""{''.join(json.dumps(command_list))}
-{msg.text}""")
-
         if command_list[0] == "!fmute":
             if command_list[1] == "list":
                 msg.fast_reply(f"FOLLOW_MUTE: {FOLLOW_MUTE}")
@@ -1378,6 +1373,10 @@ Coins: {coin_purse}
 
             FOLLOW_MUTE[str(command_list[1])] = str(int(time.time()) + (int(command_list[2]) * 60))
             msg.fast_reply(f'Success!\nEnded Time:{datetime.datetime.utcfromtimestamp(int(FOLLOW_MUTE[str(command_list[1])])).strftime("%Y-%m-%d %H:%M:%S")}')
+        
+        if command_list[0] == "!testcounter":
+
+
 
     except Exception as e:
         a = traceback.format_exc()
@@ -1522,6 +1521,10 @@ def send_email(mail, title, text):
     os.system(f"echo \"{text}\" | mail -s \"{title}\" {mail}")
 
 
+def score_list(group):
+    a = sorted(MESSAGE_COUNTER[str(group)].items(), key=lambda item:item[1], reverse=True)
+
+
 # 定义一个用来接收监听数据的方法
 def on_message(ws, message):
     threading.Thread(target=temps_message, args=(ws, message)).start()
@@ -1548,6 +1551,18 @@ def goodmor(target=None):
         sendMessage(msg1, target_group=target)
     else:
         for i in s:
+            sendMessage(msg1, target_group=i)
+            time.sleep(random.randint(1500, 2000) / 1000)
+
+
+def msg_counter_send(target=None):
+    s = getGroups()
+    if target:
+        msg1 = "一天结束了呢 这是今日的活跃榜 ^_^"
+        sendMessage(msg1, target_group=target)
+    else:
+        for i in s:
+            msg1 = "一天结束了呢 这是今日的活跃榜 ^_^"
             sendMessage(msg1, target_group=i)
             time.sleep(random.randint(1500, 2000) / 1000)
 
