@@ -271,7 +271,7 @@ def save_config():
     try:
         with open("fillow_mute.json", 'w') as f:
             f.write(json.dumps(FOLLOW_MUTE))
-     except:
+    except:
         pass
 
 
