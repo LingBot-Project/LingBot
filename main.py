@@ -551,7 +551,9 @@ def on_message2(ws, message):
                 #     msg.mute(600)
                 # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
                 # return
-                SPAM2_MESSAGE_LIST[msg.sender.id].append(msg)
+                if len(SPAM2_MESSAGE_LIST[msg.sender.id]) >= 10:
+                    SPAM2_MESSAGE_LIST[msg.sender.id].pop(0)
+            SPAM2_MESSAGE_LIST[msg.sender.id].append(msg)
             SPAM2_MSG[msg.sender.id] = msg
         else:
             SPAM2_MSG[msg.sender.id] = msg
