@@ -2,22 +2,21 @@
 import base64
 import configparser
 import datetime
+import hypixel
 import json
 import logging
 import os
+import psutil
 import random
 import re
+import requests
 import threading
 import time
 import traceback
-from io import BytesIO
-
-import hypixel
-import psutil
-import requests
 import websocket
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from apscheduler.schedulers.blocking import BlockingScheduler
+from io import BytesIO
 from mcstatus import MinecraftServer
 from simhash import Simhash
 
@@ -1569,7 +1568,7 @@ def send_email(mail, title, text):
 
 
 def score_list(group):
-    if len(MESSAGE_COUNTER[str(group)]) == 0:
+    if str(group) not in MESSAGE_COUNTER or len(MESSAGE_COUNTER[str(group)]) == 0:
         return "1. Null\n2. Null\n3. Null"
     a = sorted(MESSAGE_COUNTER[str(group)].items(), key=lambda item: item[1], reverse=True)
     b = len(MESSAGE_COUNTER[str(group)])
