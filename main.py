@@ -1599,6 +1599,7 @@ def main():
         sched = BlockingScheduler()
         sched.add_job(goodmor, 'cron', hour=7)
         sched.add_job(goodnig, 'cron', hour=22, minute=30)
+        sched.add_job(msg_counter_send, 'cron', hour=0)
         t1 = threading.Thread(target=sched.start)
         t1.deamon = True
         logging.info("Starting... (3/5)")
