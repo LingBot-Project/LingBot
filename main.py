@@ -1379,7 +1379,7 @@ Coins: {coin_purse}
             msg_counter_send(msg.group.id)
 
         if command_list[0] == "没什么卵用的测试":
-            time_1 = datetime.datetime.strptime(str(datetime.datetime.now().date()) + '16:22', '%Y-%m-%d%H:%M')
+            time_1 = datetime.datetime.strptime(str(datetime.datetime.now().date()) + '16:50', '%Y-%m-%d%H:%M')
             time_2 = datetime.datetime.strptime(str(datetime.datetime.now().date()) + '17:00', '%Y-%m-%d%H:%M')
             time_n = datetime.datetime.now()
             if time_n >= time_1 and time_n < time_2:
