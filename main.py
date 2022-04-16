@@ -456,9 +456,10 @@ def on_message2(ws, message):
                 VERIFYING[msg.group.id]["time"] = time.time()
                 send_email(command_list[2], f"[LingBot Team] 群{msg.group.id} - 激活", f"""您好, {msg.sender.name}:
 感谢您使用 LingBot 机器人, 您正在尝试给群 {msg.group.id} 激活! 您的验证码是: {VERIFYING[msg.group.id]["code"]}
-请您在群内使用指令 !mail code {VERIFYING[msg.group.id]["code"]} 来激活!
-此验证码 30 分钟内有效.
-如果您没有发起任何群验证, 请忽略此邮件""")
+请您在群内使用指令 !mail code {VERIFYING[msg.group.id]["code"]} 来激活
+此验证码 30 分钟内有效
+如果您没有发起任何群验证, 请忽略此邮件
+""")
                 msg.fast_reply("我们已经尝试发送一封电子邮件到您的邮箱 请按照邮件内容操作")
                 return
 
@@ -486,15 +487,15 @@ def on_message2(ws, message):
                     msg.fast_reply("本群并没有验证过!")
                     return
                 try:
-                    if command_list[2] + command_list[3] == f"{msg.group.id}{msg.group.id}" and command_list[4] == "我知道我在做什么!":
+                    if command_list[2] + command_list[3] == f"{msg.group.id}{VERIFIED[msg.group.id]}" and command_list[4] == "我知道我在做什么!":
                         del VERIFIED[msg.group.id]
-                        msg.fast_reply("本群验证信息已经移除, 请重新验证!")
+                        msg.fast_reply("本群验证信息已经移除!")
                         return
                     else:
                         msg.fast_reply("你只能移除这个群的验证信息!")
                         return
                 except:
-                    msg.fast_reply("请正确使用!mail reset <当前群号> <当前群号> 我知道我在做什么! 来移除本群的验证信息!")
+                    msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
 
         if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
