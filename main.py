@@ -477,6 +477,21 @@ def on_message2(ws, message):
                     msg.fast_reply("激活成功!")
                     VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
 
+            if command_list[1] == "reset" and not a["sender"]["role"] == "member":
+                if msg.group.id not in VERIFIED:
+                    msg.fast_reply("本群并没有验证过!")
+                    return
+                try:
+                    if int(command_list[3]) == int(command_list[2]) == msg.group.id and command_list[4] == "我知道我在做什么!":
+                        del VERIFIED[msg.group.id]
+                        msg.fast_reply("本群验证邮箱已经移除, 请重新验证!")
+                        return
+                    else:
+                        msg.fast_reply("你只能移除这个群的验证信息!")
+                        return
+                except:
+                    msg.fast_reply("请正确使用!mail reset <当前群号> <当前群号> 我知道我在做什么! 来移除本群的验证信息!")
+
         if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
             print(requests.get("http://" + HTTPURL + "/set_restart").text)
