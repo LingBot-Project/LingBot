@@ -542,6 +542,7 @@ def on_message2(ws, message):
                     msg.recall()
                     for _ in SPAM2_MESSAGE_LIST[msg.sender.id]:
                         _.recall()
+                        time.sleep(random.randint(0, 2000) / 1000)
                     SPAM2_MESSAGE_LIST[msg.sender.id].clear()
                     msg.mute(43199 * 60)  # :259200
                     SPAM2_VL[msg.sender.id] -= 15
