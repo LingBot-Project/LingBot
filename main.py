@@ -172,6 +172,13 @@ class Message:
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
 
 
+class FakeMessage:
+    def __init__(self):
+        self.text = '酬魎嫐搁轍擻鼃戁矙'
+    def recall(self):
+        pass
+
+
 def crop_max_square(pil_img):
     return crop_center(pil_img, min(pil_img.size), min(pil_img.size))
 
@@ -494,9 +501,9 @@ def on_message2(ws, message):
             pass
 
         if msg.sender.id not in SPAM2_MSG:
-            SPAM2_MSG[msg.sender.id] = "the first/default text lol~~"  # msg.text
+            SPAM2_MSG[msg.sender.id] = FakeMessage()  # msg.text
             SPAM2_VL[msg.sender.id] = 0
-        _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id]).lower(), msg.text.lower())
+        _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
         if _simhash_dis >= 0.836:
             SPAM2_VL[msg.sender.id] += 10 * (_simhash_dis + 0.5)  # :10
             if _simhash_dis >= 0.99:
@@ -509,6 +516,7 @@ def on_message2(ws, message):
                 #         target_group=1019068934)
                 # msg.recall()
                 if SPAM2_VL[msg.sender.id] >= 100:
+                    SPAM2_MSG[msg.sender.id].recall()
                     msg.recall()
                     msg.mute(43199 * 60)  # :259200
                     SPAM2_VL[msg.sender.id] -= 15
@@ -517,9 +525,9 @@ def on_message2(ws, message):
                 #     msg.mute(600)
                 # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
                 # return
-            SPAM2_MSG[msg.sender.id] = msg.text
+            SPAM2_MSG[msg.sender.id] = msg
         else:
-            SPAM2_MSG[msg.sender.id] = msg.text
+            SPAM2_MSG[msg.sender.id] = msg
             if SPAM2_VL[msg.sender.id] > 0:
                 SPAM2_VL[msg.sender.id] -= 2 * (1 - _simhash_dis)  # :2
 
