@@ -423,6 +423,7 @@ def on_message2(ws, message):
                 msg.fast_reply("""邮箱验证指令:
 开始验证: !mail verify 邮箱地址
 完成验证: !mail code 验证码
+移除验证: !mail reset 本群群号
 查看本群验证状态: !help""")
                 return
             if command_list[1] == "verify":
@@ -456,8 +457,9 @@ def on_message2(ws, message):
                 send_email(command_list[2], f"[LingBot Team] 群{msg.group.id} - 激活", f"""您好, {msg.sender.name}:
 感谢您使用 LingBot 机器人, 您正在尝试给群 {msg.group.id} 激活! 您的验证码是: {VERIFYING[msg.group.id]["code"]}
 请您在群内使用指令 !mail code {VERIFYING[msg.group.id]["code"]} 来激活!
-此验证码 30 分钟内有效.""")
-                msg.fast_reply("我们已经尝试发送一封电子邮件到您的邮箱 请按照邮箱内容操作")
+此验证码 30 分钟内有效.
+如果您没有发起任何群验证, 请忽略此邮件""")
+                msg.fast_reply("我们已经尝试发送一封电子邮件到您的邮箱 请按照邮件内容操作")
                 return
 
             if command_list[1] == "code":
@@ -476,6 +478,8 @@ def on_message2(ws, message):
                 if str(command_list[2]) == VERIFYING[msg.group.id]["code"]:
                     msg.fast_reply("激活成功!")
                     VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
+                    del VERIFYING[msg.group.id]
+                    return
 
             if command_list[1] == "reset" and not a["sender"]["role"] == "member":
                 if msg.group.id not in VERIFIED:
