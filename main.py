@@ -38,8 +38,10 @@ def get_achievement_image(block, title, string1, string2=None):
 
 
 ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
-    "i_m_stupid": get_achievement_image("sand", "STUPID", "I am stupid")
+    "i_m_stupid": get_achievement_image("sand", "STUPID", "I am stupid"),
+    "a_night_person": get_achievement_image("totem_of_undying", "A NIGHT PERSON", "People are in China, the time difference is in foreign countries", "Remember to go to bed early")
 }}
+# https://minecraft-api.com/achivements/blocks/
 SERVER_ADDR = "127.0.0.1"
 ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566, 1474002938]
 HYPBAN_COOKIE = None
@@ -72,7 +74,8 @@ EMAIL_DELAY = {}
 VERIFIED = {}
 VERIFYING = {}
 VERIFY_TIPS = {}
-msg_scanner = chinese_sensitive_vocabulary.word_filter.SensitiveWordModel(chinese_sensitive_vocabulary.word_filter.word_url)
+msg_scanner = chinese_sensitive_vocabulary.word_filter.SensitiveWordModel(
+    chinese_sensitive_vocabulary.word_filter.word_url)
 
 # URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
 ANTI_AD = r"送福利|定制水影|加群.*[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群.*[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙.*[0-9]{5,10}|君羊.*[0-9]{5,10}|q(\:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*|vape"
@@ -225,7 +228,7 @@ def read_config():
         VERIFIED = config["VERIFIED"]
     except:
         pass
-    
+
     try:
         with open("fillow_mute.json", 'r') as f:
             FOLLOW_MUTE = json.loads(f.read())
@@ -403,8 +406,6 @@ def on_message2(ws, message):
         command_list = msg.text.split(" ")
 
         logging.info("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
-        
-        
 
         if msg.text in ["!help", "菜单"]:
             msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090\n本群验证状态:{msg.group.verify_info()}")
@@ -608,7 +609,6 @@ def on_message2(ws, message):
             MESSAGE_COUNTER[str(msg.group.id)][str(msg.sender.id)] += 1
         except:
             pass
-        
 
         if msg.text in ["!test", "凌状态"]:
             msg.fast_reply(
@@ -633,8 +633,8 @@ def on_message2(ws, message):
                 msg.fast_reply("Too fast!")
 
         # if msg.text == "!hyp":
-            # msg.fast_reply("Test Hypixel-Apikey .ing")
-            # return
+        # msg.fast_reply("Test Hypixel-Apikey .ing")
+        # return
 
         if command_list[0] == "!丢":
             # 图片/灵感来源: https://github.com/MoeMegu/ThrowIt-Mirai
@@ -1347,7 +1347,8 @@ Coins: {coin_purse}
                 else:
                     atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
                     if atcq is not None:
-                        command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)),str(atcq.group(1))).split(" ")
+                        command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)),
+                                                        str(atcq.group(1))).split(" ")
                     for aclist in ACCOMPLISHMENT["qq"][command_list[2]]:
                         acmsg += f'[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][aclist]}]'
                     msg.fast_reply("您获得的成就有\n" + acmsg)
@@ -1371,10 +1372,14 @@ Coins: {coin_purse}
                 return
 
             FOLLOW_MUTE[str(command_list[1])] = str(int(time.time()) + (int(command_list[2]) * 60))
-            msg.fast_reply(f'Success!\nEnded Time:{datetime.datetime.utcfromtimestamp(int(FOLLOW_MUTE[str(command_list[1])])).strftime("%Y-%m-%d %H:%M:%S")}')
-        
+            msg.fast_reply(
+                f'Success!\nEnded Time:{datetime.datetime.utcfromtimestamp(int(FOLLOW_MUTE[str(command_list[1])])).strftime("%Y-%m-%d %H:%M:%S")}')
+
         if command_list[0] == "!testcounter":
             msg_counter_send(msg.group.id)
+
+        if command_list[0] == "!没什么乱用的测试":
+            msg.fast_reply(" " + json.dumps(msg))
 
 
     except Exception as e:
@@ -1523,7 +1528,7 @@ def send_email(mail, title, text):
 def score_list(group):
     if len(MESSAGE_COUNTER[str(group)]) == 0:
         return "1. Null\n2. Null\n3. Null"
-    a = sorted(MESSAGE_COUNTER[str(group)].items(), key=lambda item:item[1], reverse=True)
+    a = sorted(MESSAGE_COUNTER[str(group)].items(), key=lambda item: item[1], reverse=True)
     b = len(MESSAGE_COUNTER[str(group)])
     if b == 1:
         return f"1. [CQ:at,qq={a[0][0]}] - {a[0][1]}\n2. Null\n3. Null"
@@ -1566,11 +1571,11 @@ def goodmor(target=None):
 def msg_counter_send(target=None):
     s = getGroups()
     if target:
-        msg1 = "一天结束了呢 这是今日的活跃榜 ^_^\n\n"+score_list(target)
+        msg1 = "一天结束了呢 这是今日的活跃榜 ^_^\n\n" + score_list(target)
         sendMessage(msg1, target_group=target)
     else:
         for i in s:
-            msg1 = "一天结束了呢 这是今日的活跃榜 ^_^\n\n"+score_list(i)
+            msg1 = "一天结束了呢 这是今日的活跃榜 ^_^\n\n" + score_list(i)
             sendMessage(msg1, target_group=i)
             time.sleep(random.randint(1500, 2000) / 1000)
 
