@@ -1395,7 +1395,7 @@ def add_achievements(qq, msg, achievements):
         ACCOMPLISHMENT["qq"][qq] = [achievements]
         msg.fast_reply(f'恭喜你获得了一个成就！！\n[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][achievements]}]')
     elif achievements not in ACCOMPLISHMENT["qq"][qq]:
-        ACCOMPLISHMENT["qq"][qq] = [achievements]
+        ACCOMPLISHMENT["qq"][qq].append(achievements)
         msg.fast_reply(f'恭喜你获得了一个成就！！\n[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][achievements]}]')
 
 
