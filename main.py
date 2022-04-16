@@ -242,12 +242,16 @@ def save_config():
     config = configparser.ConfigParser()
     config["DEFAULT"] = {
         "admin": ",".join('%s' % _id for _id in ADMIN_LIST),
-        "blacklist": ",".join('%s' % _id for _id in BLACK_LIST),
-        "ACCOMPLISHMENT": json.dumps(ACCOMPLISHMENT['qq']),
-        "INTRODUCE": json.dumps(INTRODUCE['qq'])
+        "blacklist": ",".join('%s' % _id for _id in BLACK_LIST)
     }
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
+    json_list = {
+        "INTRODUCE": INTRODUCE['qq'],
+        "ACCOMPLISHMENT": ACCOMPLISHMENT['qq']
+    }
+    with open('json_list.txt', 'w', encoding='UTF-8') as jsonfile:
+        jsonfile.write(json.dumps(json_list))
     config = configparser.ConfigParser()
     config["FEEDBACKS"] = FEEDBACKS
     with open('feedback.ini', 'w') as configfile:
