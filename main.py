@@ -1357,7 +1357,7 @@ Coins: {coin_purse}
                 msg.fast_reply("已清空您的成就")
 
         if re.search(r"我是傻逼|我是傻子|i am stupid|i'm stupid|i'm a fool|i‘m an idiot|i am a fool|i am an idiot", msg.text):
-            add_achievements(msg.sender.id, msg, 'i_m_stupid')
+            add_achievements(str(msg.sender.id), msg, 'i_m_stupid')
 
         if command_list[0] == "!fmute":
             if command_list[1] == "list":
