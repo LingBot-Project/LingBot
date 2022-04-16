@@ -69,6 +69,7 @@ REPEATER = []
 AUTISM = []
 SPAM2_MSG = {}
 SPAM2_VL = {}
+SPAM2_MESSAGE_LIST = {}
 SCREENSHOT_CD = 0
 EMAIL_DELAY = {}
 VERIFIED = {}
@@ -175,6 +176,7 @@ class Message:
 class FakeMessage:
     def __init__(self):
         self.text = '酬魎嫐搁轍擻鼃戁矙'
+
     def recall(self):
         pass
 
@@ -522,6 +524,7 @@ def on_message2(ws, message):
 
         if msg.sender.id not in SPAM2_MSG:
             SPAM2_MSG[msg.sender.id] = FakeMessage()  # msg.text
+            SPAM2_MESSAGE_LIST[msg.sender.id] = []
             SPAM2_VL[msg.sender.id] = 0
         _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
         if _simhash_dis >= 0.836:
@@ -536,8 +539,10 @@ def on_message2(ws, message):
                 #         target_group=1019068934)
                 # msg.recall()
                 if SPAM2_VL[msg.sender.id] >= 100:
-                    SPAM2_MSG[msg.sender.id].recall()
                     msg.recall()
+                    for _ in SPAM2_MESSAGE_LIST[msg.sender.id]:
+                        _.recall()
+                    SPAM2_MESSAGE_LIST[msg.sender.id].clear()
                     msg.mute(43199 * 60)  # :259200
                     SPAM2_VL[msg.sender.id] -= 15
                     return
@@ -545,6 +550,7 @@ def on_message2(ws, message):
                 #     msg.mute(600)
                 # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
                 # return
+                SPAM2_MESSAGE_LIST[msg.sender.id].append(msg)
             SPAM2_MSG[msg.sender.id] = msg
         else:
             SPAM2_MSG[msg.sender.id] = msg
@@ -1427,7 +1433,6 @@ def add_achievements(qq, msg, achievements):
     elif achievements not in ACCOMPLISHMENT["qq"][qq]:
         ACCOMPLISHMENT["qq"][qq].append(achievements)
         msg.fast_reply(f'恭喜你获得了一个成就！！\n[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][achievements]}]')
-
 
 
 def mutePerson(group, qq_number, mute_time):
