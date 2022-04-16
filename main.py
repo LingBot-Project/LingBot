@@ -1379,6 +1379,7 @@ Coins: {coin_purse}
             time_2 = datetime.datetime.strptime(str(datetime.datetime.now().date()) + '4:00', '%Y-%m-%d%H:%M')
             time_n = datetime.datetime.now()
             if time_n >= time_1 and time_n < time_2:
+                pass
 
 
 
