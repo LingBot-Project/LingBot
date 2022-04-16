@@ -1374,7 +1374,7 @@ Coins: {coin_purse}
             msg.fast_reply(f'Success!\nEnded Time:{datetime.datetime.utcfromtimestamp(int(FOLLOW_MUTE[str(command_list[1])])).strftime("%Y-%m-%d %H:%M:%S")}')
         
         if command_list[0] == "!testcounter":
-            pass
+            msg_counter_send(msg.sender.id)
 
 
     except Exception as e:
