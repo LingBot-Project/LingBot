@@ -1378,9 +1378,9 @@ Coins: {coin_purse}
         if command_list[0] == "!testcounter":
             msg_counter_send(msg.group.id)
 
-        if command_list[0] == "!没什么乱用的测试":
-            msg.fast_reply(" " + json.dumps(msg))
-
+        if command_list[0] == "没什么卵用的测试":
+            now_time = time.strftime("%H:%M:%S")
+            msg.fast_reply(" " + now_time)
 
     except Exception as e:
         a = traceback.format_exc()
