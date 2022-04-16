@@ -28,6 +28,18 @@ hypixel.setKeys(["bc67e230-01a3-45c6-8177-c9b256b0ef3a"])
 hypixel.setCacheTime(30.0)
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s][%(levelname)s] %(message)s", datefmt="%H:%M:%S %p")
 
+
+def get_achievement_image(block, title, string1, string2=None):
+    title = title.replace(" ", "..")
+    string1 = string1.replace(" ", "..")
+    if string2 is not None:
+        string2 = string2.replace(" ", "..")
+    return f'https://minecraft-api.com/api/achivements/{block}/{title}/{string1}/{string2 if string2 is not None else ""}'
+
+
+ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
+    "i_m_stupid": get_achievement_image("sand", "STUPID", "I am stupid")
+}}
 SERVER_ADDR = "127.0.0.1"
 ADMIN_LIST = [1790194105, 1584784496, 2734583, 2908331301, 3040438566, 1474002938]
 HYPBAN_COOKIE = None
@@ -50,19 +62,6 @@ ANTISPAMMER = {}
 IGNORE_GROUP = [1079822858]
 FOLLOW_MUTE = {}
 MESSAGE_COUNTER = {}
-
-
-def get_achievement_image(block, title, string1, string2=None):
-    title = title.replace(" ", "..")
-    string1 = string1.replace(" ", "..")
-    if string2 is not None:
-        string2 = string2.replace(" ", "..")
-    return f'https://minecraft-api.com/api/achivements/{block}/{title}/{string1}/{string2 if string2 is not None else ""}'
-
-
-ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
-    "i_m_stupid": get_achievement_image("sand", "STUPID", "I am stupid")
-}}
 FEEDBACKS = {}
 REPEATER = []
 AUTISM = []
@@ -1522,7 +1521,16 @@ def send_email(mail, title, text):
 
 
 def score_list(group):
+    if len(MESSAGE_COUNTER[str(group)]) == 0:
+        return "1. Null\n2. Null\n3. Null"
     a = sorted(MESSAGE_COUNTER[str(group)].items(), key=lambda item:item[1], reverse=True)
+    b = len(MESSAGE_COUNTER[str(group)])
+    if b == 1:
+        return f"1. [CQ:at,qq={a[0][0]}] - {a[0][1]}\n2. Null\n3. Null"
+    elif b == 2:
+        return f"1. [CQ:at,qq={a[0][0]}] - {a[0][1]}\n2. [CQ:at,qq={a[1][0]}] - {a[1][1]}\n3. Null"
+    else:
+        return f"1. [CQ:at,qq={a[0][0]}] - {a[0][1]}\n2. [CQ:at,qq={a[1][0]}] - {a[1][1]}\n3. [CQ:at,qq={a[2][0]}] - {a[2][1]}"
 
 
 # 定义一个用来接收监听数据的方法
@@ -1558,11 +1566,11 @@ def goodmor(target=None):
 def msg_counter_send(target=None):
     s = getGroups()
     if target:
-        msg1 = "一天结束了呢 这是今日的活跃榜 ^_^"
+        msg1 = "一天结束了呢 这是今日的活跃榜 ^_^\n\n"+score_list(target)
         sendMessage(msg1, target_group=target)
     else:
         for i in s:
-            msg1 = "一天结束了呢 这是今日的活跃榜 ^_^"
+            msg1 = "一天结束了呢 这是今日的活跃榜 ^_^\n\n"+score_list(i)
             sendMessage(msg1, target_group=i)
             time.sleep(random.randint(1500, 2000) / 1000)
 
