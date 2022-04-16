@@ -482,7 +482,7 @@ def on_message2(ws, message):
                     msg.fast_reply("本群并没有验证过!")
                     return
                 try:
-                    if int(command_list[2]) == int(command_list[3]) == msg.group.id and command_list[4] == "我知道我在做什么!":
+                    if command_list[2] + command_list[3] == f"{msg.group.id}{msg.group.id}" and command_list[4] == "我知道我在做什么!":
                         del VERIFIED[msg.group.id]
                         msg.fast_reply("本群验证信息已经移除, 请重新验证!")
                         return
