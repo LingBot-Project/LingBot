@@ -602,7 +602,7 @@ def on_message2(ws, message):
                 msg.fast_reply(msg.text, reply=False, at=False)
         try:
             if str(msg.group.id) not in MESSAGE_COUNTER:
-                MESSAGE_COUNTER = {}
+                MESSAGE_COUNTER[str(msg.group.id)] = {}
             if str(msg.sender.id) not in MESSAGE_COUNTER[str(msg.group.id)]:
                 MESSAGE_COUNTER[str(msg.group.id)][str(msg.sender.id)] = 0
             MESSAGE_COUNTER[str(msg.group.id)][str(msg.sender.id)] += 1
