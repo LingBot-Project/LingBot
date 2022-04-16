@@ -1357,11 +1357,7 @@ Coins: {coin_purse}
                 msg.fast_reply("已清空您的成就")
 
         if re.search(r"我是傻逼|我是傻子|i am stupid|i'm stupid|i'm a fool|i‘m an idiot|i am a fool|i am an idiot", msg.text):
-            if str(msg.sender.id) not in ACCOMPLISHMENT["qq"]:
-                ACCOMPLISHMENT["qq"][str(msg.sender.id)] = []
-                get_achievements(msg.sender.id, msg, "i_m_stupid")
-            if "i_m_stupid" not in ACCOMPLISHMENT["qq"][str(msg.sender.id)]:
-                get_achievements(msg.sender.id, msg, "i_m_stupid")
+            add_achievements(msg.sender.id, msg, 'i_m_stupid')
 
         if command_list[0] == "!fmute":
             if command_list[1] == "list":
@@ -1379,13 +1375,11 @@ Coins: {coin_purse}
             msg_counter_send(msg.group.id)
 
         if command_list[0] == "没什么卵用的测试":
-            time_1 = datetime.datetime.strptime(str(datetime.datetime.now().date()) + '16:50', '%Y-%m-%d%H:%M')
-            time_2 = datetime.datetime.strptime(str(datetime.datetime.now().date()) + '17:00', '%Y-%m-%d%H:%M')
+            time_1 = datetime.datetime.strptime(str(datetime.datetime.now().date()) + '0:00', '%Y-%m-%d%H:%M')
+            time_2 = datetime.datetime.strptime(str(datetime.datetime.now().date()) + '4:00', '%Y-%m-%d%H:%M')
             time_n = datetime.datetime.now()
             if time_n >= time_1 and time_n < time_2:
-                msg.fast_reply("TRUE")
-            else:
-                msg.fast_reply("FALSE")
+
 
 
     except Exception as e:
@@ -1395,10 +1389,14 @@ Coins: {coin_purse}
             "很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(
                 text2image(a)))
 
+def add_achievements(qq, msg, achievements):
+    if qq not in ACCOMPLISHMENT["qq"]:
+        ACCOMPLISHMENT["qq"][qq] = [achievements]
+        msg.fast_reply(f'恭喜你获得了一个成就！！\n[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][achievements]}]')
+    elif achievements not in ACCOMPLISHMENT["qq"][qq]:
+        ACCOMPLISHMENT["qq"][qq] = [achievements]
+        msg.fast_reply(f'恭喜你获得了一个成就！！\n[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][achievements]}]')
 
-def get_achievements(qq, msg, achievements):
-    ACCOMPLISHMENT["qq"][str(qq)].append(achievements)
-    msg.fast_reply(f'恭喜你获得了一个成就！！\n[CQ:image,file={ACCOMPLISHMENT["ACCOMPLISHMENT"][achievements]}]')
 
 
 def mutePerson(group, qq_number, mute_time):
