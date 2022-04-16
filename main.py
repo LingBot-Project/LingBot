@@ -1577,6 +1577,7 @@ def goodmor(target=None):
 
 
 def msg_counter_send(target=None):
+    global MESSAGE_COUNTER
     s = getGroups()
     if target:
         msg1 = "一天结束了呢 这是今日的活跃榜 ^_^\n\n" + score_list(target)
@@ -1586,6 +1587,7 @@ def msg_counter_send(target=None):
             msg1 = "一天结束了呢 这是今日的活跃榜 ^_^\n\n" + score_list(i)
             sendMessage(msg1, target_group=i)
             time.sleep(random.randint(1500, 2000) / 1000)
+        MESSAGE_COUNTER = {}
 
 
 def goodnig():
