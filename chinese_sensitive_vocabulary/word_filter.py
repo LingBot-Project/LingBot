@@ -18,10 +18,7 @@ class SensitiveWordModel(object):
     def predict(self, text):
         text = text.lower()
         _ = set(jieba.cut(text))
-        if self.word_filter.extract_keywords(text):
-            return 1
-        else:
-            return min(sum(sorted([self.nospam.get(w, 0) for w in _][:3], reverse=True)) / 3, 1)
+        return min(sum(sorted([self.nospam.get(w, 0) for w in _][:3], reverse=True)) / 3, 1)
 
     def __get_words_info(self):
         for s in requests.get(self.word_url, verify=False).text.strip().split('\n'):
