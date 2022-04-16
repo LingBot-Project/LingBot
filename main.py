@@ -77,7 +77,7 @@ VERIFY_TIPS = {}
 msg_scanner = chinese_sensitive_vocabulary.word_filter.SensitiveWordModel(
     chinese_sensitive_vocabulary.word_filter.word_url)
 
-# URL_LIST = r'.*.net|.*.com|.*.xyz|.*.me|.*.'
+# URL_LIST = r'http(s)://[(.*).net|.com|.xyz|.me|.top]'
 ANTI_AD = r"送福利|定制水影|加群.*[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群.*[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙.*[0-9]{5,10}|君羊.*[0-9]{5,10}|q(\:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*|vape"
 
 spam2_vl_reset_cool_down = time.time()
@@ -931,7 +931,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 if command_list[1] == "all":
                     s = getGroups()
                     msg.fast_reply("正在群发... 目标:{}个群".format(len(s)))
-                    _prefix = "(由 {}({}) 发起的群发消息)".format(msg.sender.name, msg.sender.id)
+                    _prefix = "(由 {}({}) 发起的群发消息)\n".format(msg.sender.name, msg.sender.id)
                     for i in s:
                         if i not in IGNORE_GROUP:
                             nowmsg = ""
@@ -1381,10 +1381,8 @@ Coins: {coin_purse}
             time_1 = datetime.datetime.strptime(str(datetime.datetime.now().date()) + '0:00', '%Y-%m-%d%H:%M')
             time_2 = datetime.datetime.strptime(str(datetime.datetime.now().date()) + '4:00', '%Y-%m-%d%H:%M')
             time_n = datetime.datetime.now()
-            if time_n >= time_1 and time_n < time_2:
+            if time_1 <= time_n < time_2:
                 pass
-
-
 
     except Exception as e:
         a = traceback.format_exc()
@@ -1392,6 +1390,7 @@ Coins: {coin_purse}
         msg.fast_reply(
             "很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(
                 text2image(a)))
+
 
 def add_achievements(qq, msg, achievements):
     if qq not in ACCOMPLISHMENT["qq"]:
