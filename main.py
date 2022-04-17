@@ -391,7 +391,7 @@ def on_message2(ws, message):
         if msg.text == "":
             return
 
-        if msg.id in CACHE_MESSAGE:
+        if msg.id in CACHE_MESSAGE and msg.id != -1:
             if len(CACHE_MESSAGE) >= 1000:
                 CACHE_MESSAGE.clear()
             return
@@ -419,11 +419,9 @@ def on_message2(ws, message):
 完成验证: !mail code 验证码
 移除验证: !mail reset 本群群号
 查看本群验证状态: !help""")
-                return
             if command_list[1] == "verify":
                 if msg.group.id in VERIFIED:
                     msg.fast_reply("本群已经验证过了! 输入 !help 可以查询激活状态")
-                    return
 
                 if msg.group.id not in VERIFYING:
                     VERIFYING[msg.group.id] = {
@@ -455,31 +453,24 @@ def on_message2(ws, message):
 如果您没有发起任何群验证, 请忽略此邮件
 """)
                 msg.fast_reply("我们已经尝试发送一封电子邮件到您的邮箱 请按照邮件内容操作")
-                return
 
             if command_list[1] == "code":
                 if msg.group.id not in VERIFYING:
                     msg.fast_reply("没有查到本群的激活信息!")
-                    return
-
-                if time.time() - VERIFYING[msg.group.id]["time"] >= 1800:
+                elif time.time() - VERIFYING[msg.group.id]["time"] >= 1800:
                     msg.fast_reply("""本群的验证码已经过期了!
 邮箱验证指令:
 开始验证: !mail verify 邮箱地址
 完成验证: !mail code 验证码
 查看本群验证状态: !help""")
-                    return
-
-                if str(command_list[2]) == VERIFYING[msg.group.id]["code"]:
+                elif str(command_list[2]) == VERIFYING[msg.group.id]["code"]:
                     msg.fast_reply("激活成功!")
                     VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
                     del VERIFYING[msg.group.id]
-                    return
 
             if command_list[1] == "reset" and not a["sender"]["role"] == "member":
                 if msg.group.id not in VERIFIED:
                     msg.fast_reply("本群并没有验证过!")
-                    return
                 try:
                     if command_list[2] + command_list[3] == f"{msg.group.id}{VERIFIED[msg.group.id]}" and command_list[4] == "我知道我在做什么!":
                         del VERIFIED[msg.group.id]
@@ -490,7 +481,6 @@ def on_message2(ws, message):
                         return
                 except:
                     msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
-                    return
 
         if command_list[0] == "!runas":
             if msg.sender.isadmin():
@@ -510,7 +500,6 @@ def on_message2(ws, message):
                 }
                 msg.fast_reply("Trying")
                 on_message2(ws, json.dumps(data1))
-                return
 
         if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
