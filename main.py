@@ -1457,6 +1457,8 @@ def unmutePerson(group, qq_number):
 
 
 def recall(msg_id):
+    if msg_id == 0 | msg_id == -1:
+        return
     data1 = {
         "message_id": int(msg_id)
     }
