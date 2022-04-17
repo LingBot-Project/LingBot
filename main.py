@@ -500,13 +500,13 @@ def on_message2(ws, message):
                 data1 = {
                     "post_type": "message",
                     "message_type": "group",
-                    "message": "".join(command_list[2:]),
+                    "message": " ".join(command_list[2:]),
                     "sender": {
                         "user_id": int(command_list[1]),
                         "nickname": "FakeMessage"
                     },
                     "group_id": msg.group.id,
-                    "message_id": msg.id
+                    "message_id": -1
                 }
                 msg.fast_reply("Trying")
                 on_message2(ws, json.dumps(data1))
