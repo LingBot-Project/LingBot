@@ -542,10 +542,11 @@ def on_message2(ws, message):
                     #         target_group=1019068934)
                     # msg.recall()
                     if SPAM2_VL[msg.sender.id] >= 100:
-                        msg.mute(43199 * 60)  # :259200
+                        msg.mute(43199 * 60)  # 43199 * 60 # :259200
                         msg.recall()
                         for _ in SPAM2_MESSAGE_LIST[msg.sender.id]:
                             _.recall()
+                            _.mute(604800)
                             time.sleep(random.randint(0, 2000) / 1000)
                         SPAM2_MESSAGE_LIST[msg.sender.id].clear()
                         SPAM2_VL[msg.sender.id] -= 15
