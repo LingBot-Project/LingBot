@@ -498,7 +498,6 @@ def on_message2(ws, message):
                     "group_id": msg.group.id,
                     "message_id": -1
                 }
-                msg.fast_reply("Trying")
                 on_message2(ws, json.dumps(data1))
 
         if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
