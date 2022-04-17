@@ -498,6 +498,25 @@ def on_message2(ws, message):
                         return
                 except:
                     msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
+                    return
+
+        if command_list[0] == "!runas":
+            atcq = re.search(r'\[CQ:at,qq=(.*)]', command_list[1])
+            if atcq is not None:
+                command_list[1] = command_list[1].replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1)))
+            data1 = {
+                "post_type": "message",
+                "message_type": "group",
+                "message": "".join(command_list[2:]),
+                "sender": {
+                    "user_id": int(command_list[1]),
+                    "nickname": "FakeMessage"
+                },
+                "group_id": msg.group.id,
+                "message_id": None
+            }
+            on_message2(ws, json.dumps(data1))
+            return
 
         if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
@@ -1420,23 +1439,6 @@ Coins: {coin_purse}
             time_n = datetime.datetime.now()
             if time_1 <= time_n < time_2:
                 pass
-
-        if command_list[0] == "!runas":
-            atcq = re.search(r'\[CQ:at,qq=(.*)]', command_list[1])
-            if atcq is not None:
-                command_list[1] = command_list[1].replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1)))
-            data1 = {
-                "post_type": "message",
-                "message_type": "group",
-                "message": "".join(command_list[2:]),
-                "sender": {
-                    "user_id": int(command_list[1]),
-                    "nickname": "FakeMessage"
-                },
-                "group_id": msg.group.id,
-                "message_id": None
-            }
-            on_message2(ws, json.dumps(data1))
 
     except Exception as e:
         a = traceback.format_exc()
