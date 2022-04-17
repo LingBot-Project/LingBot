@@ -980,7 +980,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                         if i not in IGNORE_GROUP:
                             nowmsg = ""
                             for i2 in list(msg1):
-                                nowmsg += i2+random.choice(["‭", "", "", "", ""])
+                                nowmsg += i2+random.choice(["\u202D", "", "", "", ""])
                             sendMessage(_prefix + nowmsg, target_group=i)
                             time.sleep(random.randint(1500, 1900) / 1000)
                     msg.fast_reply("群发完成")
