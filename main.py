@@ -535,7 +535,9 @@ def on_message2(ws, message):
             pass
 
         if msg.sender.id not in SPAM2_MSG:
-            SPAM2_MSG[msg.sender.id] = FakeMessage()  # msg.text
+            _temp = Message()
+            _temp.text = "烫烫烫混斤拷"
+            SPAM2_MSG[msg.sender.id] = _temp  # msg.text
             SPAM2_MESSAGE_LIST[msg.sender.id] = []
             SPAM2_VL[msg.sender.id] = 0
         _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
