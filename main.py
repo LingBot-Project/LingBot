@@ -534,121 +534,121 @@ def on_message2(ws, message):
                 msg.mute(int(FOLLOW_MUTE[str(msg.sender.id)] - time.time()))
         except:
             pass
+        if msg.id != -1:
+            if msg.sender.id not in SPAM2_MSG:
+                _temp = Message()
+                _temp.text = "烫烫烫混斤拷"
+                SPAM2_MSG[msg.sender.id] = _temp  # msg.text
+                SPAM2_MESSAGE_LIST[msg.sender.id] = []
+                SPAM2_VL[msg.sender.id] = 0
+            _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
+            if _simhash_dis >= 0.836:
+                SPAM2_VL[msg.sender.id] += 10 * (_simhash_dis + 0.5)  # :10
+                if _simhash_dis >= 0.99:
+                    SPAM2_VL[msg.sender.id] += 5
 
-        if msg.sender.id not in SPAM2_MSG:
-            _temp = Message()
-            _temp.text = "烫烫烫混斤拷"
-            SPAM2_MSG[msg.sender.id] = _temp  # msg.text
-            SPAM2_MESSAGE_LIST[msg.sender.id] = []
-            SPAM2_VL[msg.sender.id] = 0
-        _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
-        if _simhash_dis >= 0.836:
-            SPAM2_VL[msg.sender.id] += 10 * (_simhash_dis + 0.5)  # :10
-            if _simhash_dis >= 0.99:
-                SPAM2_VL[msg.sender.id] += 5
+                if SPAM2_VL[msg.sender.id] >= 55:
+                    # if msg.sender.isadmin():
+                    #     sendMessage(
+                    #         f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度: {_simhash_dis}\nVL: {SPAM2_VL[msg.sender.id]}",
+                    #         target_group=1019068934)
+                    # msg.recall()
+                    if SPAM2_VL[msg.sender.id] >= 100:
+                        msg.mute(43199 * 60)  # :259200
+                        msg.recall()
+                        for _ in SPAM2_MESSAGE_LIST[msg.sender.id]:
+                            _.recall()
+                            time.sleep(random.randint(0, 2000) / 1000)
+                        SPAM2_MESSAGE_LIST[msg.sender.id].clear()
+                        SPAM2_VL[msg.sender.id] -= 15
+                        return
+                    # else:
+                    #     msg.mute(600)
+                    # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
+                    # return
+                    if len(SPAM2_MESSAGE_LIST[msg.sender.id]) >= 10:
+                        SPAM2_MESSAGE_LIST[msg.sender.id].pop(0)
+                SPAM2_MESSAGE_LIST[msg.sender.id].append(msg)
+                SPAM2_MSG[msg.sender.id] = msg
+            else:
+                SPAM2_MSG[msg.sender.id] = msg
+                if SPAM2_VL[msg.sender.id] > 0:
+                    SPAM2_VL[msg.sender.id] -= 2 * (1 - _simhash_dis)  # :2
 
-            if SPAM2_VL[msg.sender.id] >= 55:
-                # if msg.sender.isadmin():
-                #     sendMessage(
-                #         f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度: {_simhash_dis}\nVL: {SPAM2_VL[msg.sender.id]}",
-                #         target_group=1019068934)
-                # msg.recall()
-                if SPAM2_VL[msg.sender.id] >= 100:
-                    msg.mute(43199 * 60)  # :259200
-                    msg.recall()
-                    for _ in SPAM2_MESSAGE_LIST[msg.sender.id]:
-                        _.recall()
-                        time.sleep(random.randint(0, 2000) / 1000)
-                    SPAM2_MESSAGE_LIST[msg.sender.id].clear()
-                    SPAM2_VL[msg.sender.id] -= 15
-                    return
-                # else:
-                #     msg.mute(600)
-                # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
-                # return
-                if len(SPAM2_MESSAGE_LIST[msg.sender.id]) >= 10:
-                    SPAM2_MESSAGE_LIST[msg.sender.id].pop(0)
-            SPAM2_MESSAGE_LIST[msg.sender.id].append(msg)
-            SPAM2_MSG[msg.sender.id] = msg
-        else:
-            SPAM2_MSG[msg.sender.id] = msg
-            if SPAM2_VL[msg.sender.id] > 0:
-                SPAM2_VL[msg.sender.id] -= 2 * (1 - _simhash_dis)  # :2
-
-        reScan = re.findall(
-            ANTI_AD,
-            msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
-        if len(msg.text) >= 33 and len(reScan) >= 2:
-            SPAM2_VL[msg.sender.id] += 4
-            if msg.sender.isadmin():
-                sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
-                            target_group=1019068934)
-                return
-            msg.mute(3600)
-            msg.recall()
-            ALL_AD += 1
-            return
-
-        sc_id_ad = re.search(ANTI_AD, msg.sender.name.replace(" ", "").replace(".", "").replace("\n", "").lower())
-        if sc_id_ad is not None and not msg.sender.isadmin():
-            msg.mute(600)
-            msg.recall()
-            time.sleep(random.randint(500, 2000) / 1000)
-            msg.fast_reply("您的名称中似乎存在广告", reply=False)
-            ALL_AD += 1
-            return
-
-        scan_lv = msg_scanner.predict(msg.text_nocq)
-        if scan_lv >= 0.8:
-            msg.fast_reply(f"您的消息貌似有违法内容?\nLevel: {round(scan_lv, 3)}", reply=False)
-            if scan_lv >= 0.9:
-                msg.recall()
-                msg.mute(600)
-
-        if len(msg.text) > 1500:
-            msg.mute(600)
-            msg.recall()
-            msg.fast_reply("消息太长了哟", reply=False)
-            SPAM2_VL[msg.sender.id] += 3
-            return
-
-        multiMsg = re.search(r'\[CQ:forward,id=(.*)]', msg.text)
-        if multiMsg is not None:
-            a = requests.get(url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()[
-                "data"]["messages"]
-            multiMsg_raw = ""
-            for i in a:
-                multiMsg_raw += i["content"]
-            reScan = re.search(
+            reScan = re.findall(
                 ANTI_AD,
-                multiMsg_raw.replace(" ", "").replace(".", "").replace("\n", "").lower())
-            if reScan is not None:
-                msg.fast_reply("您发送的合并转发内容貌似有广告!", reply=False)
+                msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
+            if len(msg.text) >= 33 and len(reScan) >= 2:
+                SPAM2_VL[msg.sender.id] += 4
+                if msg.sender.isadmin():
+                    sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
+                                target_group=1019068934)
+                    return
                 msg.mute(3600)
                 msg.recall()
                 ALL_AD += 1
+                return
+
+            sc_id_ad = re.search(ANTI_AD, msg.sender.name.replace(" ", "").replace(".", "").replace("\n", "").lower())
+            if sc_id_ad is not None and not msg.sender.isadmin():
+                msg.mute(600)
+                msg.recall()
+                time.sleep(random.randint(500, 2000) / 1000)
+                msg.fast_reply("您的名称中似乎存在广告", reply=False)
+                ALL_AD += 1
+                return
+
+            scan_lv = msg_scanner.predict(msg.text_nocq)
+            if scan_lv >= 0.8:
+                msg.fast_reply(f"您的消息貌似有违法内容?\nLevel: {round(scan_lv, 3)}", reply=False)
+                if scan_lv >= 0.9:
+                    msg.recall()
+                    msg.mute(600)
+
+            if len(msg.text) > 1500:
+                msg.mute(600)
+                msg.recall()
+                msg.fast_reply("消息太长了哟", reply=False)
                 SPAM2_VL[msg.sender.id] += 3
                 return
 
-        try:
-            if spammer_checker(msg):
+            multiMsg = re.search(r'\[CQ:forward,id=(.*)]', msg.text)
+            if multiMsg is not None:
+                a = requests.get(url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()[
+                    "data"]["messages"]
+                multiMsg_raw = ""
+                for i in a:
+                    multiMsg_raw += i["content"]
+                reScan = re.search(
+                    ANTI_AD,
+                    multiMsg_raw.replace(" ", "").replace(".", "").replace("\n", "").lower())
+                if reScan is not None:
+                    msg.fast_reply("您发送的合并转发内容貌似有广告!", reply=False)
+                    msg.mute(3600)
+                    msg.recall()
+                    ALL_AD += 1
+                    SPAM2_VL[msg.sender.id] += 3
+                    return
+
+            try:
+                if spammer_checker(msg):
+                    msg.mute(60)
+                    msg.recall()
+                    msg.fast_reply("您的说话速度有点快，是不是在刷屏呢？", reply=False)
+            except:
+                pass
+
+            if msg.sender.id in BLACK_LIST:
                 msg.mute(60)
                 msg.recall()
-                msg.fast_reply("您的说话速度有点快，是不是在刷屏呢？", reply=False)
-        except:
-            pass
-
-        if msg.sender.id in BLACK_LIST:
-            msg.mute(60)
-            msg.recall()
-            return
-
-        if msg.text.count("[CQ:image") >= 3:
-            if msg.sender.isadmin() is False:
-                msg.mute(60)
-                msg.recall()
-                msg.fast_reply("太...太多图片了..", reply=False)
                 return
+
+            if msg.text.count("[CQ:image") >= 3:
+                if msg.sender.isadmin() is False:
+                    msg.mute(60)
+                    msg.recall()
+                    msg.fast_reply("太...太多图片了..", reply=False)
+                    return
 
         if (msg.group.id, msg.sender.id) in REPEATER:
             if not (command_list[0] == "!repeater" and (command_list[1] == "add" or command_list[1] == "remove")):
