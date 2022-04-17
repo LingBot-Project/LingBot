@@ -173,14 +173,6 @@ class Message:
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
 
 
-class FakeMessage:
-    def __init__(self):
-        self.text = '酬魎嫐搁轍擻鼃戁矙'
-
-    def recall(self):
-        pass
-
-
 def crop_max_square(pil_img):
     return crop_center(pil_img, min(pil_img.size), min(pil_img.size))
 
@@ -501,22 +493,23 @@ def on_message2(ws, message):
                     return
 
         if command_list[0] == "!runas":
-            atcq = re.search(r'\[CQ:at,qq=(.*)]', command_list[1])
-            if atcq is not None:
-                command_list[1] = command_list[1].replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1)))
-            data1 = {
-                "post_type": "message",
-                "message_type": "group",
-                "message": "".join(command_list[2:]),
-                "sender": {
-                    "user_id": int(command_list[1]),
-                    "nickname": "FakeMessage"
-                },
-                "group_id": msg.group.id,
-                "message_id": msg.id
-            }
-            on_message2(ws, json.dumps(data1))
-            return
+            if msg.sender.isadmin():
+                atcq = re.search(r'\[CQ:at,qq=(.*)]', command_list[1])
+                if atcq is not None:
+                    command_list[1] = command_list[1].replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1)))
+                data1 = {
+                    "post_type": "message",
+                    "message_type": "group",
+                    "message": "".join(command_list[2:]),
+                    "sender": {
+                        "user_id": int(command_list[1]),
+                        "nickname": "FakeMessage"
+                    },
+                    "group_id": msg.group.id,
+                    "message_id": msg.id
+                }
+                on_message2(ws, json.dumps(data1))
+                return
 
         if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
