@@ -508,6 +508,7 @@ def on_message2(ws, message):
                     "group_id": msg.group.id,
                     "message_id": msg.id
                 }
+                msg.fast_reply("Trying")
                 on_message2(ws, json.dumps(data1))
                 return
 
