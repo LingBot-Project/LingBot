@@ -2,21 +2,22 @@
 import base64
 import configparser
 import datetime
-import hypixel
 import json
 import logging
 import os
-import psutil
 import random
 import re
-import requests
 import threading
 import time
 import traceback
+from io import BytesIO
+
+import hypixel
+import psutil
+import requests
 import websocket
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from apscheduler.schedulers.blocking import BlockingScheduler
-from io import BytesIO
 from mcstatus import MinecraftServer
 from simhash import Simhash
 
@@ -1420,6 +1421,23 @@ Coins: {coin_purse}
             if time_1 <= time_n < time_2:
                 pass
 
+        if command_list[0] == "!runas":
+            atcq = re.search(r'\[CQ:at,qq=(.*)]', command_list[1])
+            if atcq is not None:
+                command_list[1] = command_list[1].replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1)))
+            data1 = {
+                "post_type": "message",
+                "message_type": "group",
+                "message": "".join(command_list[2:]),
+                "sender": {
+                    "user_id": int(command_list[1]),
+                    "nickname": "FakeMessage"
+                },
+                "group_id": msg.group.id,
+                "message_id": None
+            }
+            on_message2(ws, json.dumps(data1))
+
     except Exception as e:
         a = traceback.format_exc()
         logging.error(a)
@@ -1586,13 +1604,13 @@ def on_message(ws, message):
 
 
 # 定义一个用来处理错误的方法
-def on_error(ws, error):
+def on_error(_, error):
     logging.warning("-----连接出现异常,异常信息如下-----")
     logging.warning(error)
 
 
 # 定义一个用来处理关闭连接的方法
-def on_close(ws, a, b):
+def on_close(_, a, b):
     logging.error("-------连接已关闭------")
     stop()
 
