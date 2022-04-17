@@ -513,7 +513,7 @@ def on_message2(ws, message):
                     "nickname": "FakeMessage"
                 },
                 "group_id": msg.group.id,
-                "message_id": None
+                "message_id": msg.id
             }
             on_message2(ws, json.dumps(data1))
             return
