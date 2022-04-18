@@ -709,7 +709,7 @@ def on_message2(ws, message):
         if command_list[0] == "!5k":
             # 图片/灵感来源: https://github.com/SAGIRI-kawaii/saya_plugins_collection/tree/master/modules/5000zhao
             # 字体文件: ./5k_fonts
-            if command_list[1] >= 18 or command_list[2] >= 18:
+            if len(command_list[1]) >= 18 or len(command_list[2]) >= 18:
                 msg.fast_reply("内容过长 被拒绝运行")
                 return
             imageuid = str(random.randint(10000000, 9999999999))
