@@ -198,7 +198,7 @@ def mask_sircle_transparent(pil_img, blur_radius, offset=0):
 
 
 def read_config():
-    global ADMIN_LIST, BLACK_LIST, FEEDBACKS, VERIFIED, FOLLOW_MUTE
+    global ADMIN_LIST, BLACK_LIST, FEEDBACKS, VERIFIED, FOLLOW_MUTE, MESSAGE_COUNTER
     config = configparser.ConfigParser()
     config.read("config.ini")
     s = config["DEFAULT"]
