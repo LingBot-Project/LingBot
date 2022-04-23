@@ -569,6 +569,8 @@ def on_message2(ws, message):
                     # return
                     if len(SPAM2_MESSAGE_LIST[msg.sender.id]) >= 10:
                         SPAM2_MESSAGE_LIST[msg.sender.id].pop(0)
+                if SPAM2_MESSAGE_LIST[msg.sender.id] not in SPAM2_MESSAGE_LIST[msg.sender.id]:
+                    SPAM2_MESSAGE_LIST[msg.sender.id].append(msg)
                 SPAM2_MESSAGE_LIST[msg.sender.id].append(msg)
                 SPAM2_MSG[msg.sender.id] = msg
             else:
