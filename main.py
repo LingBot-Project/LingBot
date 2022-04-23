@@ -543,9 +543,9 @@ def on_message2(ws, message):
                 SPAM2_VL[msg.sender.id] = 0
             _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
             if _simhash_dis >= 0.836:
-                SPAM2_VL[msg.sender.id] += 15 * _simhash_dis  # :10
+                SPAM2_VL[msg.sender.id] += 20 * (_simhash_dis - 0.5)  # :10
                 if _simhash_dis >= 0.99:
-                    SPAM2_VL[msg.sender.id] += 5
+                    SPAM2_VL[msg.sender.id] += 10
 
                 if SPAM2_VL[msg.sender.id] >= 55:
                     # if msg.sender.isadmin():
@@ -574,7 +574,7 @@ def on_message2(ws, message):
             else:
                 SPAM2_MSG[msg.sender.id] = msg
                 if SPAM2_VL[msg.sender.id] > 0:
-                    SPAM2_VL[msg.sender.id] -= 2 * (1 - _simhash_dis)  # :2
+                    SPAM2_VL[msg.sender.id] -= 2 * (0.7 - _simhash_dis)  # :2
 
             reScan = re.findall(
                 ANTI_AD,
