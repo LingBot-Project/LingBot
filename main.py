@@ -543,7 +543,7 @@ def on_message2(ws, message):
                 SPAM2_VL[msg.sender.id] = 0
             _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
             if _simhash_dis >= 0.836:
-                SPAM2_VL[msg.sender.id] += 10 * (_simhash_dis + 0.5)  # :10
+                SPAM2_VL[msg.sender.id] += 15 * _simhash_dis  # :10
                 if _simhash_dis >= 0.99:
                     SPAM2_VL[msg.sender.id] += 5
 
