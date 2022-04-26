@@ -747,8 +747,8 @@ def on_message2(ws, message):
         if command_list[0] == "!testchrome" and msg.sender.id == 1584784496:
             msg.fast_reply("Trying...")
             msg.fast_reply("[CQ:image,file=base64://{}]".format(
-                post2http(url="/url2base64",
-                              data={"url": " ".join(command_list[1:])}).text.replace("\n", ""), server_addr="127.0.0.1:25566"))
+                requests.post(url="http://localhost:25666/url2base64",
+                              data={"url": " ".join(command_list[1:])}).text.replace("\n", "")))
 
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
@@ -1636,7 +1636,7 @@ def on_close(_, a, b):
 
 def goodmor(target=None):
     msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(
-        post2http(url="/url2base64", data={"url": "https://news.topurl.cn/"}, server_addr="127.0.0.1:25566").text.replace(
+        requests.post(url="http://localhost:25666/url2base64", data={"url": "https://news.topurl.cn/"}).text.replace(
             "\n", ""))
     s = getGroups()
     if target:
