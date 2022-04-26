@@ -747,8 +747,8 @@ def on_message2(ws, message):
         if command_list[0] == "!testchrome" and msg.sender.id == 1584784496:
             msg.fast_reply("Trying...")
             msg.fast_reply("[CQ:image,file=base64://{}]".format(
-                requests.post(url="http://localhost:25666/url2base64",
-                              data={"url": " ".join(command_list[1:])}).text.replace("\n", "")))
+                post2http(url="/url2base64",
+                              data={"url": " ".join(command_list[1:])}).text.replace("\n", ""), server_addr="127.0.0.1:25566"))
 
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
@@ -1476,7 +1476,7 @@ def mutePerson(group, qq_number, mute_time):
         "user_id": int(qq_number),
         "duration": int(mute_time)
     }
-    requests.post(url="http://" + HTTPURL + "/set_group_ban", data=data1)
+    post2http(url="/set_group_ban", data=data1)
 
 
 def unmutePerson(group, qq_number):
@@ -1489,7 +1489,7 @@ def recall(msg_id):
     data1 = {
         "message_id": int(msg_id)
     }
-    requests.post(url="http://" + HTTPURL + "/delete_msg", data=data1)
+    post2http(url="/delete_msg", data=data1)
 
 
 def sendMessage(message, target_qq=None, target_group=None, message_id=None):
@@ -1513,7 +1513,7 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None):
         }
 
         # 发送消息
-        s = requests.post(url="http://" + HTTPURL + "/send_group_msg", data=data1)
+        s = post2http(url="/send_group_msg", data=data1)
         if not s.ok:
             # 如果请求失败
             s.raise_for_status()
@@ -1613,6 +1613,10 @@ def score_list(group):
         return f"1. [CQ:at,qq={a[0][0]}] - {a[0][1]}\n2. [CQ:at,qq={a[1][0]}] - {a[1][1]}\n3. [CQ:at,qq={a[2][0]}] - {a[2][1]}"
 
 
+def post2http(url, server_addr=HTTPURL, data=None):
+    return requests.post(f"http://{server_addr}{url}", data=data)
+
+
 # 定义一个用来接收监听数据的方法
 def on_message(ws, message):
     threading.Thread(target=temps_message, args=(ws, message)).start()
@@ -1632,7 +1636,7 @@ def on_close(_, a, b):
 
 def goodmor(target=None):
     msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(
-        requests.post(url="http://localhost:25666/url2base64", data={"url": "https://news.topurl.cn/"}).text.replace(
+        post2http(url="/url2base64", data={"url": "https://news.topurl.cn/"}, server_addr="127.0.0.1:25566").text.replace(
             "\n", ""))
     s = getGroups()
     if target:
