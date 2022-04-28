@@ -101,7 +101,7 @@ class Group:
 
     def verify_info(self):
         if str(self.id) in VERIFIED:
-            return f"已验证 绑定邮箱:{''.join(VERIFIED[str(self.id)][0:3])}{len(VERIFIED[str(self.id)][3:-3])*"*"}{''.join(VERIFIED[str(self.id)][-3:])}"
+            return f"已验证 绑定邮箱:{''.join(VERIFIED[str(self.id)][0:3])}{len(VERIFIED[str(self.id)][3:-3]) * "*"}{''.join(VERIFIED[str(self.id)][-3:])}"
         elif str(self.id) in VERIFYING:
             return f"正在验证..."
         else:
