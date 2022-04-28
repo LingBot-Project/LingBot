@@ -101,7 +101,7 @@ class Group:
 
     def verify_info(self):
         if str(self.id) in VERIFIED:
-            return f"已验证 绑定邮箱:{''.join(VERIFIED[str(self.id)][0:3])}******{''.join(VERIFIED[str(self.id)][-3:])}"
+            return f"已验证 绑定邮箱:{''.join(VERIFIED[str(self.id)][0:3])}{len(VERIFIED[str(self.id)][3:-3])*"*"}{''.join(VERIFIED[str(self.id)][-3:])}"
         elif str(self.id) in VERIFYING:
             return f"正在验证..."
         else:
@@ -302,9 +302,9 @@ def spammer_checker(msg):
     if ANTISPAMMER[group][user][1] >= 8:
         ANTISPAMMER[group][user] = [0, 0]
         return True
-    elif SPAM2_VL[msg.sender.id] >= 50 and ANTISPAMMER[group][user][1] >= 6:
+    elif ANTISPAMMER[group][user][1] >= 300 / SPAM2_VL[msg.sender.id]:
         ANTISPAMMER[group][user] = [0, 0]
-        SPAM2_VL[msg.sender.id] -= 5
+        SPAM2_VL[msg.sender.id] -= 7
         return True
     else:
         if msg.text.count("\n") >= 15:
@@ -421,7 +421,7 @@ def on_message2(ws, message):
         logging.info("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
 
         if msg.text in ["!help", "菜单"]:
-            msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群：308089090\n本群验证状态:{msg.group.verify_info()}")
+            msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群: 308089090\n本群验证状态:{msg.group.verify_info()}")
 
         if command_list[0] == "!mail":
             msg.group.id = str(msg.group.id)
