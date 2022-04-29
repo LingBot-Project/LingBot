@@ -233,3 +233,6 @@ def genImage(word_a="5000兆円", word_b="欲しい!", default_width=1500, heigh
     final_image.paste(img, (50, 50))
 
     return final_image
+
+if __name__ == "__main__":
+    print("This is a library and you shouldn't run it directly.")
