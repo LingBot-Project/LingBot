@@ -5,7 +5,7 @@
 
 ## 中文
 ### 联系方式
-* LingBot官方群:308089090
+* LingBot官方群:[Telegram](https://t.me/LingBotProject) [QQ](https://jq.qq.com/?_wv=1027&k=YpmTkCJt)
 * 汐洛:1584784496
 
 ### 开源协议
@@ -23,8 +23,8 @@
 
 ## English
 ### Contact us
-* LingBot QQ Group：308089090
-* 汐洛 Xi Luo：1584784496(QQ)
+* Group：[Telegram](https://t.me/LingBotProject) [QQ](https://jq.qq.com/?_wv=1027&k=YpmTkCJt)
+* Guimc：1584784496(QQ)
 
 ### Open source protocol
 * This open source project uses the AGPL3.0 open source license
