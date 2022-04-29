@@ -530,7 +530,7 @@ def on_message2(ws, message):
         if msg.id != -1:
             if msg.sender.id not in SPAM2_MSG:
                 _temp = Message()
-                _temp.text = "烫烫烫锟斤拷"
+                _temp.text = "¶¶¶¶"*10086
                 SPAM2_MSG[msg.sender.id] = _temp  # msg.text
                 SPAM2_MESSAGE_LIST[msg.sender.id] = []
                 SPAM2_VL[msg.sender.id] = 0
