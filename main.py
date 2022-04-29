@@ -1639,7 +1639,7 @@ def on_close(_, a, b):
 def goodmor(target=None):
     response = requests.request("POST", "https://v2.alapi.cn/api/zaobao", data="token=CPmfvyrbNdiUBIwI&format=image", headers={'Content-Type': "application/x-www-form-urlencoded"})
 
-    msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(base64.b64encode(response.content))
+    msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(base64.b64encode(response.content).decode())
         # requests.post(url="http://localhost:25666/url2base64", data={"url": "https://news.topurl.cn/"}).text.replace(
         #     "\n", "")
         
