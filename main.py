@@ -421,7 +421,7 @@ def on_message2(ws, message):
         logging.info("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
 
         if msg.text in ["!help", "菜单"]:
-            msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群: https://t.me/Lingbot-Project\n本群验证状态:{msg.group.verify_info()}")
+            msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群: https://t.me/LingBotProject\n本群验证状态:{msg.group.verify_info()}")
 
         if command_list[0] == "!mail":
             msg.group.id = str(msg.group.id)
