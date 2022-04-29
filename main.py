@@ -421,7 +421,7 @@ def on_message2(ws, message):
         logging.info("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
 
         if msg.text in ["!help", "菜单"]:
-            msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群: 308089090\n本群验证状态:{msg.group.verify_info()}")
+            msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群: https://t.me/Lingbot-Project\n本群验证状态:{msg.group.verify_info()}")
 
         if command_list[0] == "!mail":
             msg.group.id = str(msg.group.id)
@@ -479,6 +479,8 @@ def on_message2(ws, message):
                     msg.fast_reply("激活成功!")
                     VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
                     del VERIFYING[msg.group.id]
+                else:
+                    mdg.fast_reply("我们在处理您的验证时出现了亿点问题 请检查激活码是否正确")
 
             if command_list[1] == "reset" and not a["sender"]["role"] == "member":
                 if msg.group.id not in VERIFIED:
