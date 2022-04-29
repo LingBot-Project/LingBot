@@ -480,7 +480,7 @@ def on_message2(ws, message):
                     VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
                     del VERIFYING[msg.group.id]
                 else:
-                    mdg.fast_reply("我们在处理您的验证时出现了亿点问题 请检查激活码是否正确")
+                    msg.fast_reply("我们在处理您的验证时出现了亿点问题 请检查激活码是否正确")
 
             if command_list[1] == "reset" and not a["sender"]["role"] == "member":
                 if msg.group.id not in VERIFIED:
@@ -520,15 +520,6 @@ def on_message2(ws, message):
             stop()
 
         if not msg.group.isverify():
-            try:
-                if str(msg.group.id) not in VERIFY_TIPS:
-                    VERIFY_TIPS[str(msg.group.id)] = 0
-                if time.time() - VERIFY_TIPS[str(msg.group.id)] <= 120:
-                    msg.fast_reply("本群还没有激活! 请及时联系管理员激活!! 激活方式 !mail verify 邮箱地址\n注意 禁言机器人会进入黑名单!", reply=False,
-                                   at=False)
-                    VERIFY_TIPS[str(msg.group.id)] = time.time()
-            except:
-                pass
             return
         try:
             if FOLLOW_MUTE[str(msg.sender.id)] > time.time():
