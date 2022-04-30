@@ -672,7 +672,8 @@ def on_message2(ws, message):
                 f"Hello! 已处理 {ALL_MESSAGE} 条消息\n"
                 f"已经运行了 {get_runtime()}\n"
                 f"平均每条消息耗时 {timePreMessage} 秒\n"
-                f"拦截了 {ALL_AD} 条广告 占全部处理消息的 {(ALL_AD / ALL_MESSAGE) * 100}%"
+                f"拦截了 {ALL_AD} 条广告 占全部处理消息的 {(ALL_AD / ALL_MESSAGE) * 100}%\n"
+                f"目前有 {threading.active_count()} 个线程正在运行"
             )
 
         if msg.text == "一语":
