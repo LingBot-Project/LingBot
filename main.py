@@ -56,7 +56,7 @@ MC_MOTD_COLORFUL = re.compile(r"§.")
 ALL_MESSAGE = 0
 MESSAGE_PRE_MINUTE = [0, 0]
 ALL_AD = 0
-BILI_BV_RE = re.compile(r"BV([a-zA-Z0-9]{10})")
+BILI_BV_RE = re.compile(r"BV([a-zA-Z\d]{10})")
 timePreMessage = 0
 recordTime = int(time.time())
 isChatBypassOpened = False
@@ -459,10 +459,10 @@ def on_message2(ws, message):
                 VERIFYING[msg.group.id]["code"] = str(random.randint(100000000, 999999999))
                 VERIFYING[msg.group.id]["time"] = time.time()
                 send_email(command_list[2], f"[LingBot Team] 群{msg.group.id} - 激活", f"""您好, {msg.sender.name}:
-感谢您使用 LingBot 机器人, 您正在尝试给群 {msg.group.id} 激活! 您的验证码是: {VERIFYING[msg.group.id]["code"]}
-请您在群内使用指令 !mail code {VERIFYING[msg.group.id]["code"]} 来激活
-此验证码 30 分钟内有效
-如果您没有发起任何群验证, 请忽略此邮件
+\t感谢您使用 LingBot 机器人, 您正在尝试给群 {msg.group.id} 激活! 您的验证码是: {VERIFYING[msg.group.id]["code"]}
+\t请您在群内使用指令 !mail code {VERIFYING[msg.group.id]["code"]} 来激活
+\t此验证码 30 分钟内有效
+\t如果您没不知道这是, 请忽略此邮件
 """)
                 msg.fast_reply("我们已经尝试发送一封电子邮件到您的邮箱 请按照邮件内容操作")
 
@@ -669,13 +669,10 @@ def on_message2(ws, message):
 
         if msg.text in ["!test", "凌状态"]:
             msg.fast_reply(
-                "Hello! 已处理 {} 条消息\n已经运行了 {}\n平均每条消息耗时 {} 秒\n拦截了 {} 条广告 占全部处理消息的 {}%".format(
-                    ALL_MESSAGE,
-                    get_runtime(),
-                    timePreMessage,
-                    ALL_AD,
-                    (ALL_AD / ALL_MESSAGE) * 100
-                )
+                f"Hello! 已处理 {ALL_MESSAGE} 条消息\n"
+                f"已经运行了 {get_runtime()}\n"
+                f"平均每条消息耗时 {timePreMessage} 秒\n"
+                f"拦截了 {ALL_AD} 条广告 占全部处理消息的 {(ALL_AD / ALL_MESSAGE) * 100}%"
             )
 
         if msg.text == "一语":
