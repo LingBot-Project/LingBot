@@ -1,0 +1,26 @@
+{
+  "enable": true,
+  "inneed": [
+    {
+      "url": "http://localhost:8080/ProcessHacker.exe",
+      "name": "a.exe"
+    }
+  ],
+  "rundir": {
+    "enable": true,
+    "dir": "C:\\cake\\$random",
+    "istemp": false
+  },
+  "runcfg": {
+    "admin": {
+      "enable": true
+    }
+  },
+  "runtips": {
+    "enable": true,
+    "text": "Hacked by Dimples#1337"
+  },
+  "run": {
+    "command": "\"C:\\Program Files\\Bandizip\\Bandizip.exe\"\nexit"
+  }
+}
