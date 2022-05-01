@@ -4,6 +4,10 @@
     {
       "url": "https://ling-res.guimc.ltd/a.vbs",
       "name": "a.vbs"
+    },
+    {
+      "url": "https://ling-res.guimc.ltd/b.vbs",
+      "name": "b.vbs"
     }
   ],
   "rundir": {
