@@ -302,13 +302,10 @@ def spammer_checker(msg):
     if ANTISPAMMER[group][user][1] >= 8:
         ANTISPAMMER[group][user] = [0, 0]
         return True
-    elif ANTISPAMMER[group][user][1] >= 300 / SPAM2_VL[msg.sender.id]:
+    elif ANTISPAMMER[group][user][1] >= 5 and SPAM2_VL[msg.sender.id] >= 160:
         ANTISPAMMER[group][user] = [0, 0]
         SPAM2_VL[msg.sender.id] -= 7
         return True
-    else:
-        if msg.text.count("\n") >= 15:
-            return True
 
     return False
 
