@@ -1491,8 +1491,8 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None):
         if target_qq is not None:
             prefix += "[CQ:at,qq={}]".format(target_qq)
 
-        # if message_id is not None:
-        #     prefix += "[CQ:reply,id={}]".format(message_id)
+        if message_id is not None:
+            prefix += "[CQ:reply,id={}]".format(message_id)
 
         # 构建数据
         data1 = {
