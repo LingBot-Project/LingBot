@@ -552,14 +552,17 @@ def on_message2(ws, message):
                           if j.group not in _tmp2:
                             _temp.append(j)
                             _tmp2.append(j.group)
-                        # 撤回
-                        for _ in SPAM2_MESSAGE_LIST[msg.sender.id]:
-                            _.recall()
-                            time.sleep(random.randint(250, 2000) / 1000)
-                        # 再分别禁言
+                        # 先分别禁言
                         for _ in _temp:
                             _.mute(604800)
                             time.sleep(random.randint(250, 1500) / 1000)
+                        
+                        # 再撤回
+                        while len(SPAM2_MESSAGE_LIST[msg.sender.id]) > 0:
+                            SPAM2_MESSAGE_LIST[msg.sender.id][0].recall()
+                            SPAM2_MESSAGE_LIST[msg.sender.id].pop(0)
+                            time.sleep(random.randint(250, 2000) / 1000)
+                        
                         msg.mute(43199 * 60)  # 43199 * 60 # :259200
                         SPAM2_MESSAGE_LIST[msg.sender.id].clear()
                         SPAM2_VL[msg.sender.id] -= 20
@@ -569,7 +572,7 @@ def on_message2(ws, message):
                     #     msg.mute(600)
                     # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
                     # return
-                    if len(SPAM2_MESSAGE_LIST[msg.sender.id]) >= 15:
+                    if len(SPAM2_MESSAGE_LIST[msg.sender.id]) >= 20:
                         SPAM2_MESSAGE_LIST[msg.sender.id].pop(0)
                 if SPAM2_MESSAGE_LIST[msg.sender.id] not in SPAM2_MESSAGE_LIST[msg.sender.id]:
                     SPAM2_MESSAGE_LIST[msg.sender.id].append(msg)
