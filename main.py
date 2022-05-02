@@ -533,7 +533,7 @@ def on_message2(ws, message):
                 SPAM2_VL[msg.sender.id] = 0
             _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
             if _simhash_dis >= 0.836:
-                SPAM2_VL[msg.sender.id] += 20 * (_simhash_dis - 0.5)  # :10
+                SPAM2_VL[msg.sender.id] += 10 * (_simhash_dis - 0.5) + (len(msg.text) * 0.2)   # :10
                 if _simhash_dis >= 0.99:
                     SPAM2_VL[msg.sender.id] += 10
 
@@ -937,7 +937,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 BLACK_LIST.remove(int(command_list[2]))
                 msg.fast_reply("操作成功")
 
-        if command_list[0] == "/mcping":
+        if command_list[0] in ["/mcping", "!mcping"]:
             server = MinecraftServer.lookup(command_list[1]).status()
             aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
                 re.sub(MC_MOTD_COLORFUL, "", server.description),
@@ -1094,10 +1094,14 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("你的权限不足!")
                 return
             if command_list[1] == "spam2":
-                msg.fast_reply(f'此人spam2 vl为: {SPAM2_VL[int(command_list[2])]}')
-                return
+                if len(command_list < 3):
+                    msg.fast_reply(f'spam2 vl {json.dumps(SPAM2_VL)}')
+                    return
+                else:
+                    msg.fast_reply(f'此人spam2 vl为 {SPAM2_VL[int(command_list[2])]}')
+                    return
             elif command_list[1] == "spam":
-                msg.fast_reply(f"此群成员spam vl为: {int(ANTISPAMMER[command_list[2]])}")
+                msg.fast_reply(f"此群成员spam vl为 {int(ANTISPAMMER[command_list[2]])}")
                 return
 
         if command_list[0] == "!namelocker":
