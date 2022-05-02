@@ -544,21 +544,23 @@ def on_message2(ws, message):
                     #         target_group=1019068934)
                     # msg.recall()
                     if SPAM2_VL[msg.sender.id] >= 100:
-                        msg.mute(43199 * 60)  # 43199 * 60 # :259200
                         msg.recall()
-                        # _temp = []
-                        # _tmp2 = []
-                        # for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
-                        #   if j.group not in _tmp2:
-                        #       _temp.appand(j)
-                        #       _tmp2.appand(j.group)
+                        # 消息的群组去重
+                        _temp = []
+                        _tmp2 = []
+                        for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
+                          if j.group not in _tmp2:
+                            _temp.appand(j)
+                            _tmp2.appand(j.group)
+                        # 撤回
                         for _ in SPAM2_MESSAGE_LIST[msg.sender.id]:
                             _.recall()
+                            time.sleep(random.randint(250, 2000) / 1000)
+                        # 再分别禁言
+                        for _ in _temp:
                             _.mute(604800)
-                            time.sleep(random.randint(0, 2000) / 1000)
-                        # for _ in _temp:
-                        #   _.mute(604800)
-                        #   sleep
+                            time.sleep(random.randint(250, 1500) / 1000)
+                        msg.mute(43199 * 60)  # 43199 * 60 # :259200
                         SPAM2_MESSAGE_LIST[msg.sender.id].clear()
                         SPAM2_VL[msg.sender.id] -= 15
                         return
@@ -575,7 +577,7 @@ def on_message2(ws, message):
             else:
                 SPAM2_MSG[msg.sender.id] = msg
                 if SPAM2_VL[msg.sender.id] > 0:
-                    SPAM2_VL[msg.sender.id] -= 2 * (0.7 - _simhash_dis)  # :2
+                    SPAM2_VL[msg.sender.id] -= 2.5 * (0.9 - _simhash_dis)  # :2
 
             reScan = re.findall(
                 ANTI_AD,
