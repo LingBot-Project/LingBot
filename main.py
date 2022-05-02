@@ -550,8 +550,8 @@ def on_message2(ws, message):
                         _tmp2 = []
                         for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
                           if j.group not in _tmp2:
-                            _temp.appand(j)
-                            _tmp2.appand(j.group)
+                            _temp.append(j)
+                            _tmp2.append(j.group)
                         # 撤回
                         for _ in SPAM2_MESSAGE_LIST[msg.sender.id]:
                             _.recall()
