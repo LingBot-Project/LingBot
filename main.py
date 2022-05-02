@@ -1094,7 +1094,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("你的权限不足!")
                 return
             if command_list[1] == "spam2":
-                if len(command_list < 3):
+                if len(command_list) < 3:
                     msg.fast_reply(f'spam2 vl {json.dumps(SPAM2_VL)}')
                     return
                 else:
