@@ -533,7 +533,7 @@ def on_message2(ws, message):
                 SPAM2_VL[msg.sender.id] = 0
             _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
             if _simhash_dis >= 0.836:
-                SPAM2_VL[msg.sender.id] += 10 * (_simhash_dis - 0.5) + (len(msg.text) * 0.2)   # :10
+                SPAM2_VL[msg.sender.id] += 10 * (_simhash_dis - 0.5) + (len(msg.text) * 0.05)  # :10
                 if _simhash_dis >= 0.99:
                     SPAM2_VL[msg.sender.id] += 10
 
@@ -572,10 +572,14 @@ def on_message2(ws, message):
                     #     msg.mute(600)
                     # msg.fast_reply("您貌似在刷屏/群发?", reply=False)
                     # return
+
                     if len(SPAM2_MESSAGE_LIST[msg.sender.id]) >= 20:
                         SPAM2_MESSAGE_LIST[msg.sender.id].pop(0)
-                if SPAM2_MESSAGE_LIST[msg.sender.id] not in SPAM2_MESSAGE_LIST[msg.sender.id]:
-                    SPAM2_MESSAGE_LIST[msg.sender.id].append(msg)
+                
+                for i in SPAM2_MESSAGE_LIST[msg.sender.id]:
+                    _sim = simhash_similarity(str(i.text).lower(), msg.text.lower())
+                    if _sim > 0.9:
+                        SPAM2_VL[msg.sender.id] += _sim
                 SPAM2_MESSAGE_LIST[msg.sender.id].append(msg)
                 SPAM2_MSG[msg.sender.id] = msg
             else:
