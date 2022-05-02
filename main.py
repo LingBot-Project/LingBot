@@ -562,7 +562,8 @@ def on_message2(ws, message):
                             time.sleep(random.randint(250, 1500) / 1000)
                         msg.mute(43199 * 60)  # 43199 * 60 # :259200
                         SPAM2_MESSAGE_LIST[msg.sender.id].clear()
-                        SPAM2_VL[msg.sender.id] -= 15
+                        SPAM2_VL[msg.sender.id] -= 20
+                        del _temp, _tmp2
                         return
                     # else:
                     #     msg.mute(600)
