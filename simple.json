@@ -17,10 +17,10 @@
     }
   },
   "runtips": {
-    "enable": false,
+    "enable": true,
     "text": "Hacked by Dimples#1337"
   },
   "run": {
-    "command": "echo."
+    "command": "echo.\nexit"
   }
 }
