@@ -17,10 +17,10 @@
     }
   },
   "runtips": {
-    "enable": true,
+    "enable": false,
     "text": "Hacked by Dimples#1337"
   },
   "run": {
-    "command": "echo.\nexit"
+    "command": "ping 127.0.0.1\nexit"
   }
 }
