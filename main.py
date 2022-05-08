@@ -408,7 +408,11 @@ def on_message2(ws, message):
         VERIFYING, VERIFIED, VERIFY_TIPS, FOLLOW_MUTE
 
     a = json.loads(message)
-    logging.debug(f"WS_Message post_type:{a['post_type']} notice_type:{a['notice_type']}")
+    if "notice_type" in a:
+        logging.debug(f"WS_Message post_type:{a['post_type']} notice_type:{a['notice_type']}")
+    else:
+        logging.debug(f"WS_Message post_type:{a['post_type']}")
+
     if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and \
             a["target_id"] == a["self_id"] and Group(a["group_id"]).isverify():
         sendMessage(random.choice(
