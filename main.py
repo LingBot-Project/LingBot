@@ -442,7 +442,7 @@ def on_message2(ws, message):
         if a["post_type"] == "notice" and a["notice_type"] == "group_ban":
             if a["sub_type"] == "ban":
                 sendMessage(
-                    f"[CQ:at,qq={a['user_id']}] 从 [CQ:at,qq={a['operator_id']}] 那获得了时长为 {get_lapsetime(a['duration'])} 的禁言",
+                    f"[CQ:at,qq={a['user_id']}]从 [CQ:at,qq={a['operator_id']}]那获得了时长为 {get_lapsetime(a['duration'])} 的禁言",
                     target_group=a["group_id"])
                 
                 if a['user_id'] == a['self_id']:
@@ -455,7 +455,7 @@ def on_message2(ws, message):
             
             if a["sub_type"] == "lift_ban":
                 sendMessage(
-                    f"[CQ:at,qq={a['user_id']}] 从 [CQ:at,qq={a['operator_id']}] 那获得了解除禁言",
+                    f"[CQ:at,qq={a['user_id']}]从 [CQ:at,qq={a['operator_id']}]那获得了解除禁言",
                     target_group=a["group_id"])
     except BaseException as e:
         logging.warning("\n".join(traceback.format_exception(e)))
