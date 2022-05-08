@@ -438,7 +438,7 @@ def on_message2(ws, message):
         if a["post_type"] == "notice" and a["notice_type"] == "group_ban":
             if a["sub_type"] == "ban":
                 sendMessage(
-                    f"[CQ:at,qq={a['user_id']}] 从 [CQ:at,qq={a['operator_id']}] 那获得了时长为 {get_lapsetime(a['duration'])} 的禁言",
+                    f"{a['user_id']} 被 {a['operator_id']} 禁言了 {get_lapsetime(a['duration'])}",
                     target_group=a["group_id"])
 
                 if a['user_id'] == a['self_id']:
@@ -448,7 +448,7 @@ def on_message2(ws, message):
                     post2http("/set_group_leave", data=data1)
             else:
                 sendMessage(
-                    f"[CQ:at,qq={a['user_id']}] 从 [CQ:at,qq={a['operator_id']}] 那获得了解除禁言",
+                    f"{a['user_id']} 被 {a['operator_id']} 解除禁言",
                     target_group=a["group_id"])
 
     msg = Message(message)
