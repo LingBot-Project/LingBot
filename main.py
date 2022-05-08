@@ -451,14 +451,14 @@ def on_message2(ws, message):
                     }
                     post2http("/set_group_leave", data=data1)
 
-                    sendMessage(f"机器人在群 {a['group_id']} 被禁言 已自动退出")
+                    sendMessage(f"机器人在群 {a['group_id']} 被禁言 已自动退出", target_group=1019068934)
             
             if a["sub_type"] == "lift_ban":
                 sendMessage(
                     f"[CQ:at,qq={a['user_id']}] 从 [CQ:at,qq={a['operator_id']}] 那获得了解除禁言",
                     target_group=a["group_id"])
     except BaseException as e:
-        logging.warning(traceback.format_exception(e))
+        logging.warning("\n".join(traceback.format_exception(e)))
 
     msg = Message(message)
 
