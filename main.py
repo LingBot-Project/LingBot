@@ -26,7 +26,7 @@ from utils import five_k_utils, tcping
 
 hypixel.setKeys(["bc67e230-01a3-45c6-8177-c9b256b0ef3a", "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"])
 hypixel.setCacheTime(10.0)
-logging.basicConfig(level=logging.INFO, format="[%(asctime)s][%(levelname)s] %(message)s", datefmt="%H:%M:%S %p")
+logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s] [%(levelname)s] %(message)s", datefmt="%H:%M:%S %p")
 
 
 def get_achievement_image(block, title, string1, string2=None):
@@ -408,7 +408,7 @@ def on_message2(ws, message):
         VERIFYING, VERIFIED, VERIFY_TIPS, FOLLOW_MUTE
 
     a = json.loads(message)
-    logging.debug(a)
+    logging.debug(f"WS_Message post_type:{a['post_type']} notice_type:{a['notice_type']}')
     if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and \
             a["target_id"] == a["self_id"] and Group(a["group_id"]).isverify():
         sendMessage(random.choice(
