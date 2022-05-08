@@ -39,7 +39,9 @@ def get_achievement_image(block, title, string1, string2=None):
 
 ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
     "i_m_stupid": get_achievement_image("sand", "STUPID", "I am stupid"),
-    "a_night_person": get_achievement_image("totem_of_undying", "A NIGHT PERSON", "People are in China, the time difference is in foreign countries", "Remember to go to bed early")
+    "a_night_person": get_achievement_image("totem_of_undying", "A NIGHT PERSON",
+                                            "People are in China, the time difference is in foreign countries",
+                                            "Remember to go to bed early")
 }}
 # https://minecraft-api.com/achivements/blocks/
 SERVER_ADDR = "127.0.0.1"
@@ -235,7 +237,7 @@ def read_config():
             FOLLOW_MUTE = json.loads(f.read())
     except:
         pass
-    
+
     try:
         with open("message_counter.json") as f:
             MESSAGE_COUNTER = json.loads(f.read())
@@ -272,7 +274,7 @@ def save_config():
             f.write(json.dumps(FOLLOW_MUTE))
     except:
         pass
-    
+
     try:
         with open("message_counter.json", "w") as f:
             f.write(json.dumps(MESSAGE_COUNTER))
@@ -325,9 +327,32 @@ def simhash_similarity(text1: str, text2: str) -> float:
     return similar
 
 
+def get_lapsetime(atime: int | float, btime: int | float = 0) -> str:
+    """
+    :param atime: 时间1
+    :param btime: 时间2
+    :return: 返回时间差
+    """
+    timex = round(atime - btime)
+    if timex < 60:
+        return f"{timex}秒"
+    elif timex < 3600:
+        mtime = (timex - (timex % 60)) / 60
+        return f"{mtime}分{(timex % 60)}秒"
+    elif timex < 86400:
+        htime = (timex - (timex % 3600)) / 3600
+        mtime = (timex - (timex % 60) - (timex - (timex % 3600))) / 60
+        return f"{htime}时{mtime}分{(timex % 60)}秒"
+    else:
+        dtime = (timex - (timex % 86400)) / 86400
+        htime = (timex - (timex % 3600) - (timex - (timex % 86400))) / 3600
+        mtime = (timex - (timex % 60) - (timex % 3600) - (timex - (timex % 86400))) / 60
+        return f"{dtime}天{htime}时{mtime}分{(timex % 60)}秒"
+
+
 def get_runtime():
     nowtime = int(time.time())
-    return "{}秒".format(int(nowtime - recordTime))
+    return get_lapsetime(nowtime, recordTime)
 
 
 def text2image(text):
@@ -392,6 +417,37 @@ def on_message2(ws, message):
         sendMessage(f"[CQ:poke,qq={a['user_id']}]", target_group=a["group_id"])
         return
 
+    if a["post_type"] == "request" and a["notice_type"] == "friend":
+        data1 = {
+            "flag": a["flag"],
+            "approve": True
+        }
+        post2http("/set_friend_add_request", data=data1)
+
+    if a["post_type"] == "request" and a["notice_type"] == "group" and a["sub_type"] == "invite":
+        data1 = {
+            "flag": a["flag"],
+            "type": "invite",
+            "approve": True
+        }
+        post2http("/set_group_add_request", data=data1)
+
+        if a["post_type"] == "notice" and a["notice_type"] == "group_ban":
+            if a["sub_type"] == "ban":
+                sendMessage(
+                    f"[CQ:at,qq={a['user_id']}] 从 [CQ:at,qq={a['operator_id']}] 那获得了时长为 {get_lapsetime(a['duration'])} 的禁言",
+                    target_group=a["group_id"])
+
+                if a['user_id'] == a['self_id']:
+                    data1 = {
+                        "group_id": a['group_id']
+                    }
+                    post2http("/set_group_leave", data=data1)
+            else:
+                sendMessage(
+                    f"[CQ:at,qq={a['user_id']}] 从 [CQ:at,qq={a['operator_id']}] 那获得了解除禁言",
+                    target_group=a["group_id"])
+
     msg = Message(message)
 
     try:
@@ -418,7 +474,8 @@ def on_message2(ws, message):
         logging.info("[{0}] {1}({2}) {3}".format(msg.group.id, msg.sender.name, msg.sender.id, msg.text))
 
         if msg.text in ["!help", "菜单"]:
-            msg.fast_reply(f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群: https://t.me/LingBotProject\n本群验证状态:{msg.group.verify_info()}")
+            msg.fast_reply(
+                f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群: https://t.me/LingBotProject\n本群验证状态:{msg.group.verify_info()}")
 
         if command_list[0] == "!mail":
             msg.group.id = str(msg.group.id)
@@ -483,7 +540,8 @@ def on_message2(ws, message):
                 if msg.group.id not in VERIFIED:
                     msg.fast_reply("本群并没有验证过!")
                 try:
-                    if command_list[2] + command_list[3] == f"{msg.group.id}{VERIFIED[msg.group.id]}" and command_list[4] == "我知道我在做什么!":
+                    if command_list[2] + command_list[3] == f"{msg.group.id}{VERIFIED[msg.group.id]}" and command_list[
+                        4] == "我知道我在做什么!":
                         del VERIFIED[msg.group.id]
                         msg.fast_reply("本群验证信息已经移除!")
                         return
@@ -527,7 +585,7 @@ def on_message2(ws, message):
         if msg.id != -1:
             if msg.sender.id not in SPAM2_MSG:
                 _temp = Message()
-                _temp.text = "¶¶¶¶"*10086
+                _temp.text = "¶¶¶¶" * 10086
                 SPAM2_MSG[msg.sender.id] = _temp  # msg.text
                 SPAM2_MESSAGE_LIST[msg.sender.id] = []
                 SPAM2_VL[msg.sender.id] = 0
@@ -549,20 +607,20 @@ def on_message2(ws, message):
                         _temp = []
                         _tmp2 = []
                         for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
-                          if j.group not in _tmp2:
-                            _temp.append(j)
-                            _tmp2.append(j.group)
+                            if j.group not in _tmp2:
+                                _temp.append(j)
+                                _tmp2.append(j.group)
                         # 先分别禁言
                         for _ in _temp:
                             _.mute(604800)
                             time.sleep(random.randint(250, 1500) / 1000)
-                        
+
                         # 再撤回
                         while len(SPAM2_MESSAGE_LIST[msg.sender.id]) > 0:
                             SPAM2_MESSAGE_LIST[msg.sender.id][0].recall()
                             SPAM2_MESSAGE_LIST[msg.sender.id].pop(0)
                             time.sleep(random.randint(250, 2000) / 1000)
-                        
+
                         msg.mute(43199 * 60)  # 43199 * 60 # :259200
                         SPAM2_MESSAGE_LIST[msg.sender.id].clear()
                         SPAM2_VL[msg.sender.id] -= 20
@@ -575,7 +633,7 @@ def on_message2(ws, message):
 
                     if len(SPAM2_MESSAGE_LIST[msg.sender.id]) >= 20:
                         SPAM2_MESSAGE_LIST[msg.sender.id].pop(0)
-                
+
                 for i in SPAM2_MESSAGE_LIST[msg.sender.id]:
                     _sim = simhash_similarity(str(i.text).lower(), msg.text.lower())
                     if _sim > 0.9:
@@ -626,8 +684,10 @@ def on_message2(ws, message):
 
             multiMsg = re.search(r'\[CQ:forward,id=(.*)]', msg.text)
             if multiMsg is not None:
-                a = requests.get(url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()[
-                    "data"]["messages"]
+                a = \
+                    requests.get(
+                        url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()[
+                        "data"]["messages"]
                 multiMsg_raw = ""
                 for i in a:
                     multiMsg_raw += i["content"]
@@ -1001,7 +1061,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                         if i not in IGNORE_GROUP:
                             nowmsg = ""
                             for i2 in list(msg1):
-                                nowmsg += i2+random.choice(["\u202D", "", "", "", ""])
+                                nowmsg += i2 + random.choice(["\u202D", "", "", "", ""])
                             sendMessage(_prefix + nowmsg, target_group=i)
                             time.sleep(random.randint(1500, 1900) / 1000)
                     msg.fast_reply("群发完成")
@@ -1637,12 +1697,13 @@ def on_close(_, a, b):
 
 
 def goodmor(target=None):
-    response = requests.request("POST", "https://v2.alapi.cn/api/zaobao", data="token=CPmfvyrbNdiUBIwI&format=image", headers={'Content-Type': "application/x-www-form-urlencoded"})
+    response = requests.request("POST", "https://v2.alapi.cn/api/zaobao", data="token=CPmfvyrbNdiUBIwI&format=image",
+                                headers={'Content-Type': "application/x-www-form-urlencoded"})
 
     msg1 = "早上好呀~ [CQ:image,file=base64://{}]".format(base64.b64encode(response.content).decode())
-        # requests.post(url="http://localhost:25666/url2base64", data={"url": "https://news.topurl.cn/"}).text.replace(
-        #     "\n", "")
-        
+    # requests.post(url="http://localhost:25666/url2base64", data={"url": "https://news.topurl.cn/"}).text.replace(
+    #     "\n", "")
+
     s = getGroups()
     if target:
         sendMessage(msg1, target_group=target)
