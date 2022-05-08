@@ -408,14 +408,13 @@ def on_message2(ws, message):
         VERIFYING, VERIFIED, VERIFY_TIPS, FOLLOW_MUTE
 
     a = json.loads(message)
-    logging.debug(f"WS_Message post_type:{a['post_type']} notice_type:{a['notice_type']}')
+    logging.debug(f"WS_Message post_type:{a['post_type']} notice_type:{a['notice_type']}")
     if a["post_type"] == "notice" and a["notice_type"] == "notify" and a["sub_type"] == "poke" and "group_id" in a and \
             a["target_id"] == a["self_id"] and Group(a["group_id"]).isverify():
         sendMessage(random.choice(
             ["不要戳我啦 =w=", "不要动我!", "唔...", "Hentai!", "再戳...会...会变奇怪的..", "啊啊啊不要再戳我辣!!!", "好痛! 呜~", "Nya~"]),
             target_group=a["group_id"], target_qq=a["user_id"])
         sendMessage(f"[CQ:poke,qq={a['user_id']}]", target_group=a["group_id"])
-        return
 
     if a["post_type"] == "request" and a["notice_type"] == "friend":
         data1 = {
