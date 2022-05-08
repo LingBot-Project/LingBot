@@ -430,31 +430,31 @@ def on_message2(ws, message):
         }
         post2http("/set_friend_add_request", data=data1)
 
-    try:
-        if a["post_type"] == "request" and a["notice_type"] == "group" and a["sub_type"] == "invite":
-            data1 = {
-                "flag": a["flag"],
-                "type": "invite",
-                "approve": True
-            }
-            post2http("/set_group_add_request", data=data1)
-            
-            if a["post_type"] == "notice" and a["notice_type"] == "group_ban":
-                if a["sub_type"] == "ban":
-                    sendMessage(
-                        f"{a['user_id']} 被 {a['operator_id']} 禁言了 {get_lapsetime(a['duration'])}",
-                        target_group=a["group_id"])
-                    
-                    if a['user_id'] == a['self_id']:
-                        data1 = {
-                            "group_id": a['group_id']
-                        }
-                        post2http("/set_group_leave", data=data1)
+    if a["post_type"] == "request" and a["notice_type"] == "group" and a["sub_type"] == "invite":
+        data1 = {
+            "flag": a["flag"],
+            "type": "invite",
+            "approve": True
+        }
+        post2http("/set_group_add_request", data=data1)
 
-                        sendMessage(f"机器人在群 {a['group_id']} 被禁言 已自动退出")
+    try:
+        if a["post_type"] == "notice" and a["notice_type"] == "group_ban":
+            if a["sub_type"] == "ban":
+                sendMessage(
+                    f"{a['user_id']} 被 {a['operator_id']} 禁言了 {get_lapsetime(a['duration'])}",
+                    target_group=a["group_id"])
                 
-                if a["sub_type"] == "lift_ban":
-                    sendMessage(f"{a['user_id']} 被 {a['operator_id']} 解除禁言", target_group=a["group_id"])
+                if a['user_id'] == a['self_id']:
+                    data1 = {
+                        "group_id": a['group_id']
+                    }
+                    post2http("/set_group_leave", data=data1)
+
+                    sendMessage(f"机器人在群 {a['group_id']} 被禁言 已自动退出")
+            
+            if a["sub_type"] == "lift_ban":
+                sendMessage(f"{a['user_id']} 被 {a['operator_id']} 解除禁言", target_group=a["group_id"])
     except BaseException as e:
         logging.warning(traceback.format_exception(e))
 
