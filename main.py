@@ -346,7 +346,7 @@ def get_lapsetime(atime: int | float, btime: int | float = 0) -> str:
     else:
         dtime = int((timex - (timex % 86400)) / 86400)
         htime = int((timex - (timex % 3600) - (timex - (timex % 86400))) / 3600)
-        mtime = int((timex - (timex % 60) - (timex % 3600) - (timex - (timex % 86400))) / 60)
+        mtime = int((timex - (timex % 60) - (timex % 3600) - (timex % 86400)) / 60)
         return f"{dtime}天{htime}时{mtime}分{(timex % 60)}秒"
 
 
