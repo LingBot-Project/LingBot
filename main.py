@@ -409,7 +409,10 @@ def on_message2(ws, message):
 
     a = json.loads(message)
     if "notice_type" in a:
-        logging.debug(f"WS_Message post_type:{a['post_type']} notice_type:{a['notice_type']}")
+        if "sub_type" in a:
+            logging.debug(f"WS_Message post_type:{a['post_type']} notice_type:{a['notice_type']} sub_type:{a['sub_type']}")
+        else:
+            logging.debug(f"WS_Message post_type:{a['post_type']} notice_type:{a['notice_type']}")
     else:
         logging.debug(f"WS_Message post_type:{a['post_type']}")
 
