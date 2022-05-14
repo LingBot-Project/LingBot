@@ -4,6 +4,11 @@
  * 机器人使用说明请移步 [Here](https://lingbot.guimc.ltd)
  * 本项目基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp) 开发
 
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLingBot-Project%2FLingBot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FLingBot-Project%2FLingBot?ref=badge_large)
+
+
 ## 中文
 ### 联系方式
 * LingBot官方群:[Telegram](https://t.me/LingBotProject) [QQ](https://jq.qq.com/?_wv=1027&k=YpmTkCJt)
@@ -39,7 +44,3 @@
 ### You must to
 * Open source all projects that use our code
 * The projects you use our code also need to use the AGPL open source license
-
-
-## License
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLingBot-Project%2FLingBot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FLingBot-Project%2FLingBot?ref=badge_large)
