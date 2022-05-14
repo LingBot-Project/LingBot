@@ -1,6 +1,5 @@
 # LingBot
 [![Pylint](https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml/badge.svg?event=push)](https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml)
-</br>[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLingBot-Project%2FLingBot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FLingBot-Project%2FLingBot?ref=badge_large)
  * 机器人使用说明请移步 [Here](https://lingbot.guimc.ltd)
  * 本项目基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp) 开发
 
