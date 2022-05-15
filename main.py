@@ -672,14 +672,16 @@ def on_message2(ws, message):
                 ALL_AD += 1
                 return
             
-            sc_id_ad = re.search(ANTI_AD, msg.sender.name.replace(" ", "").replace(".", "").replace("\n", "").lower())
-            if sc_id_ad is not None and not msg.sender.isadmin():
-                msg.mute(600)
-                msg.recall()
-                time.sleep(random.randint(500, 2000) / 1000)
-                msg.fast_reply("您的名称中似乎存在广告", reply=False)
-                ALL_AD += 1
-                return
+            # Bug: 名称有缓存
+            
+            # sc_id_ad = re.search(ANTI_AD, msg.sender.name.replace(" ", "").replace(".", "").replace("\n", "").lower())
+            # if sc_id_ad is not None and not msg.sender.isadmin():
+            #     msg.mute(600)
+            #     msg.recall()
+            #     time.sleep(random.randint(500, 2000) / 1000)
+            #     msg.fast_reply("您的名称中似乎存在广告", reply=False)
+            #     ALL_AD += 1
+            #     return
             
             scan_lv = msg_scanner.predict(msg.text_nocq)
             if scan_lv >= 0.8:
