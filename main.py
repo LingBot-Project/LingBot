@@ -620,9 +620,10 @@ def on_message2(ws, message):
                         _temp = []
                         _tmp2 = []
                         for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
-                            if str(j.group) not in _tmp2:
-                                _temp.append(j)
-                                _tmp2.append(str(j.group))
+                            if str(j.group) in _tmp2:
+                                continue;
+                            _temp.append(j)
+                            _tmp2.append(str(j.group))
                         # 先分别禁言
                         for _ in _temp:
                             _.mute(604800)
