@@ -1764,9 +1764,6 @@ def watchdog():
             rt = threading.enumerate()
             nr = [i for i in ["Scheduler", "WebSocket", "WatchDog", "MainThread"] if i not in [i.name for i in rt]]
             
-            if "MainThread" in nr:
-                raise KeyboardInterrupt()
-            
             if len(nr) != 0:
                 if (time.time() - lastLessThreadWarn) >= 10:
                     infoMsg(f"警告: 有部分关键进程没在运行!\n{nr}")
@@ -1777,11 +1774,14 @@ def watchdog():
                     infoMsg(f"警告: 运行线程过多! 当前运行线程数量:{len(rt)}")
                     lastMoreThreadWarn = time.time()
             
+            if "MainThread" in nr:
+                raise KeyboardInterrupt()
+            
             # Server Status Check
             cpu_usage = psutil.cpu_times_percent().user + psutil.cpu_times_percent().system
             memory_usage = psutil.virtual_memory().percent
             
-            if memory_usage >= 80 and time.time() - memoryWarn >= 10:
+            if memory_usage >= 87 and time.time() - memoryWarn >= 10:
                 infoMsg(f"警告: 运存占用过多! 当前占用:{memory_usage}%")
                 memoryWarn = time.time()
             
