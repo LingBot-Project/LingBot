@@ -301,10 +301,10 @@ def spammer_checker(msg):
     else:
         ANTISPAMMER[group][user][0] = time.time()
         ANTISPAMMER[group][user][1] = 1
-    if ANTISPAMMER[group][user][1] >= 8:
+    if ANTISPAMMER[group][user][1] >= 12:
         ANTISPAMMER[group][user] = [0, 0]
         return True
-    elif ANTISPAMMER[group][user][1] >= 5 and SPAM2_VL[msg.sender.id] >= 160:
+    elif ANTISPAMMER[group][user][1] >= 7 and SPAM2_VL[msg.sender.id] >= 160:
         ANTISPAMMER[group][user] = [0, 0]
         SPAM2_VL[msg.sender.id] -= 7
         return True
