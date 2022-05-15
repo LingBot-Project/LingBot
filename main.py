@@ -1784,7 +1784,7 @@ def watchdog():
                 memoryWarn = time.time()
                 
             if cpu_usage >= 80 and time.time() - cpuWarn >= 10:
-                infoMsg(f"警告: CPU占用过多! 当前占用:{cpu_usage}%")
+                infoMsg(f"警告: CPU占用过高! 当前占用:{cpu_usage}%")
                 cpuWarn = time.time()
         except KeyboardInterrupt:
             infoMsg("Watchdog Thread is stopping")
