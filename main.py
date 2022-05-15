@@ -1739,6 +1739,59 @@ def msg_counter_send(target=None):
         MESSAGE_COUNTER = {}
 
 
+def watchdog():
+    def infoMsg(text1):
+        logging.info("[WatchDog] "+text1)
+        try:
+            sendMessage("[WatchDog] "+text1, target_group=1019068934)
+        except:
+            pass
+    
+    infoMsg("Watchdog Thread is running")
+    lastLessThreadWarn = 0
+    lastMoreThreadWarn = 0
+    memoryWarn = 0
+    cpuWarn = 0
+    
+    # Start Watching
+    while 1:
+        try:
+            time.sleep(0.01)
+            
+            # Threads Check
+            rt = threading.enumerate()
+            nr = [i for i in ["Scheduler", "WebSocket", "WatchDog", "MainThread"] if i not in [i.name for i in rt]]
+            
+            if "MainThread" in nr:
+                raise KeyboardInterrupt()
+            
+            if len(nr) != 0:
+                if (time.time() - lastLessThreadWarn) >= 60:
+                    infoMsg(f"警告: 有部分关键进程没在运行!\n{nr}")
+                    lastLessThreadWarn = time.time()
+            
+            if len(rt) >= 50:
+                if (time.time() - lastMoreThreadWarn) >= 60:
+                    infoMsg(f"警告: 运行线程过多! 当前运行线程数量:{len(rt)}")
+                    lastMoreThreadWarn = time.time()
+            
+            # Server Status Check
+            cpu_usage = psutil.cpu_percent()
+            memory_usage = psutil.virtual_memory().percent
+            
+            if memory_usage >= 80 and time.time() - memoryWarn >= 60:
+                infoMsg(f"警告: 运存占用过多! 当前占用:{memory_usage}%")
+                memoryWarn = time.time()
+                
+            if cpu_usage >= 80 and time.time() - cpuWarn >= 60:
+                infoMsg(f"警告: CPU占用过多! 当前占用:{cpu_usage}%")
+                cpuWarn = time.time()
+        except KeyboardInterrupt:
+            infoMsg("Watchdog Thread is stopping")
+        except BaseException as e:
+            infoMsg(f"[WatchDog] 警告: WatchDog线程出现错误!!\n[CQ:image,file=base64://{text2image(traceback.format_exc())}]")
+
+
 def goodnig():
     msg1 = "很晚了!该睡了!"
     s = getGroups()
@@ -1768,10 +1821,16 @@ def main():
         t1.deamon = True
         logging.info("Starting... (3/5)")
         t1.start()
+        t1.name = "Scheduler"
         logging.info("Starting... (4/5)")
         t3.start()
+        t3.name = "WebSocket"
         logging.info("Starting... (5/5)")
-        logging.info("Bot Ready!")
+        logging.info("Started")
+        t4 = threading.Thread(target=watchdog)
+        t4.start()
+        t4.name = "WatchDog"
+        t4.join()
         while True:
             time.sleep(3600)
     except KeyboardInterrupt:

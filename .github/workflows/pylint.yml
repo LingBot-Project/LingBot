@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip setuptools
-        pip install pylint hypixel apscheduler requests websocket-client flashtext jieba mcstatus pillow psutil matplotlib simhash selenium
+        pip install pylint hypixel apscheduler requests websocket-client flashtext jieba mcstatus pillow psutil matplotlib simhash selenium psutil
     - name: Analysing the code with pylint
       run: |
         pylint --disable=C,W,R ./main.py
