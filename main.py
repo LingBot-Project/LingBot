@@ -1797,7 +1797,7 @@ def watchdog():
             infoMsg("Watchdog Thread is stopping")
             return
         except BaseException as e:
-            infoMsg(f"[WatchDog] 警告: WatchDog线程出现错误!!\n[CQ:image,file=base64://{text2image(traceback.format_exc())}]")
+            infoMsg(f"警告: WatchDog线程出现错误!!\n[CQ:image,file=base64://{text2image(traceback.format_exc())}]")
 
 
 def goodnig():
