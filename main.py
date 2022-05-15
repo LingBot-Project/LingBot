@@ -604,7 +604,7 @@ def on_message2(ws, message):
                 SPAM2_VL[msg.sender.id] = 0
             _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
             if _simhash_dis >= 0.836:
-                SPAM2_VL[msg.sender.id] += 10 * (_simhash_dis - 0.5) + (len(msg.text) * 0.05)  # :10
+                SPAM2_VL[msg.sender.id] += 12.5 * (_simhash_dis - 0.5) + (len(msg.text) * 0.05)  # :10
                 if _simhash_dis >= 0.99:
                     SPAM2_VL[msg.sender.id] += 10
                 
@@ -617,6 +617,7 @@ def on_message2(ws, message):
                     if SPAM2_VL[msg.sender.id] >= 100:
                         msg.recall()
                         # 消息的群组去重
+                        # FIXME : 去重无效
                         _temp = []
                         _tmp2 = []
                         for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
@@ -631,8 +632,7 @@ def on_message2(ws, message):
                         
                         # 再撤回
                         while len(SPAM2_MESSAGE_LIST[msg.sender.id]) > 0:
-                            SPAM2_MESSAGE_LIST[msg.sender.id][0].recall()
-                            SPAM2_MESSAGE_LIST[msg.sender.id].pop(0)
+                            SPAM2_MESSAGE_LIST[msg.sender.id].pop(0).recall()
                             time.sleep(random.randint(250, 2000) / 1000)
                         
                         msg.mute(43199 * 60)  # 43199 * 60 # :259200
