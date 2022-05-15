@@ -1776,7 +1776,7 @@ def watchdog():
                     lastMoreThreadWarn = time.time()
             
             # Server Status Check
-            cpu_usage = psutil.cpu_percent()
+            cpu_usage = psutil.cpu_times_percent().user + psutil.cpu_times_percent().system
             memory_usage = psutil.virtual_memory().percent
             
             if memory_usage >= 80 and time.time() - memoryWarn >= 10:
