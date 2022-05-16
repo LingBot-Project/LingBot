@@ -159,9 +159,11 @@ class Message:
     
     def mute(self, _time):
         self.group.mute(self.sender, _time)
+        return self
     
     def recall(self):
         recall(self.id)
+        return self
     
     def fast_reply(self, message, at=True, reply=True):
         temp1 = [None, None]
@@ -173,6 +175,7 @@ class Message:
             temp1[1] = self.id
         
         sendMessage(message, target_qq=temp1[0], target_group=self.group.id, message_id=temp1[1])
+        return self
 
 
 def crop_max_square(pil_img):
