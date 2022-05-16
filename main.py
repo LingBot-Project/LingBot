@@ -627,7 +627,7 @@ def on_message2(ws, message):
                             _temp.append(j)
                         # 先分别禁言
                         for _ in _temp:
-                            _.mute(604800)
+                            _.mute(86400)
                             time.sleep(random.randint(250, 1500) / 1000)
                         
                         # 再撤回
