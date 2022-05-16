@@ -327,7 +327,7 @@ def simhash_similarity(text1: str, text2: str) -> float:
     return similar
 
 
-def get_lapsetime(atime: int | float, btime: int | float = 0) -> str:
+def get_lapsetime(atime, btime = 0) -> str:
     """
     :param atime: 时间1
     :param btime: 时间2
@@ -617,14 +617,14 @@ def on_message2(ws, message):
                     if SPAM2_VL[msg.sender.id] >= 100:
                         msg.recall()
                         # 消息的群组去重
-                        # FIXME : 去重无效
+                        # FIXME : 去重无效 但我不知道为什么
                         _temp = []
                         _tmp2 = []
                         for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
                             if str(j.group) in _tmp2:
-                                continue;
-                            _temp.append(j)
+                                continue
                             _tmp2.append(str(j.group))
+                            _temp.append(j)
                         # 先分别禁言
                         for _ in _temp:
                             _.mute(604800)
@@ -636,9 +636,9 @@ def on_message2(ws, message):
                             time.sleep(random.randint(250, 2000) / 1000)
                         
                         msg.mute(43199 * 60)  # 43199 * 60 # :259200
-                        SPAM2_MESSAGE_LIST[msg.sender.id].clear()
                         SPAM2_VL[msg.sender.id] -= 20
                         del _temp, _tmp2
+                        SPAM2_MESSAGE_LIST[msg.sender.id].clear()
                         return
                     # else:
                     #     msg.mute(600)
