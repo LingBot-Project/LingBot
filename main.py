@@ -1784,7 +1784,7 @@ def watchdog():
                 cpuWarn = time.time()
 
             # Running Tips
-            if time.time() % 1800 == 0:
+            if time.time() % 1800 == 0.0:
                 infoMsg(f"当前机器人运行状态:\nCPU: {cpu_usage}%\nMemory: {memory_usage}%\nRunning Threads: {len(rt)}")
         except KeyboardInterrupt:
             infoMsg("Watchdog Thread is stopping")
