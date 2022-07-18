@@ -3,7 +3,7 @@ import jieba
 import numpy as np
 import requests
 
-word_url = 'http://raw.staticdn.net/Jie-Yuan/ChineseSensitiveVocabulary/master/chinese_sensitive_vocabulary/data/words.txt'
+word_url = 'http://localhost/words.txt'
 
 
 class SensitiveWordModel(object):
