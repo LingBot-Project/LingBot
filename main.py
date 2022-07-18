@@ -1365,6 +1365,12 @@ Coins: {coin_purse}
                 msg.fast_reply("请发送QQ号或'me'!!!")
             return
 
+        if command_list[0] == "!info":
+            if msg.sender.isadmin:
+                watchdoginfo()
+
+
+
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
             atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
             if atcq is not None:
@@ -1753,6 +1759,51 @@ def watchdog():
 
     # Start Watching
     while 1:
+        try:
+            time.sleep(0.01)
+
+            # Threads Check
+            rt = threading.enumerate()
+            nr = [i for i in ["Scheduler", "WebSocket", "WatchDog", "MainThread"] if i not in [i.name for i in rt]]
+
+            if len(nr) != 0:
+                if (time.time() - lastLessThreadWarn) >= 10:
+                    infoMsg(f"警告: 有部分关键进程没在运行!\n{nr}")
+                    lastLessThreadWarn = time.time()
+
+            if len(rt) >= 50:
+                if (time.time() - lastMoreThreadWarn) >= 10:
+                    infoMsg(f"警告: 运行线程过多! 当前运行线程数量:{len(rt)}")
+                    lastMoreThreadWarn = time.time()
+
+            if "MainThread" in nr:
+                raise KeyboardInterrupt()
+
+            # Server Status Check
+            cpu_usage = psutil.cpu_times_percent().user + psutil.cpu_times_percent().system
+            memory_usage = psutil.virtual_memory().percent
+
+            if memory_usage >= 87 and time.time() - memoryWarn >= 10:
+                infoMsg(f"警告: 运存占用过多! 当前占用:{memory_usage}%")
+                memoryWarn = time.time()
+
+            if cpu_usage >= 80 and time.time() - cpuWarn >= 10:
+                infoMsg(f"警告: CPU占用过高! 当前占用:{cpu_usage}%")
+                cpuWarn = time.time()
+
+            # Running Tips
+            # if time.time() % 1800 == 0.0:
+            if time.time() - last_tip >= 1800:
+                infoMsg(f"当前机器人运行状态:\nCPU: {cpu_usage}%\nMemory: {memory_usage}%\nRunning Threads: {len(rt)}")
+                last_tip = time.time()
+        except KeyboardInterrupt:
+            infoMsg("Watchdog Thread is stopping")
+            return
+        except BaseException as e:
+            infoMsg(f"警告: WatchDog线程出现错误!!\n[CQ:image,file=base64://{text2image(traceback.format_exc())}]")
+
+
+def watchdoginfo():
         try:
             time.sleep(0.01)
 
