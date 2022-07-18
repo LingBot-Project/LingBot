@@ -290,8 +290,6 @@ def stop():
     save_config()
     psutil.Process().kill()
 
-def git():
-    return(os.popen('cd /home/creeper/lingbot/LingBotNew|git pull'))
 
 def spammer_checker(msg):
     global ANTISPAMMER
@@ -571,7 +569,7 @@ def on_message2(ws, message):
 
         if command_list[0] == "!git pull":
             if msg.sender.isadmin():
-                msg.fast_reply(git())
+                msg.fast_reply(os.popen('cd /home/creeper/lingbot/LingBotNew|git pull'))
 
         if command_list[0] == "!runas":
             if msg.sender.isadmin():
