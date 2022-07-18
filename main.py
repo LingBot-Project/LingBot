@@ -1857,6 +1857,13 @@ def goodnig():
 
 
 def main():
+    def infoMsg(text1):
+        logging.info("[WatchDog] " + text1)
+        try:
+            sendMessage("[WatchDog] " + text1, target_group=1019068934)
+        except:
+            pass
+
     try:
         logging.info("Starting... (0/5)")
         read_config()
