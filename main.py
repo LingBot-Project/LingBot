@@ -1365,7 +1365,7 @@ Coins: {coin_purse}
                 msg.fast_reply("请发送QQ号或'me'!!!")
             return
 
-        if msg.text == "!info":
+        if command_list[1] == "!info":
             if msg.sender.isadmin:
                 watchdoginfo()
 
