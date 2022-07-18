@@ -567,7 +567,7 @@ def on_message2(ws, message):
         #                 except:
         #                     msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
 
-        if command_list[0] == "!git pull":
+        if msg.text == "!pull":
             if msg.sender.isadmin():
                 msg.fast_reply(os.popen('cd /home/creeper/lingbot/LingBotNew|git pull'))
 
