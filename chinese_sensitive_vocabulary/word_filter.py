@@ -20,13 +20,13 @@ class SensitiveWordModel(object):
         _ = set(jieba.cut(text))
         return min(sum(sorted([self.nospam.get(w, 0) for w in _][:3], reverse=True)) / 3, 1)
 
-    def __get_words_info(self):
-        for s in requests.get(self.word_url, verify=False).text.strip().split('\n'):
-            _ = s.split('\t')
-            if _[1] == '0':
-                self.nospam[_[0]] = np.asarray(_[2:], float).sum()
-            else:
-                self.spam.add(_[0])
+#    def __get_words_info(self):
+#        for s in requests.get(self.word_url, verify=False).text.strip().split('\n'):
+#            _ = s.split('\t')
+#            if _[1] == '0':
+#                self.nospam[_[0]] = np.asarray(_[2:], float).sum()
+#            else:
+#                self.spam.add(_[0])
 
 
 if __name__ == '__main__':
