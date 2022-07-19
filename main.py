@@ -1823,37 +1823,6 @@ def watchdog():
         except BaseException as e:
             infoMsg(f"警告: WatchDog线程出现错误!!\n[CQ:image,file=base64://{text2image(traceback.format_exc())}]")
 
-def git():
-    api = 'https://api.github.com/repos/ABCDCreeper-Team/LingBotNew'
-    web_page = "https://github.com/ABCDCreeper-Team/LingBotNew"
-    def infoMsg(text1):
-        logging.info("[GitDetection] " + text1)
-        try:
-            sendMessage("[GitDetection] " + text1, target_group=1019068934)
-        except:
-            pass
-    while True:
-
-        all_info = requests.get(api).json()
-        cur_update = all_info['updated_at']
-
-        # 假设第一次运行之前，不知道上次的更新时间
-        # 如果last_update 为 none，会执行下面的语句，把当前的时间给到上次时间
-        if not last_update:
-            last_update = cur_update
-        # 第一次两个时间相等，不会执行
-        # 假设10分钟后，cur_update更新，那么就会自动打开网页
-        # 接下来，把 当前时间 赋值 给上次时间
-        # 开始新一轮的监测
-        if last_update < cur_update:
-            last_update = cur_update
-            infoMsg("Git Repository Changed")
-
-        # 间隔 10分钟，再次while循环，观察新的更新时间是否发生变化
-        time.sleep(1)
-
-
-
 def goodnig():
     msg1 = "很晚了!该睡了!"
     s = getGroups()
@@ -1895,9 +1864,6 @@ def main():
         logging.info("Started")
         t4.name = "WatchDog"
         t4.join()
-        t5 = threading.Thread(target=git)
-        t5.start()
-        t5.join()
         while True:
             time.sleep(3600)
     except KeyboardInterrupt:
