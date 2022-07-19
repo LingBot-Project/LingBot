@@ -1367,9 +1367,8 @@ Coins: {coin_purse}
             return
 
             if msg.sender.isadmin:
-                s = str(round(int(psutil.boot_time) / 1000, 2))
-                m = str(round(round(ms / 1000, 2) / 60, 2))
-                h = str(round(round(round(ms / 1000, 2) / 60, 2) / 60, 2))
+
+                h = str(round(int(psutil.boot_time)/1000/60/60, 2))
                 rt = threading.enumerate()
                 cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
                 memory_usage = str(psutil.virtual_memory().percent)
