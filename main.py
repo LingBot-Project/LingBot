@@ -1807,7 +1807,7 @@ def watchdoginfo():
     def infoMsg(text1):
         logging.info("[WatchDog] " + text1)
         try:
-            sendMessage("[WatchDog] " + text1, target_group=1019068934)
+            msg.fast_reply("[WatchDog] " + text1)
         except:
             pass
 
