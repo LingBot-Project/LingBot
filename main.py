@@ -1367,9 +1367,10 @@ Coins: {coin_purse}
             return
 
         if command_list[0] == "!info":
+            mem=psutil.virtual_memory
             if msg.sender.isadmin:
-                memt=psutil.TOTAL_PHYMEM/1024/1024
-                memf=psutil.avail_phymem()/1024/1024
+                memt=mem.total/1024/1024
+                memf=mem.free/1024/1024
                 memu=memt-memf
                 systemt=datetime.datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")  
                 rt = threading.enumerate()
