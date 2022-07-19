@@ -1881,16 +1881,18 @@ def main():
         sched.add_job(msg_counter_send, 'cron', hour=0)
         t1 = threading.Thread(target=sched.start)
         t1.deamon = True
-        logging.info("Starting... (3/5)")
+        logging.info("Starting... (3/6)")
         t1.start()
         t1.name = "Scheduler"
-        logging.info("Starting... (4/5)")
+        logging.info("Starting... (4/6)")
         t3.start()
         t3.name = "WebSocket"
-        logging.info("Starting... (5/5)")
-        logging.info("Started")
+        logging.info("Starting... (5/6)")
+        
         t4 = threading.Thread(target=watchdog)
         t4.start()
+        logging.info("Starting... (6/6)")
+        logging.info("Started")
         t4.name = "WatchDog"
         t4.join()
         t5 = threading.Thread(target=git)
