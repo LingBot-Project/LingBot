@@ -1367,8 +1367,12 @@ Coins: {coin_purse}
 
         if command_list[0] == "!info":
             if msg.sender.isadmin:
-                watchdoginfo()
-
+                rt = threading.enumerate()
+                cpu_usage = psutil.cpu_times_percent().user + psutil.cpu_times_percent().system
+                memory_usage = psutil.virtual_memory().percent
+                msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+len(rt))
+            else:
+                msg.fast_reply("您还没有权限哦")
 
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
@@ -1803,23 +1807,7 @@ def watchdog():
             infoMsg(f"警告: WatchDog线程出现错误!!\n[CQ:image,file=base64://{text2image(traceback.format_exc())}]")
 
 
-def watchdoginfo():
-    msg = Message()
-    def infoMsg(text1):
-        logging.info("[WatchDog] " + text1)
-        try:
-            msg.fast_reply("[WatchDog] " + text1)
-        except:
-            pass
 
-    try:
-
-        cpu_usage = psutil.cpu_times_percent().user + psutil.cpu_times_percent().system
-        memory_usage = psutil.virtual_memory().percent
-        infoMsg("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+len(rt))
-
-    except:
-        pass
 
 
 def goodnig():
