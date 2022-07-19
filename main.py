@@ -1804,7 +1804,7 @@ def watchdog():
 
 
 def watchdoginfo():
-    msg = Message(message)
+    msg = Message()
     def infoMsg(text1):
         logging.info("[WatchDog] " + text1)
         try:
