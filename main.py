@@ -1365,7 +1365,8 @@ Coins: {coin_purse}
             else:
                 msg.fast_reply("请发送QQ号或'me'!!!")
             return
-
+            
+        if(command_list[0] == "!info")
             if msg.sender.isadmin:
 
                 rt = threading.enumerate()
