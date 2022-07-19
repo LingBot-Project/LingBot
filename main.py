@@ -1368,11 +1368,14 @@ Coins: {coin_purse}
 
         if command_list[0] == "!info":
             if msg.sender.isadmin:
+                s = round(ms / 1000, 2)
+                m = round(round(ms / 1000, 2) / 60, 2)
+                h = round(round(round(ms / 1000, 2) / 60, 2) / 60, 2)
                 systemt=datetime.datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")  
                 rt = threading.enumerate()
                 cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
                 memory_usage = str(psutil.virtual_memory().percent)
-                msg.fast_reply("CPU核心数量:"+str(psutil.cpu_count())+"核"+"\n内存占用率:"+memory_usage+"\n系统正常运行时间:"+str(int(psutil.boot_time())/60/60/60)+"\n运行中的Watchdog线程:"+str(len(rt)))
+                msg.fast_reply("CPU核心数量:"+str(psutil.cpu_count())+"核"+"\n内存占用率:"+memory_usage+"\n系统正常运行时间:"+str(round(round(round(int(psutil.boot_time()) / 1000, 2) / 60, 2) / 60, 2))+"\n运行中的Watchdog线程:"+str(len(rt)))
                 #msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
             else:
                 msg.fast_reply("您还没有权限哦")
