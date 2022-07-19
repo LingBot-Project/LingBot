@@ -1844,13 +1844,13 @@ def watchdoginfo():
             # Running Tips
             # if time.time() % 1800 == 0.0:
         if time.time() - last_tip >= 1800:
-            infoMsg(f"当前机器人运行状态:\nCPU: {cpu_usage}%\nMemory: {memory_usage}%\nRunning Threads: {len(rt)}")
+            infoMsg("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+len(rt))
             last_tip = time.time()
     except KeyboardInterrupt:
         infoMsg("Watchdog Thread is stopping")
         return
     except BaseException as e:
-        infoMsg(f"警告: WatchDog线程出现错误!!\n[CQ:image,file=base64://{text2image(traceback.format_exc())}]")
+        infoMsg("警告: WatchDog线程出现错误!")
 
 
 def goodnig():
