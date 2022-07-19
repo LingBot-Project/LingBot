@@ -1367,7 +1367,7 @@ Coins: {coin_purse}
 
         if command_list[0] == "!info":
             if msg.sender.isadmin:
-                rt = str(threading.enumerate())
+                rt = threading.enumerate()
                 cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
                 memory_usage = str(psutil.virtual_memory().percent)
                 msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
