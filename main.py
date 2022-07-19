@@ -1372,7 +1372,7 @@ Coins: {coin_purse}
                 rt = threading.enumerate()
                 cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
                 memory_usage = str(psutil.virtual_memory().percent)
-                msg.fast_reply("CPU核心数量:"+str(psutil.cpu_count())+"核"+"\n内存占用率:"+memory_usage+"\n系统正常运行时间:"+str(h))+"小时\n运行中的Watchdog线程:"+str(len(rt))
+                msg.fast_reply("CPU核心数量:"+str(psutil.cpu_count())+"核"+"\n内存占用率:"+memory_usage+"\n系统正常运行时间:"+h+"小时\n运行中的Watchdog线程:"+str(len(rt)))
                 #msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
             else:
                 msg.fast_reply("您还没有权限哦")
