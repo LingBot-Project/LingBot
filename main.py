@@ -10,6 +10,7 @@ import re
 import threading
 import time
 import traceback
+import datetime
 from io import BytesIO
 
 import hypixel
@@ -1367,10 +1368,15 @@ Coins: {coin_purse}
 
         if command_list[0] == "!info":
             if msg.sender.isadmin:
+                memt=psutil.TOTAL_PHYMEM/1024/1024
+                memf=psutil.avail_phymem()/1024/1024
+                memu=memt-memf
+                systemt=datetime.datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")  
                 rt = threading.enumerate()
                 cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
                 memory_usage = str(psutil.virtual_memory().percent)
-                msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
+                msg.fast_reply("CPU信息:"+psutil.cpu_count()+"\n内存信息:"+memu+"/"+ment+"\n系统正常运行时间:"+systemt+"\n运行中的Watchdog线程:"+str(len(rt)))
+                #msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
             else:
                 msg.fast_reply("您还没有权限哦")
 
