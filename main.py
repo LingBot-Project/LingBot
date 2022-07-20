@@ -1017,7 +1017,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 BLACK_LIST.remove(int(command_list[2]))
                 msg.fast_reply("操作成功")
 
-        if command_list[0] in ["/mcping", "!mcping"]:
+        if command_list[0] =="!mcping":
             try:
                 server = MinecraftServer.lookup(command_list[1]).status()
                 aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
@@ -1033,8 +1033,8 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 if server.favicon is not None:
                     aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,", "base64://") + "]"
                 msg.fast_reply(aaa)
-                catch:
-                    msg.fast_reply("无法获取信息")
+            catch:
+                msg.fast_reply("无法获取信息")
                 
         if command_list[0] == "!hypban":
             msg.fast_reply("本功能已经停止使用了")
