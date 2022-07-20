@@ -10,6 +10,7 @@ import re
 import threading
 import time
 import traceback
+import datetime
 from io import BytesIO
 
 import hypixel
@@ -566,6 +567,7 @@ def on_message2(ws, message):
         #                         return
         #                 except:
         #                     msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
+
 
         if command_list[0] == "!runas":
             if msg.sender.isadmin():
@@ -1364,6 +1366,32 @@ Coins: {coin_purse}
                 msg.fast_reply("请发送QQ号或'me'!!!")
             return
 
+        if command_list[0]=="!git":
+            # 1.Github项目及API接口数据
+            api = 'https://api.github.com/repos/ABCDCreeper-Team/LingBotNew'
+            web_page = "https://github.com/ABCDCreeper-Team/LingBotNew"
+
+            # 2.发送请求，获取数据
+            all_info = requests.get(api).json()
+
+            # 3.解析想要的数据，并打印
+            cur_update = all_info['updated_at']
+            msg.fast_reply(cur_update)
+
+
+
+        if(command_list[0] == "!info"):
+            if msg.sender.isadmin:
+
+                rt = threading.enumerate()
+                cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
+                memory_usage = str(psutil.virtual_memory().percent)
+                msg.fast_reply("CPU核心数量:"+str(psutil.cpu_count())+"核\n"+"CPU占用率:"+cpu_usage+"%\n内存占用率:"+memory_usage+"%\n运行中的Watchdog线程:"+str(len(rt)))
+                #msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
+            else:
+                msg.fast_reply("您还没有权限哦")
+
+
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
             atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
             if atcq is not None:
@@ -1795,7 +1823,6 @@ def watchdog():
         except BaseException as e:
             infoMsg(f"警告: WatchDog线程出现错误!!\n[CQ:image,file=base64://{text2image(traceback.format_exc())}]")
 
-
 def goodnig():
     msg1 = "很晚了!该睡了!"
     s = getGroups()
@@ -1823,16 +1850,18 @@ def main():
         sched.add_job(msg_counter_send, 'cron', hour=0)
         t1 = threading.Thread(target=sched.start)
         t1.deamon = True
-        logging.info("Starting... (3/5)")
+        logging.info("Starting... (3/6)")
         t1.start()
         t1.name = "Scheduler"
-        logging.info("Starting... (4/5)")
+        logging.info("Starting... (4/6)")
         t3.start()
         t3.name = "WebSocket"
-        logging.info("Starting... (5/5)")
-        logging.info("Started")
+        logging.info("Starting... (5/6)")
+        
         t4 = threading.Thread(target=watchdog)
         t4.start()
+        logging.info("Starting... (6/6)")
+        logging.info("Started")
         t4.name = "WatchDog"
         t4.join()
         while True:
