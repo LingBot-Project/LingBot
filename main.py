@@ -959,18 +959,20 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             if len(command_list) == 1:
                 msg.fast_reply("语法错误 使用方法为: !tcping IP[:端口(默认为80)]\n如: !tcping api.github.com:80")
             else:
-                msg.fast_reply("正在进行TCPing")
-                _host = ""
-                _port = "80"
-                if command_list[1].find(":") != -1:
-                    _host, _port = command_list[1].split(":")
-                else:
-                    _host = command_list[1]
+                try:
+                    msg.fast_reply("正在进行TCPing")
+                    _host = ""
+                    _port = "80"
+                    if command_list[1].find(":") != -1:
+                        _host, _port = command_list[1].split(":")
+                    else:
+                        _host = command_list[1]
 
-                _ping = tcping.Ping(_host, int(_port), 1.0)
-                _ping.ping(5)
-                msg.fast_reply("[CQ:image,file=base64://{}]".format(text2image(_ping.result.raw.replace(", ", "\n"))))
-
+                    _ping = tcping.Ping(_host, int(_port), 1.0)
+                    _ping.ping(5)
+                    msg.fast_reply("[CQ:image,file=base64://{}]".format(text2image(_ping.result.raw.replace(", ", "\n"))))
+                except:
+                    msg.fast_reply("无法获取信息")
         if command_list[0] == "!admin":
             if command_list[1] == "list":
                 msg.fast_reply(", ".join('%s' % _id for _id in ADMIN_LIST))
