@@ -587,7 +587,7 @@ def on_message2(ws, message):
                 }
                 on_message2(ws, json.dumps(data1))
 
-        if msg.text in ["!restart", "!quit"] and msg.sender.isadmin():
+        if msg.text in ["!restart", "!quit","!reload"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
             print(requests.get("http://" + HTTPURL + "/set_restart").text)
             stop()
