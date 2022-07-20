@@ -1033,7 +1033,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 if server.favicon is not None:
                     aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,", "base64://") + "]"
                 msg.fast_reply(aaa)
-            catch:
+            except:
                 msg.fast_reply("无法获取信息")
                 
         if command_list[0] == "!hypban":
