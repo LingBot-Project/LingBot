@@ -1018,21 +1018,24 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("操作成功")
 
         if command_list[0] in ["/mcping", "!mcping"]:
-            server = MinecraftServer.lookup(command_list[1]).status()
-            aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
-                re.sub(MC_MOTD_COLORFUL, "", server.description),
-                server.players.online,
-                server.players.max,
-                server.latency,
-                re.sub(MC_MOTD_COLORFUL, "", server.version.name),
-                server.version.protocol
-            )
-            aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
-            aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
-            if server.favicon is not None:
-                aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,", "base64://") + "]"
-            msg.fast_reply(aaa)
-
+            try:
+                server = MinecraftServer.lookup(command_list[1]).status()
+                aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
+                    re.sub(MC_MOTD_COLORFUL, "", server.description),
+                    server.players.online,
+                    server.players.max,
+                    server.latency,
+                    re.sub(MC_MOTD_COLORFUL, "", server.version.name),
+                    server.version.protocol
+                )
+                aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
+                aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
+                if server.favicon is not None:
+                    aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,", "base64://") + "]"
+                msg.fast_reply(aaa)
+                catch:
+                    msg.fast_reply("无法获取信息")
+                
         if command_list[0] == "!hypban":
             msg.fast_reply("本功能已经停止使用了")
             return
