@@ -1396,6 +1396,24 @@ Coins: {coin_purse}
             else:
                 msg.fast_reply("您还没有权限哦")
 
+        if command_list[0] == "!kick":
+            if msg.sender.isadmin():
+                atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
+                if atcq is not None:
+                    command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(
+                        " ")
+                if command_list[1] == "this":
+                    command_list[1] = msg.group.id
+                else:
+                    command_list[1] = int(command_list[1])
+                command_list[2] = int(command_list[2].replace("@", ""))
+            kickdata1 = {
+                "group_id": int(command_list[1]),
+                "user_id": int(command_list[2]),
+                }
+            post2http(url="/set_group_kick", data=kickdata1)
+
+
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
             atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
