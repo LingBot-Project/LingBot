@@ -159,7 +159,7 @@ class FriendEvent:
             else:
                 raise Exception()
 
-    def verify(flag,approve=True):
+    def verify(self,flag,approve=True):
         friend_add_data = {
             "flag": str(flag),
             "approve": bool(approve)
@@ -187,7 +187,7 @@ class GroupEvent:
                 self.success = True
             else:
                 raise Exception()
-    def verify(flag,type="invite",approve=True):
+    def verify(slef,flag,type="invite",approve=True):
         group_add_data = {
             "flag": str(flag),
             "sub_type": str(type),
