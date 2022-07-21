@@ -1412,7 +1412,7 @@ Coins: {coin_purse}
                 "user_id": int(command_list[2]),
                 }
             post2http(url="/set_group_kick", data=kickdata1)
-
+            msg.fast_reply("已尝试在"+str(command_list[1])+"移除"+str(command_list[2]))
 
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
