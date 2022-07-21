@@ -81,6 +81,8 @@ VERIFYING = {}
 VERIFY_TIPS = {}
 msg_scanner = chinese_sensitive_vocabulary.word_filter.SensitiveWordModel(
     chinese_sensitive_vocabulary.word_filter.word_url)
+WAIT_GROUP_INVITE=[]
+WAIT_FRIEND_INVITE=[]
 
 # URL_LIST = r'http(s)://[(.*).net|.com|.xyz|.me|.top]'
 ANTI_AD = r"送福利|定制水影|加群.*[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群.*[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙.*[0-9]{5,10}|君羊.*[0-9]{5,10}|q(\:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*|vape"
@@ -137,64 +139,6 @@ class User:
     def remove4admin(self):
         if self.id != 1584784496:
             ADMIN_LIST.remove(self.id)
-
-class FriendEvent:
-    def __init__(self,json2msg=None):
-        self.time = 0
-        self.selfid = 0
-        self.userid = 0
-        self.comment = "None"
-        self.verifyflag = "None"
-        self.JSON = json2msg
-        if json2msg is not None:
-            a = json.loads(json2msg)
-            ad = a
-            if ad["post_type"] == "request" and ad["request_type"] == "friend":
-                self.time = int(ad["time"])
-                self.selfid = int(ad["self_id"])
-                self.userid = int(ad["user_id"])
-                self.comment = str(ad["comment"])
-                self.verifyflag = str(ad["flag"])
-                self.success = True
-            else:
-                raise Exception()
-
-    def verify(self,flag,approve=True):
-        friend_add_data = {
-            "flag": str(flag),
-            "approve": bool(approve)
-            }
-        post2http(url="/set_friend_add_request", data=friend_add_data)
-
-class GroupEvent:
-    def __init__(self,json2msg=None):
-        self.time = 0
-        self.selfid = 0
-        self.userid = 0
-        self.comment = "None"
-        self.verifyflag = "None"
-        self.JSON = json2msg
-        if json2msg is not None:
-            a = json.loads(json2msg)
-            ad = a
-            if ad["post_type"] == "request" and ad["request_type"] == "group" and str(ad["sub_type"]) == "invite":
-                self.time = int(ad["time"])
-                self.selfid = int(ad["self_id"])
-                self.groupid = int(ad["group_id"])
-                self.userid = int(ad["user_id"])
-                self.comment = str(ad["comment"])
-                self.verifyflag = str(ad["flag"])
-                self.success = True
-            else:
-                raise Exception()
-    def verify(slef,flag,type="invite",approve=True):
-        group_add_data = {
-            "flag": str(flag),
-            "sub_type": str(type),
-            "approve": bool(approve)
-        }
-        post2http(url="/set_friend_add_request", data=group_add_data)
-
 
 class Message:
     def __init__(self, json2msg=None):
@@ -487,6 +431,8 @@ def on_message2(ws, message):
         sendMessage(f"[CQ:poke,qq={a['user_id']}]", target_group=a["group_id"])
 
     if a["post_type"] == "request" and a["notice_type"] == "friend":
+        sendMessage("[Friend Requst]\nID:"+str(a["user_id"])+"\nComment:"+str(a["comment"]+"\n如需通过输入!invi friend agree "+str(a["flag"])),target_group=1019068934)
+        WAIT_FRIEND_INVITE.append(str(a["user_id"]))
         data1 = {
             "flag": a["flag"],
             "approve": True
@@ -627,6 +573,54 @@ def on_message2(ws, message):
         #                 except:
         #                     msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
 
+        if command_list[0] == "!invitations" or command_list[0] == "!invi":
+            if msg.sender.isadmin():
+                if command_list[1] == "group":
+                    if command_list[2] == "agree":
+                        try:
+                            data1 = {
+                                "flag": command_list[3],
+                                "type": "invite",
+                                "approve": True
+                            }
+                            post2http("/set_group_add_request", data=data1)
+                        except:
+                            msg.fast_reply("无flag")
+                    if command_list[2] == "refuse":
+                        try:
+                            data1 = {
+                                "flag": command_list[3],
+                                "type": "invite",
+                                "approve": False
+                            }
+                        except:
+                            msg.fast_reply("无flag")
+                    if command_list[2] == "list":
+                        msg.fast_reply(str(WAIT_GROUP_INVITE))
+                if command_list[1] == "friend":
+                    try:
+                        if command_list[2] == "agree":
+                            data1 = {
+                                "flag": command_list[3],
+                                "approve": True
+                            }
+                        post2http("/set_friend_add_request", data=data1)
+                    except:
+                        msg.fast_reply("无flag")
+                    if command_list[2] == "refuse":
+                        try:
+                            if command_list[2] == "agree":
+                                data1 = {
+                                    "flag": command_list[3],
+                                    "approve": False
+                                }
+                            post2http("/set_friend_add_request", data=data1)
+                        except:
+                            msg.fast_reply("无flag")
+                    if command_list[2] == "list":
+                        msg.fast_reply(str(WAIT_FRIEND_INVITE))
+            else:
+                msg.fast_reply("您还没有权限做这件事哦")
 
         if command_list[0] == "!runas":
             if msg.sender.isadmin():
@@ -1918,7 +1912,7 @@ def main():
         logging.info("Starting... (0/5)")
         read_config()
         logging.info("Starting... (1/5)")
-        ws = websocket.WebSocketApp("ws://" + WSURL + "/all?verifyKey=uThZyFeQwJbD&qq=3026726134",
+        ws = websocket.WebSocketApp("ws://" + WSURL + "/all?qq=1643406018",
                                     on_message=on_message,
                                     on_error=on_error,
                                     on_close=on_close,
