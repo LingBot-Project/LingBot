@@ -12,6 +12,7 @@ import time
 import traceback
 import datetime
 from io import BytesIO
+from xmlrpc.client import Boolean
 
 import hypixel
 import psutil
@@ -136,6 +137,63 @@ class User:
     def remove4admin(self):
         if self.id != 1584784496:
             ADMIN_LIST.remove(self.id)
+
+class FriendEvent:
+    def __init__(self,json2msg=None):
+        self.time = 0
+        self.selfid = 0
+        self.userid = 0
+        self.comment = "None"
+        self.verifyflag = "None"
+        self.JSON = json2msg
+        if json2msg is not None:
+            a = json.loads(json2msg)
+            ad = a
+            if ad["post_type"] == "request" and ad["request_type"] == "friend":
+                self.time = int(ad["time"])
+                self.selfid = int(ad["self_id"])
+                self.userid = int(ad["user_id"])
+                self.comment = str(ad["comment"])
+                self.verifyflag = str(ad["flag"])
+                self.success = True
+            else:
+                raise Exception()
+
+    def verify(flag,approve=True):
+        friend_add_data = {
+            "flag": str(flag),
+            "approve": bool(approve)
+            }
+        post2http(url="/set_friend_add_request", data=friend_add_data)
+
+class GroupEvent:
+    def __init__(self,json2msg=None):
+        self.time = 0
+        self.selfid = 0
+        self.userid = 0
+        self.comment = "None"
+        self.verifyflag = "None"
+        self.JSON = json2msg
+        if json2msg is not None:
+            a = json.loads(json2msg)
+            ad = a
+            if ad["post_type"] == "request" and ad["request_type"] == "group" and str(ad["sub_type"]) == "invite":
+                self.time = int(ad["time"])
+                self.selfid = int(ad["self_id"])
+                self.groupid = int(ad["group_id"])
+                self.userid = int(ad["user_id"])
+                self.comment = str(ad["comment"])
+                self.verifyflag = str(ad["flag"])
+                self.success = True
+            else:
+                raise Exception()
+    def verify(flag,type="invite",approve=True):
+        group_add_data = {
+            "flag": str(flag),
+            "sub_type": str(type),
+            "approve": bool(approve)
+        }
+        post2http(url="/set_friend_add_request", data=group_add_data)
 
 
 class Message:
@@ -466,6 +524,7 @@ def on_message2(ws, message):
         logging.warning("\n".join(traceback.format_exception(e)))
 
     msg = Message(message)
+    
 
     try:
         # 处理消息内容
