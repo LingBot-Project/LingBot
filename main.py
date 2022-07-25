@@ -25,7 +25,7 @@ from simhash import Simhash
 
 import chinese_sensitive_vocabulary.word_filter
 from utils import five_k_utils, tcping
-# Import
+
 
 hypixel.setKeys(["bc67e230-01a3-45c6-8177-c9b256b0ef3a", "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"])
 hypixel.setCacheTime(10.0)
@@ -1445,7 +1445,7 @@ Coins: {coin_purse}
             try:
                 if str(lastinfo) == str(cur_update):
                     msg.fast_reply("无新Commit")
-                elif str(lastinfo) != str(cur_update):
+                else:
                     msg.fast_reply("有新Commit,time:"+cur_update)
             except:
                 msg.fast_reply("出现错误，请尝试重新执行")
