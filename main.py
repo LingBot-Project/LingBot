@@ -1056,6 +1056,10 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("你的权限不足!")
                 return
             if command_list[1] == "add":
+                atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
+                if atcq is not None:
+                    command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(
+                        " ")
                 command_list[2] = int(command_list[2].replace("@", ""))
                 if int(command_list[2]) in BLACK_LIST:
                     msg.fast_reply("黑名单内已经有这个人了")
@@ -1067,6 +1071,10 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 BLACK_LIST.append(int(command_list[2]))
                 msg.fast_reply("操作成功")
             elif command_list[1] == "remove":
+                atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
+                if atcq is not None:
+                    command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).split(
+                        " ")
                 command_list[2] = int(command_list[2].replace("@", ""))
                 if int(command_list[2]) not in BLACK_LIST:
                     msg.fast_reply("黑名单内没有这个人")
