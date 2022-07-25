@@ -616,7 +616,7 @@ def on_message2(ws, message):
                                     "flag": command_list[3],
                                     "approve": False
                                 }
-                            post2http("/set_friend_add_request", data=data1)
+                                post2http("/set_friend_add_request", data=data1)
                             except:
                                 msg.fast_reply("无flag")
                     if command_list[2] == "list":
