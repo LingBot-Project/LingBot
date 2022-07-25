@@ -1438,15 +1438,23 @@ Coins: {coin_purse}
 
         if command_list[0]=="!git":
             # 1.Github项目及API接口数据
-            api = 'https://api.github.com/repos/ABCDCreeper-Team/LingBotNew'
-            web_page = "https://github.com/ABCDCreeper-Team/LingBotNew"
+            api = 'https://api.github.com/repos/LingBot-Project/LingBot'
+            web_page = "https://github.com/LingBot-Project/LingBot"
 
             # 2.发送请求，获取数据
             all_info = requests.get(api).json()
 
             # 3.解析想要的数据，并打印
             cur_update = all_info['updated_at']
-            msg.fast_reply(cur_update)
+            
+            try:
+                if lastinfo == cur_update:
+                    msg.fast_reply("无新Commit")
+                elif lastinfo != cur_update:
+                    msg.fast_reply("有新Commit,time:"+cur_update)
+            except:
+                msg.fast_reply("出现错误，请尝试重新执行")
+            lastinfo=cur_update
 
 
 
