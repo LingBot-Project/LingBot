@@ -32,6 +32,7 @@ hypixel.setCacheTime(10.0)
 logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s] [%(levelname)s] %(message)s", datefmt="%H:%M:%S %p")
 
 
+
 def get_achievement_image(block, title, string1, string2=None):
     title = title.replace(" ", "..")
     string1 = string1.replace(" ", "..")
@@ -82,6 +83,7 @@ VERIFYING = {}
 VERIFY_TIPS = {}
 msg_scanner = chinese_sensitive_vocabulary.word_filter.SensitiveWordModel(
     chinese_sensitive_vocabulary.word_filter.word_url)
+lastinfo=""
 
 # URL_LIST = r'http(s)://[(.*).net|.com|.xyz|.me|.top]'
 ANTI_AD = r"送福利|定制水影|加群.*[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群.*[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙.*[0-9]{5,10}|君羊.*[0-9]{5,10}|q(\:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*|vape"
@@ -1441,13 +1443,13 @@ Coins: {coin_purse}
             cur_update = all_info['updated_at']
             
             try:
-                if lastinfo == cur_update:
+                if str(lastinfo) == str(cur_update):
                     msg.fast_reply("无新Commit")
-                elif lastinfo != cur_update:
+                elif str(lastinfo) != str(cur_update):
                     msg.fast_reply("有新Commit,time:"+cur_update)
             except:
                 msg.fast_reply("出现错误，请尝试重新执行")
-            lastinfo=cur_update
+            lastinfo=str(cur_update)
 
 
 
