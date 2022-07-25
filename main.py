@@ -81,8 +81,6 @@ VERIFYING = {}
 VERIFY_TIPS = {}
 msg_scanner = chinese_sensitive_vocabulary.word_filter.SensitiveWordModel(
     chinese_sensitive_vocabulary.word_filter.word_url)
-WAIT_GROUP_INVITE=[]
-WAIT_FRIEND_INVITE=[]
 
 # URL_LIST = r'http(s)://[(.*).net|.com|.xyz|.me|.top]'
 ANTI_AD = r"送福利|定制水影|加群.*[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群.*[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙.*[0-9]{5,10}|君羊.*[0-9]{5,10}|q(\:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*|vape"
@@ -432,7 +430,6 @@ def on_message2(ws, message):
 
     if a["post_type"] == "request" and a["request_type"] == "friend":
         sendMessage("[Friend Requst]\nID:"+str(a["user_id"])+"\nComment:"+str(a["comment"]+"\n如需通过输入!invi friend agree "+str(a["flag"])),target_group=1019068934)
-        WAIT_FRIEND_INVITE.append(str(a["user_id"]))
 #        data1 = {
 #            "flag": a["flag"],
 #            "approve": True
@@ -441,7 +438,6 @@ def on_message2(ws, message):
 
     if a["post_type"] == "request" and a["request_type"] == "group" and a["sub_type"] == "invite":
         sendMessage("[Group Requst]\nID:"+str(a["user_id"])+"\nComment:"+str(a["comment"]+"\n如需通过输入!invi group agree "+str(a["flag"])),target_group=1019068934)
-        WAIT_FRIEND_INVITE.append(str(a["user_id"]))
 #        data1 = {
 #            "flag": a["flag"],
 #            "type": "invite",
@@ -597,8 +593,6 @@ def on_message2(ws, message):
                             }
                         except:
                             msg.fast_reply("无flag")
-                    if command_list[2] == "list":
-                        msg.fast_reply(str(WAIT_GROUP_INVITE))
                 if command_list[1] == "friend":
                     if command_list[2] == "agree":
                         try:
@@ -619,8 +613,6 @@ def on_message2(ws, message):
                                 post2http("/set_friend_add_request", data=data1)
                             except:
                                 msg.fast_reply("无flag")
-                    if command_list[2] == "list":
-                        msg.fast_reply(str(WAIT_FRIEND_INVITE))
             else:
                 msg.fast_reply("您还没有权限做这件事哦")
 
