@@ -430,7 +430,7 @@ def on_message2(ws, message):
             target_group=a["group_id"], target_qq=a["user_id"])
         sendMessage(f"[CQ:poke,qq={a['user_id']}]", target_group=a["group_id"])
 
-    if a["post_type"] == "request" and a["notice_type"] == "friend":
+    if a["post_type"] == "request" and a["request_type"] == "friend":
         sendMessage("[Friend Requst]\nID:"+str(a["user_id"])+"\nComment:"+str(a["comment"]+"\n如需通过输入!invi friend agree "+str(a["flag"])),target_group=1019068934)
         WAIT_FRIEND_INVITE.append(str(a["user_id"]))
         data1 = {
@@ -439,7 +439,7 @@ def on_message2(ws, message):
         }
         post2http("/set_friend_add_request", data=data1)
 
-    if a["post_type"] == "request" and a["notice_type"] == "group" and a["sub_type"] == "invite":
+    if a["post_type"] == "request" and a["request_type"] == "group" and a["sub_type"] == "invite":
         data1 = {
             "flag": a["flag"],
             "type": "invite",
