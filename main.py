@@ -13,7 +13,7 @@ import traceback
 import datetime
 from io import BytesIO
 from xmlrpc.client import Boolean
-
+#test
 import hypixel
 import psutil
 import requests
@@ -1442,13 +1442,10 @@ Coins: {coin_purse}
             # 3.解析想要的数据，并打印
             cur_update = all_info['updated_at']
             
-            try:
-                if str(lastinfo) == str(cur_update):
-                    msg.fast_reply("无新Commit")
-                else:
+            if str(lastinfo) == str(cur_update):
+                msg.fast_reply("无新Commit")
+            else:
                     msg.fast_reply("有新Commit,time:"+cur_update)
-            except:
-                msg.fast_reply("出现错误，请尝试重新执行")
             lastinfo=str(cur_update)
 
 
