@@ -433,19 +433,21 @@ def on_message2(ws, message):
     if a["post_type"] == "request" and a["request_type"] == "friend":
         sendMessage("[Friend Requst]\nID:"+str(a["user_id"])+"\nComment:"+str(a["comment"]+"\n如需通过输入!invi friend agree "+str(a["flag"])),target_group=1019068934)
         WAIT_FRIEND_INVITE.append(str(a["user_id"]))
-        data1 = {
-            "flag": a["flag"],
-            "approve": True
-        }
-        post2http("/set_friend_add_request", data=data1)
+#        data1 = {
+#            "flag": a["flag"],
+#            "approve": True
+#        }
+#        post2http("/set_friend_add_request", data=data1)
 
     if a["post_type"] == "request" and a["request_type"] == "group" and a["sub_type"] == "invite":
-        data1 = {
-            "flag": a["flag"],
-            "type": "invite",
-            "approve": True
-        }
-        post2http("/set_group_add_request", data=data1)
+        sendMessage("[Group Requst]\nID:"+str(a["user_id"])+"\nComment:"+str(a["comment"]+"\n如需通过输入!invi group agree "+str(a["flag"])),target_group=1019068934)
+        WAIT_FRIEND_INVITE.append(str(a["user_id"]))
+#        data1 = {
+#            "flag": a["flag"],
+#            "type": "invite",
+#            "approve": True
+#        }
+#        post2http("/set_group_add_request", data=data1)
 
     try:
         if a["post_type"] == "notice" and a["notice_type"] == "group_ban":
@@ -598,25 +600,25 @@ def on_message2(ws, message):
                     if command_list[2] == "list":
                         msg.fast_reply(str(WAIT_GROUP_INVITE))
                 if command_list[1] == "friend":
-                    try:
-                        if command_list[2] == "agree":
+                    if command_list[2] == "agree":
+                        try:
                             data1 = {
                                 "flag": command_list[3],
                                 "approve": True
                             }
-                        post2http("/set_friend_add_request", data=data1)
-                    except:
-                        msg.fast_reply("无flag")
+                            post2http("/set_friend_add_request", data=data1)
+                        except:
+                            msg.fast_reply("无flag")
                     if command_list[2] == "refuse":
-                        try:
-                            if command_list[2] == "agree":
+                        if command_list[2] == "agree":
+                            try:
                                 data1 = {
                                     "flag": command_list[3],
                                     "approve": False
                                 }
                             post2http("/set_friend_add_request", data=data1)
-                        except:
-                            msg.fast_reply("无flag")
+                            except:
+                                msg.fast_reply("无flag")
                     if command_list[2] == "list":
                         msg.fast_reply(str(WAIT_FRIEND_INVITE))
             else:
