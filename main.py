@@ -579,7 +579,7 @@ def on_message2(ws, message):
         if command_list[0] == "!leave"
            try:
                data1 = {
-                   "group_id": int(command_list[1]
+                   "group_id": int(command_list[1])
                }
                post2http("/set_group_leave", data=data1)
                msg.fast_reply("已尝试在"+command_list[1]+"退出")
