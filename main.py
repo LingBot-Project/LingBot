@@ -576,7 +576,7 @@ def on_message2(ws, message):
         #                 except:
         #                     msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
 
-        if command_list[0] == "!leave"
+        if command_list[0] == "!leave":
            try:
                data1 = {
                    "group_id": int(command_list[1])
