@@ -406,6 +406,7 @@ def acg_img():
     except Exception as e:
         return text2image("获取图片失败\n" + traceback.format_exc())
 
+    
 
 def on_message2(ws, message):
     global HYPBAN_COOKIE, isChatBypassOpened, \
@@ -456,13 +457,13 @@ def on_message2(ws, message):
                     f"[CQ:at,qq={a['user_id']}]从 [CQ:at,qq={a['operator_id']}]那获得了时长为 {get_lapsetime(a['duration'])} 的禁言",
                     target_group=a["group_id"])
 
-                if a['user_id'] == a['self_id']:
-                    data1 = {
-                        "group_id": a['group_id']
-                    }
-                    post2http("/set_group_leave", data=data1)
-
-                    sendMessage(f"机器人在群 {a['group_id']} 被禁言 已自动退出", target_group=1019068934)
+#                if a['user_id'] == a['self_id']:
+ #                   data1 = {
+  #                      "group_id": a['group_id']
+   #                 }
+    #                post2http("/set_group_leave", data=data1)
+#
+ #                   sendMessage(f"机器人在群 {a['group_id']} 被禁言 已自动退出", target_group=1019068934)
 
             if a["sub_type"] == "lift_ban":
                 sendMessage(
@@ -575,6 +576,16 @@ def on_message2(ws, message):
         #                 except:
         #                     msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
 
+        if command_list[0] == "!leave"
+           try:
+               data1 = {
+                   "group_id": int(command_list[1]
+               }
+               post2http("/set_group_leave", data=data1)
+               msg.fast_reply("已尝试在"+command_list[1]+"退出")
+           except:
+               msg.fast_reply("Error")
+        
         if command_list[0] == "!invitations" or command_list[0] == "!invi":
             if msg.sender.isadmin():
                 if command_list[1] == "group":
@@ -1836,7 +1847,6 @@ def goodmor(target=None):
         for i in s:
             sendMessage(msg1, target_group=i)
             time.sleep(random.randint(1500, 2000) / 1000)
-
 
 def msg_counter_send(target=None):
     global MESSAGE_COUNTER
