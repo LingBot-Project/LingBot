@@ -1,4 +1,4 @@
-import main
+import main as _instance
 
 
 class Event:
@@ -18,7 +18,7 @@ class CancelableEvent(Event):
 
 
 class GroupMessageEvent(CancelableEvent):
-    def __init__(self, message: main.Message):
+    def __init__(self, message: _instance.Message):
         super().__init__()
         self._message = message
 
