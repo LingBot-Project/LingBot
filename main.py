@@ -24,6 +24,8 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 
 import chinese_sensitive_vocabulary.word_filter
+from events.Events import *
+from module.ModulesManager import ModuleManager
 from utils import five_k_utils, tcping
 
 
@@ -83,7 +85,7 @@ VERIFY_TIPS = {}
 last_info = ""
 msg_scanner = chinese_sensitive_vocabulary.word_filter.SensitiveWordModel(
     chinese_sensitive_vocabulary.word_filter.word_url)
-
+moduleManager: ModuleManager = ModuleManager()
 
 # URL_LIST = r'http(s)://[(.*).net|.com|.xyz|.me|.top]'
 ANTI_AD = r"送福利|定制水影|加群.*[0-9]{5,10}|.*内部|\n元|破甲|天花板|工具箱|绕更新|开端|不封号|外部|.* toolbox|替换au|绕过(盒子)vape检测|内部|防封|封号|waibu|外部|.*公益|晋商|禁商|盒子更新后|小号机|群.*[0-9]{5,10}|\d{2,4}红利项目|躺赚|咨询(\+)|捡钱(模式)|(个人)创业|带价私聊|出.*号|裙.*[0-9]{5,10}|君羊.*[0-9]{5,10}|q(\:)[0-9]{5,10}|免费(获取)|.*launcher|3xl?top|.*小卖铺|cpd(d)|暴打|对刀|不服|稳定奔放|qq[0-9]{5,10}|定制.*|小卖铺|老婆不在家(刺激)|代购.*|vape"
@@ -408,7 +410,7 @@ def acg_img():
     
 
 def on_message2(ws, message):
-    global HYPBAN_COOKIE, isChatBypassOpened, \
+    global moduleManager, HYPBAN_COOKIE, isChatBypassOpened, \
         CACHE_MESSAGE, timePreMessage, \
         MESSAGE_PRE_MINUTE, ALL_MESSAGE, \
         ALL_AD, FEEDBACKS, \
@@ -472,7 +474,6 @@ def on_message2(ws, message):
         logging.warning("\n".join(traceback.format_exception(e)))
 
     msg = Message(message)
-    
 
     try:
         # 处理消息内容
@@ -492,6 +493,10 @@ def on_message2(ws, message):
         else:
             MESSAGE_PRE_MINUTE[1] += 1
         ALL_MESSAGE += 1
+
+        # Call Event
+        if moduleManager.process_event(GroupMessageEvent(msg)):
+            msg.recall()
 
         command_list = msg.text.split(" ")
 

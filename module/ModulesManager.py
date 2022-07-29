@@ -1,13 +1,16 @@
 from events.Events import *
 from module.modules.IModule import IModule
-from modules import *
+from module.modules import HelloNew, TestHello
 from typing import List
 
 
-# TODO
 class ModuleManager:
     def __init__(self):
         self._modules: List[IModule] = []
+        self.register_modules(
+            HelloNew.HelloNew(),
+            TestHello.TestHello()
+        )
         pass
 
     def register_modules(self, *modules: IModule):
