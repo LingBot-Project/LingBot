@@ -8,13 +8,13 @@ class Event:
 class CancelableEvent(Event):
     def __init__(self):
         super().__init__()
-        self._canceled: bool = False
+        self.canceled: bool = False
 
     def is_canceled(self) -> bool:
-        return self._canceled
+        return self.canceled
 
     def cancel_event(self):
-        self._canceled = True
+        self.canceled = True
 
 
 class GroupMessageEvent(CancelableEvent):

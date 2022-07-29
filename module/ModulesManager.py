@@ -1,3 +1,4 @@
+from events.Events import *
 from module.modules.IModule import IModule
 from modules import *
 
@@ -17,6 +18,10 @@ class ModuleManager:
         self._modules.append(module)
         pass
 
-    def process_event(self, event):
+    def process_event(self, event: Event) -> bool:
         for module in self._modules:
             module.process(event)
+
+        if isinstance(event, CancelableEvent):
+            return event.is_canceled()
+        return False
