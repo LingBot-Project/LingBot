@@ -1,6 +1,4 @@
-import main as _instance
-
-
+#import main as _instance
 class Event:
     def __init__(self): ...
 
