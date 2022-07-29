@@ -838,9 +838,7 @@ def on_message2(ws, message):
             # 图片文件: r2gac549.bmp
             atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
             if atcq is not None:
-                command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).replace("me",
-                                                                                                                   str(msg.sender.id)).split(
-                    " ")
+                command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).replace("me", str(msg.sender.id)).split(" ")
             tx_image = requests.get(url=f"http://qlogo4.store.qq.com/qzone/{command_list[1]}/{command_list[1]}/100")
             ima = Image.open(BytesIO(tx_image.content))
             ima = ima.resize((136, 136), Image.ANTIALIAS)
