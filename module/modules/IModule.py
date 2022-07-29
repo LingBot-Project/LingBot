@@ -1,0 +1,3 @@
+class IModule:
+    @staticmethod
+    def process(self, event) -> None: ...

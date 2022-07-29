@@ -13,7 +13,7 @@ import traceback
 import datetime
 from io import BytesIO
 from xmlrpc.client import Boolean
-#test
+# test
 import hypixel
 import psutil
 import requests
@@ -30,7 +30,6 @@ from utils import five_k_utils, tcping
 hypixel.setKeys(["bc67e230-01a3-45c6-8177-c9b256b0ef3a", "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"])
 hypixel.setCacheTime(10.0)
 logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s] [%(levelname)s] %(message)s", datefmt="%H:%M:%S %p")
-
 
 
 def get_achievement_image(block, title, string1, string2=None):
@@ -414,7 +413,7 @@ def on_message2(ws, message):
         MESSAGE_PRE_MINUTE, ALL_MESSAGE, \
         ALL_AD, FEEDBACKS, \
         spam2_vl_reset_cool_down, SCREENSHOT_CD, \
-        VERIFYING, VERIFIED, VERIFY_TIPS, FOLLOW_MUTE
+        VERIFYING, VERIFIED, VERIFY_TIPS, FOLLOW_MUTE, last_info
 
     a = json.loads(message)
     if "notice_type" in a:
@@ -1458,7 +1457,7 @@ Coins: {coin_purse}
                 msg.fast_reply("无新Commit")
             else:
                     msg.fast_reply("有新Commit,time:"+cur_update)
-            last_info=str(cur_update)
+            last_info = str(cur_update)
 
 
 
