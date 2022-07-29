@@ -24,7 +24,7 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 
 import chinese_sensitive_vocabulary.word_filter
-from events.Events import *
+from events.Events import Event, GroupMessageEvent
 from module.ModulesManager import ModuleManager
 from utils import five_k_utils, tcping
 

@@ -18,7 +18,8 @@ class CancelableEvent(Event):
 
 
 class GroupMessageEvent(CancelableEvent):
-    def __init__(self, message: _instance.Message):
+    # def __init__(self, message: _instance.Message):
+    def __init__(self, message):
         super().__init__()
         self._message = message
 
