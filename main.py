@@ -687,13 +687,12 @@ def on_message2(ws, message):
                     if SPAM2_VL[msg.sender.id] >= 100:
                         msg.recall()
                         # 消息的群组去重
-                        # FIXME : 去重无效 但我不知道为什么
                         _temp = []
                         _tmp2 = []
                         for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
-                            if str(j.group) in _tmp2:
+                            if str(j.group.id) in _tmp2:
                                 continue
-                            _tmp2.append(str(j.group))
+                            _tmp2.append(str(j.group.id))
                             _temp.append(j)
                         # 先分别禁言
                         for _ in _temp:
