@@ -1370,7 +1370,13 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     onlineMode = "Offline"
             except:
                 pass
-
+            if last_login == "1970-01-01 00:00:00":
+                last_login = "被Hypixel隐藏"
+            if lastLogout == "1970-01-01 00:00:00":
+                lastLogout = "被Hypixel隐藏"
+                onlineMode = ""
+            if first_login == "1970-01-01 00:00:00"
+                first_login == "被Hypixel隐藏"
             pmsg = """注: 当前为测试版本 不代表最终体验
 ---查询结果---
 玩家名称: [{rank}]{name}
