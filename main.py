@@ -1393,10 +1393,7 @@ Karma(人品值): {karma}
                 first_login=datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 onlineMode=onlineMode,
                 lastLogout=datetime.datetime.utcfromtimestamp(lastLogout / 1000).strftime("%Y-%m-%d %H:%M:%S"))
-            try:
-                pmsg.replace('1970-01-01 00:00:00',"被Hypixel隐藏")
-            except:
-                pass
+                
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
 
@@ -1430,6 +1427,7 @@ Coins: {coin_purse}
                               death_count=sbprofile["death_count"])
             except:
                 logging.error(traceback.format_exc())
+            pmsg.replace('1970-01-01 00:00:00',"被Hypixel隐藏")
             msg.fast_reply(pmsg)
 
         if msg.sender.id in INTRODUCE['waiting']:
