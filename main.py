@@ -22,7 +22,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from apscheduler.schedulers.blocking import BlockingScheduler
 from mcstatus import MinecraftServer
 from simhash import Simhash
-
+import math
 import chinese_sensitive_vocabulary.word_filter
 from events.Events import Event, GroupMessageEvent
 from module.ModulesManager import ModuleManager
@@ -254,6 +254,13 @@ def read_config():
         pass
     sendMessage("restart successful", target_group=1019068934)
 
+def is_prime(n):
+    if n == 1:
+        return False
+    for i in range(2, int(math.sqrt(n))+1):
+        if n % i == 0:
+            return False
+    return True
 
 def save_config():
     global ADMIN_LIST, BLACK_LIST, FEEDBACKS, FOLLOW_MUTE
@@ -949,6 +956,8 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 with open(imageuid + "_cache.png", "rb") as f:
                     msg.fast_reply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
 
+                    
+        
         if msg.text == "一英":
             msg.fast_reply(requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
                            requests.get("http://open.iciba.com/dsapi/").json()["note"])
@@ -986,7 +995,12 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             logging.debug(temp_msg)
             msg.fast_reply("[CQ:image,file=base64://{}]".format(text2image(temp_msg)))
             return
-
+        if command_list[0] == "!prime":
+            if is_prime(int(command_list[1])):
+                msg.fast_reply("为合数")
+            else:
+                msg.fast_reply("为素数")
+        
         if command_list[0] == "!repeater":
             if msg.sender.isadmin():
                 if command_list[1] == "add":
