@@ -1466,7 +1466,7 @@ Coins: {coin_purse}
                 msg.fast_reply("有新Commit,time:" + cur_update)
             last_info = str(cur_update)
 
-        if (command_list[0] == "!info"):
+        if command_list[0] == "!info":
             if msg.sender.isadmin:
 
                 rt = threading.enumerate()
