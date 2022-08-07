@@ -28,7 +28,6 @@ from events.Events import Event, GroupMessageEvent
 from module.ModulesManager import ModuleManager
 from utils import five_k_utils, tcping
 
-
 hypixel.setKeys(["bc67e230-01a3-45c6-8177-c9b256b0ef3a", "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"])
 hypixel.setCacheTime(10.0)
 logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s] [%(levelname)s] %(message)s", datefmt="%H:%M:%S %p")
@@ -143,6 +142,7 @@ class User:
         if self.id != 1584784496:
             ADMIN_LIST.remove(self.id)
 
+
 class Message:
     def __init__(self, json2msg=None):
         self.id = 0
@@ -196,7 +196,7 @@ def crop_center(pil_img, crop_width, crop_height):
                          (img_height + crop_height) // 2))
 
 
-def mask_sircle_transparent(pil_img, blur_radius, offset=0):
+def mask_circle_transparent(pil_img, blur_radius, offset=0):
     offset += blur_radius * 2
     mask = Image.new("L", pil_img.size, 0)
     draw = ImageDraw.Draw(mask)
@@ -254,13 +254,6 @@ def read_config():
         pass
     sendMessage("restart successful", target_group=1019068934)
 
-def is_prime(n):
-    if n == 1:
-        return False
-    for i in range(2, int(math.sqrt(n))+1):
-        if n % i == 0:
-            return False
-    return True
 
 def save_config():
     global ADMIN_LIST, BLACK_LIST, FEEDBACKS, FOLLOW_MUTE
@@ -343,7 +336,7 @@ def simhash_similarity(text1: str, text2: str) -> float:
     return similar
 
 
-def get_lapsetime(atime, btime = 0) -> str:
+def get_lapsetime(atime, btime=0) -> str:
     """
     :param atime: 时间1
     :param btime: 时间2
@@ -414,7 +407,6 @@ def acg_img():
     except Exception as e:
         return text2image("获取图片失败\n" + traceback.format_exc())
 
-    
 
 def on_message2(ws, message):
     global moduleManager, HYPBAN_COOKIE, isChatBypassOpened, \
@@ -442,21 +434,23 @@ def on_message2(ws, message):
         sendMessage(f"[CQ:poke,qq={a['user_id']}]", target_group=a["group_id"])
 
     if a["post_type"] == "request" and a["request_type"] == "friend":
-        sendMessage("[Friend Requst]\nID:"+str(a["user_id"])+"\nComment:"+str(a["comment"]+"\n如需通过输入!invi friend agree "+str(a["flag"])),target_group=1019068934)
-#        data1 = {
-#            "flag": a["flag"],
-#            "approve": True
-#        }
-#        post2http("/set_friend_add_request", data=data1)
+        sendMessage("[Friend Request]\nID:" + str(a["user_id"]) + "\nComment:" + str(
+            a["comment"] + "\n如需通过输入!invi friend agree " + str(a["flag"])), target_group=1019068934)
+    #        data1 = {
+    #            "flag": a["flag"],
+    #            "approve": True
+    #        }
+    #        post2http("/set_friend_add_request", data=data1)
 
     if a["post_type"] == "request" and a["request_type"] == "group" and a["sub_type"] == "invite":
-        sendMessage("[Group Requst]\nID:"+str(a["user_id"])+"\nComment:"+str(a["comment"]+"\n如需通过输入!invi group agree "+str(a["flag"])),target_group=1019068934)
-#        data1 = {
-#            "flag": a["flag"],
-#            "type": "invite",
-#            "approve": True
-#        }
-#        post2http("/set_group_add_request", data=data1)
+        sendMessage("[Group Request]\nID:" + str(a["user_id"]) + "\nComment:" + str(
+            a["comment"] + "\n如需通过输入!invi group agree " + str(a["flag"])), target_group=1019068934)
+    #        data1 = {
+    #            "flag": a["flag"],
+    #            "type": "invite",
+    #            "approve": True
+    #        }
+    #        post2http("/set_group_add_request", data=data1)
 
     try:
         if a["post_type"] == "notice" and a["notice_type"] == "group_ban":
@@ -465,19 +459,19 @@ def on_message2(ws, message):
                     f"[CQ:at,qq={a['user_id']}]从 [CQ:at,qq={a['operator_id']}]那获得了时长为 {get_lapsetime(a['duration'])} 的禁言",
                     target_group=a["group_id"])
 
-#                if a['user_id'] == a['self_id']:
- #                   data1 = {
-  #                      "group_id": a['group_id']
-   #                 }
-    #                post2http("/set_group_leave", data=data1)
-#
- #                   sendMessage(f"机器人在群 {a['group_id']} 被禁言 已自动退出", target_group=1019068934)
+            #                if a['user_id'] == a['self_id']:
+            #                   data1 = {
+            #                      "group_id": a['group_id']
+            #                 }
+            #                post2http("/set_group_leave", data=data1)
+            #
+            #                   sendMessage(f"机器人在群 {a['group_id']} 被禁言 已自动退出", target_group=1019068934)
 
             if a["sub_type"] == "lift_ban":
                 sendMessage(
                     f"[CQ:at,qq={a['user_id']}]从 [CQ:at,qq={a['operator_id']}]那获得了解除禁言",
                     target_group=a["group_id"])
-    except BaseException as e:
+    except Exception as e:
         logging.warning("\n".join(traceback.format_exception(e)))
 
     msg = Message(message)
@@ -588,15 +582,15 @@ def on_message2(ws, message):
         #                     msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
 
         if command_list[0] == "!leave":
-           try:
-               data1 = {
-                   "group_id": int(command_list[1])
-               }
-               post2http("/set_group_leave", data=data1)
-               msg.fast_reply("已尝试在"+command_list[1]+"退出")
-           except:
-               msg.fast_reply("Error")
-        
+            try:
+                data1 = {
+                    "group_id": int(command_list[1])
+                }
+                post2http("/set_group_leave", data=data1)
+                msg.fast_reply("已尝试在" + command_list[1] + "退出")
+            except:
+                msg.fast_reply("Error")
+
         if command_list[0] == "!invitations" or command_list[0] == "!invi":
             if msg.sender.isadmin():
                 if command_list[1] == "group":
@@ -660,7 +654,7 @@ def on_message2(ws, message):
                 }
                 on_message2(ws, json.dumps(data1))
 
-        if msg.text in ["!restart", "!quit","!reload"] and msg.sender.isadmin():
+        if msg.text in ["!restart", "!quit", "!reload"] and msg.sender.isadmin():
             msg.fast_reply("Restarting...")
             print(requests.get("http://" + HTTPURL + "/set_restart").text)
             stop()
@@ -845,12 +839,14 @@ def on_message2(ws, message):
             # 图片文件: r2gac549.bmp
             atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
             if atcq is not None:
-                command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).replace("me", str(msg.sender.id)).split(" ")
+                command_list = msg.text.replace("[CQ:at,qq={}]".format(atcq.group(1)), str(atcq.group(1))).replace("me",
+                                                                                                                   str(msg.sender.id)).split(
+                    " ")
             tx_image = requests.get(url=f"http://qlogo4.store.qq.com/qzone/{command_list[1]}/{command_list[1]}/100")
             ima = Image.open(BytesIO(tx_image.content))
             ima = ima.resize((136, 136), Image.ANTIALIAS)
             imc = Image.open("r2gac549.bmp")
-            imb, mask1 = mask_sircle_transparent(ima.rotate(-160), 0, 2)
+            imb, mask1 = mask_circle_transparent(ima.rotate(-160), 0, 2)
             imc.paste(imb, (19, 181), mask=mask1)
             _temp = BytesIO()
             imc.save(_temp, format="PNG")
@@ -864,7 +860,8 @@ def on_message2(ws, message):
                 msg.fast_reply(f"搜索失败! {search_result['code']}")
                 return
 
-            msg.fast_reply("这是你要找的歌吗?").fast_reply(f"[CQ:music,type=163,id={search_result['result']['songs'][0]['id']}]")
+            msg.fast_reply("这是你要找的歌吗?").fast_reply(
+                f"[CQ:music,type=163,id={search_result['result']['songs'][0]['id']}]")
 
         if command_list[0] == "!5k":
             # 图片/灵感来源: https://github.com/SAGIRI-kawaii/saya_plugins_collection/tree/master/modules/5000zhao
@@ -882,11 +879,11 @@ def on_message2(ws, message):
             return
 
         if command_list[0] == "!testchrome" and msg.sender.id == 1584784496:
-            msg.fast_reply("Trying...")\
+            msg.fast_reply("Trying...") \
                 .fast_reply("[CQ:image,file=base64://{}]".format(
-                    requests.post(url="http://localhost:25666/url2base64",
-                        data={"url": " ".join(command_list[1:])}).text.replace("\n", "")
-                )
+                requests.post(url="http://localhost:25666/url2base64",
+                              data={"url": " ".join(command_list[1:])}).text.replace("\n", "")
+            )
             )
 
         if msg.text.find("[CQ:json,data=") != -1:
@@ -956,8 +953,6 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 with open(imageuid + "_cache.png", "rb") as f:
                     msg.fast_reply("[CQ:image,file=base64://" + base64.b64encode(f.read()).decode() + "]")
 
-                    
-        
         if msg.text == "一英":
             msg.fast_reply(requests.get("http://open.iciba.com/dsapi/").json()["content"] + "\n" +
                            requests.get("http://open.iciba.com/dsapi/").json()["note"])
@@ -971,7 +966,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 
         if msg.text == "一话":
             req1 = requests.get("http://open.iciba.com/dsapi/").json()
-            msg.fast_reply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"])\
+            msg.fast_reply(requests.get("http://api.muxiuge.cn/API/society.php").json()["text"]) \
                 .fast_reply(req1["content"] + "\n" + req1["note"])
 
         if msg.text == "!hyp players":
@@ -995,12 +990,6 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
             logging.debug(temp_msg)
             msg.fast_reply("[CQ:image,file=base64://{}]".format(text2image(temp_msg)))
             return
-        if command_list[0] == "!prime":
-            if is_prime(int(command_list[1])):
-                msg.fast_reply("为合数")
-            else:
-                msg.fast_reply("为素数")
-        
         if command_list[0] == "!repeater":
             if msg.sender.isadmin():
                 if command_list[1] == "add":
@@ -1047,7 +1036,8 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 
                     _ping = tcping.Ping(_host, int(_port), 1.0)
                     _ping.ping(5)
-                    msg.fast_reply("[CQ:image,file=base64://{}]".format(text2image(_ping.result.raw.replace(", ", "\n"))))
+                    msg.fast_reply(
+                        "[CQ:image,file=base64://{}]".format(text2image(_ping.result.raw.replace(", ", "\n"))))
                 except:
                     msg.fast_reply("无法获取信息")
         if command_list[0] == "!admin":
@@ -1106,7 +1096,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 BLACK_LIST.remove(int(command_list[2]))
                 msg.fast_reply("操作成功")
 
-        if command_list[0] =="!mcping":
+        if command_list[0] == "!mcping":
             try:
                 server = MinecraftServer.lookup(command_list[1]).status()
                 aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
@@ -1120,11 +1110,12 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
                 aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
                 if server.favicon is not None:
-                    aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,", "base64://") + "]"
+                    aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,",
+                                                                             "base64://") + "]"
                 msg.fast_reply(aaa)
             except:
                 msg.fast_reply("无法获取信息")
-                
+
         if command_list[0] == "!hypban":
             msg.fast_reply("本功能已经停止使用了")
             return
@@ -1458,7 +1449,7 @@ Coins: {coin_purse}
                 msg.fast_reply("请发送QQ号或'me'!!!")
             return
 
-        if command_list[0]=="!git":
+        if command_list[0] == "!git":
             # 1.Github项目及API接口数据
             api = 'https://api.github.com/repos/LingBot-Project/LingBot'
             web_page = "https://github.com/LingBot-Project/LingBot"
@@ -1468,23 +1459,23 @@ Coins: {coin_purse}
 
             # 3.解析想要的数据，并打印
             cur_update = all_info['updated_at']
-            
+
             if str(last_info) == str(cur_update):
                 msg.fast_reply("无新Commit")
             else:
-                    msg.fast_reply("有新Commit,time:"+cur_update)
+                msg.fast_reply("有新Commit,time:" + cur_update)
             last_info = str(cur_update)
 
-
-
-        if(command_list[0] == "!info"):
+        if (command_list[0] == "!info"):
             if msg.sender.isadmin:
 
                 rt = threading.enumerate()
                 cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
                 memory_usage = str(psutil.virtual_memory().percent)
-                msg.fast_reply("CPU核心数量:"+str(psutil.cpu_count())+"核\n"+"CPU占用率:"+cpu_usage+"%\n内存占用率:"+memory_usage+"%\n运行中的Watchdog线程:"+str(len(rt)))
-                #msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
+                msg.fast_reply("CPU核心数量:" + str(
+                    psutil.cpu_count()) + "核\n" + "CPU占用率:" + cpu_usage + "%\n内存占用率:" + memory_usage + "%\n运行中的Watchdog线程:" + str(
+                    len(rt)))
+                # msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
             else:
                 msg.fast_reply("您还没有权限哦")
 
@@ -1502,10 +1493,9 @@ Coins: {coin_purse}
             kickdata1 = {
                 "group_id": int(command_list[1]),
                 "user_id": int(command_list[2]),
-                }
+            }
             post2http(url="/set_group_kick", data=kickdata1)
-            msg.fast_reply("已尝试在"+str(command_list[1])+"移除"+str(command_list[2]))
-
+            msg.fast_reply("已尝试在" + str(command_list[1]) + "移除" + str(command_list[2]))
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
             atcq = re.search(r'\[CQ:at,qq=(.*)]', msg.text)
@@ -1863,6 +1853,7 @@ def goodmor(target=None):
             sendMessage(msg1, target_group=i)
             time.sleep(random.randint(1500, 2000) / 1000)
 
+
 def msg_counter_send(target=None):
     global MESSAGE_COUNTER
     s = getGroups()
@@ -1937,6 +1928,7 @@ def watchdog():
         except BaseException as e:
             infoMsg(f"警告: WatchDog线程出现错误!!\n[CQ:image,file=base64://{text2image(traceback.format_exc())}]")
 
+
 def goodnig():
     msg1 = "很晚了!该睡了!"
     s = getGroups()
@@ -1971,7 +1963,7 @@ def main():
         t3.start()
         t3.name = "WebSocket"
         logging.info("Starting... (5/6)")
-        
+
         t4 = threading.Thread(target=watchdog)
         t4.start()
         logging.info("Starting... (6/6)")

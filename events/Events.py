@@ -20,6 +20,7 @@ class GroupMessageEvent(CancelableEvent):
     def __init__(self, message):
         super().__init__()
         self._message = message
+        self.command_list = message.text.split(" ")
 
     def get_message(self):
         return self._message
