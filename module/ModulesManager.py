@@ -1,6 +1,6 @@
 from events.Events import *
 from module.modules.IModule import IModule
-from module.modules import HelloNew, TestHello
+from module.modules import HelloNew, TestHello, is_prime
 from typing import List
 
 
@@ -9,7 +9,8 @@ class ModuleManager:
         self._modules: List[IModule] = []
         self.register_modules(
             HelloNew.HelloNew(),
-            TestHello.TestHello()
+            TestHello.TestHello(),
+            is_prime.IsPrime()
         )
         pass
 
