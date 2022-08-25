@@ -12,7 +12,7 @@ api = 'https://api.github.com/repos/LingBot-Project/LingBot'
 web_page = "https://github.com/LingBot-Project/LingBot"
 
 def on_msg(event):
-    global last_info, api, web_page
+    global last_info, api, web_page, listener_last_info
     if event.get_commands()[0] != "!git": return
 
     # 发送请求，获取数据
@@ -24,7 +24,7 @@ def on_msg(event):
     if str(last_info) == str(cur_update):
         event.get_message().fast_reply("无新Commit")
     else:
-        event.get_message().fast_reply("有新Commit,time:" + cur_update)
+        event.get_message().fast_reply(f"有新Commit, time: {cur_update}\nlast commit: {last_info}\nlast sync commit: {listener_last_info}")
     last_info = str(cur_update)
 
 
@@ -51,13 +51,11 @@ time: {cur_update},
             Message.sendMessage(f"Found an exception when try to sync github commit: {e}")
 
 
-
-
 class GitHubController(IModule):
     def process(self, event: Event):
         if isinstance(event, GroupMessageEvent):
             on_msg(event)
         if isinstance(event, BotEnableEvent):
             t1 = threading.Thread()
-            t1.name = "GithubListener"
             t1.start()
+            t1.name = "GithubListener"
