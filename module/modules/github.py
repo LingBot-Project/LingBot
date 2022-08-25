@@ -15,7 +15,6 @@ def on_msg(event):
     global last_info, api, web_page
     if event.get_commands()[0] != "!git": return
 
-
     # 发送请求，获取数据
     all_info = requests.get(api).json()
 
@@ -30,7 +29,7 @@ def on_msg(event):
 
 
 def sch_github_listener():
-    global listener_last_info, api, web_page
+    global listener_last_info, api
     
     listener_last_info = requests.get(api).json()['updated_at']
     while bot_state.state:
