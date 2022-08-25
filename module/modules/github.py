@@ -22,18 +22,19 @@ def on_msg(event):
     cur_update = all_info['pushed_at']
 
     if str(last_info) == str(cur_update):
-        event.get_message().fast_reply(f"无新Commit\n last commit: {last_info}\n last sync commit: {listener_last_info}")
+        event.get_message().fast_reply(f"无新Commit\n last commit: {last_info}\n last auto-sync commit: {listener_last_info}")
     else:
-        event.get_message().fast_reply(f"有新Commit, time: {cur_update}\nlast commit: {last_info}\nlast sync commit: {listener_last_info}")
+        event.get_message().fast_reply(f"有新Commit, time: {cur_update}\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
     last_info = str(cur_update)
 
 
 def sch_github_listener():
-    global listener_last_info, api
+    global listener_last_info, last_info, api
     
-    listener_last_info = requests.get(api).json()['pushed_at']
+    last_info = requests.get(api).json()['pushed_at']
+    listener_last_info = last_info
     while bot_state.state:
-        time.sleep(90)
+        time.sleep(75)
         try:
             # 发送请求，获取数据
             all_info = requests.get(api).json()
@@ -42,8 +43,9 @@ def sch_github_listener():
             cur_update = all_info['pushed_at']
 
             if str(listener_last_info) != str(cur_update):
-                Message.sendMessage(f"""[GITHUB] 有新Commit
+                Message.sendMessage(f"""[GitHub commit listener] 有新Commit
 time: {cur_update},
+repos: {all_info['html_url']}
 """, target_group=1019068934)  # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
             listener_last_info = str(cur_update)
         except Exception as e:
