@@ -9,6 +9,7 @@ import utils.Message as Message
 listener_last_info = ""
 last_info = ""
 api = 'https://api.github.com/repos/LingBot-Project/LingBot'
+commit_api = 'https://api.github.com/repos/LingBot-Project/LingBot/commits'
 web_page = "https://github.com/LingBot-Project/LingBot"
 
 def on_msg(event):
@@ -43,10 +44,14 @@ def sch_github_listener():
             cur_update = all_info['pushed_at']
 
             if str(listener_last_info) != str(cur_update):
+                commit_info = requests.get(commit_api).json()
                 Message.sendMessage(f"""=======[GitHub commit listener]=======
 有新Commit
 repos: {all_info['html_url']},
-time: {cur_update}
+time: {cur_update},
+author: {commit_info[0]['commit']['author']['name']},
+message: {commit_info[0]['commit']['message']},
+sha: {commit_info[0]['sha']}
 """, target_group=1019068934)  # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
             listener_last_info = str(cur_update)
         except Exception as e:
