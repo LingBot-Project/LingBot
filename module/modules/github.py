@@ -1,8 +1,10 @@
 from events.Events import *
 from module.modules.IModule import IModule
 import json
+import requests
 import threading
 import bot_state, time
+import utils.Message as Message
 
 listener_last_info = ""
 last_info = ""
@@ -21,9 +23,9 @@ def on_msg(event):
     cur_update = all_info['updated_at']
 
     if str(last_info) == str(cur_update):
-        msg.fast_reply("无新Commit")
+        event.get_message().fast_reply("无新Commit")
     else:
-        msg.fast_reply("有新Commit,time:" + cur_update)
+        event.get_message().fast_reply("有新Commit,time:" + cur_update)
     last_info = str(cur_update)
 
 
@@ -40,10 +42,10 @@ def sch_github_listener():
         cur_update = all_info['updated_at']
 
         if str(listener_last_info) != str(cur_update):
-            msg.fast_reply(f"""[GITHUB] 有新Commit
+            Message.sendMessage("[WatchDog] " + text1, target_group=1019068934)(f"""[GITHUB] 有新Commit
 time: {cur_update},
 {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
-""")        
+""", target_group=1019068934)
         listener_last_info = str(cur_update)
 
 
@@ -53,5 +55,5 @@ class GitHubController(IModule):
             on_msg(event)
         if isinstance(event, BotEnableEvent):
             t1 = threading.Thread()
-            t1.name = "github"
+            t1.name = "GithubListener"
             t1.start()
