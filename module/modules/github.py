@@ -43,12 +43,14 @@ def sch_github_listener():
             cur_update = all_info['updated_at']
 
             if str(listener_last_info) != str(cur_update):
-                Message.sendMessage("[WatchDog] " + text1(f"""[GITHUB] 有新Commit
+                Message.sendMessage(f"""[GITHUB] 有新Commit
 time: {cur_update},
 {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
 """, target_group=1019068934)
             listener_last_info = str(cur_update)
-        except:
+        except Exception as e:
+            Message.sendMessage(f"Found an exception when try to sync github commit: {e}")
+
 
 
 
