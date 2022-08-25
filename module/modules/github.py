@@ -57,4 +57,4 @@ class GitHubController(IModule):
         if isinstance(event, BotEnableEvent):
             t1 = threading.Thread(target=sch_github_listener)
             t1.start()
-            t1.name = "GithubListener"
+            t1.name = "GithubCommitListener"
