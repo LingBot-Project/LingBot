@@ -22,7 +22,7 @@ def on_msg(event):
     cur_update = all_info['pushed_at']
 
     if str(last_info) == str(cur_update):
-        event.get_message().fast_reply("无新Commit")
+        event.get_message().fast_reply(f"无新Commit\n last commit: {last_info}\n last sync commit: {listener_last_info}")
     else:
         event.get_message().fast_reply(f"有新Commit, time: {cur_update}\nlast commit: {last_info}\nlast sync commit: {listener_last_info}")
     last_info = str(cur_update)
