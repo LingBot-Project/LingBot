@@ -102,6 +102,6 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None):
         # logging.warning("目前暂时不支持发送私聊消息")
 
 
-def post2http(url, server_addr=HTTPURL, data=None):
+def post2http(url, server_addr='127.0.0.1:10500', data=None):
     return requests.post(f"http://{server_addr}{url}", data=data)
 
