@@ -43,9 +43,10 @@ def sch_github_listener():
             cur_update = all_info['pushed_at']
 
             if str(listener_last_info) != str(cur_update):
-                Message.sendMessage(f"""[GitHub commit listener] 有新Commit
-time: {cur_update},
-repos: {all_info['html_url']}
+                Message.sendMessage(f"""=======[GitHub commit listener]=======
+有新Commit
+repos: {all_info['html_url']},
+time: {cur_update}
 """, target_group=1019068934)  # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
             listener_last_info = str(cur_update)
         except Exception as e:
