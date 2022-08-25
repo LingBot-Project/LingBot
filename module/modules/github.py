@@ -50,7 +50,7 @@ time: {cur_update},
 
 
 class GitHubController(IModule):
-    def process(event: Event):
+    def process(self, event: Event):
         if isinstance(event, GroupMessageEvent):
             on_msg(event)
         if isinstance(event, BotEnableEvent):
