@@ -34,7 +34,7 @@ def sch_github_listener():
     
     listener_last_info = requests.get(api).json()['updated_at']
     while bot_state.state:
-        time.sleep(600)
+        time.sleep(120)
         # 发送请求，获取数据
         all_info = requests.get(api).json()
 
