@@ -30,7 +30,7 @@ from module.ModulesManager import ModuleManager
 from utils import five_k_utils, tcping
 from module.modules.github import sch_github_listener
 
-hypixel.setKeys(["14741cb9-194f-4c5b-adb2-9490b1240f14", "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"])
+hypixel.setKeys(["14741cb9-194f-4c5b-adb2-9490b1240f14"])  # , "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"
 hypixel.setCacheTime(10.0)
 logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s] [%(levelname)s] %(message)s", datefmt="%H:%M:%S %p")
 
