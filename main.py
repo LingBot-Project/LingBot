@@ -28,7 +28,7 @@ from events.Events import Event, GroupMessageEvent
 from module.ModulesManager import ModuleManager
 from utils import five_k_utils, tcping
 
-hypixel.setKeys(["bc67e230-01a3-45c6-8177-c9b256b0ef3a", "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"])
+hypixel.setKeys(["14741cb9-194f-4c5b-adb2-9490b1240f14", "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"])
 hypixel.setCacheTime(10.0)
 logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s] [%(levelname)s] %(message)s", datefmt="%H:%M:%S %p")
 
