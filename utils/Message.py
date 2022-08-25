@@ -3,7 +3,7 @@ import re
 
 import requests
 
-from main import HTTPURL, strQ2B, Group, User
+# from main import HTTPURL, strQ2B, Group, User
 
 
 # 先分类吧
@@ -18,9 +18,9 @@ class Message:
             a = json.loads(json2msg)
             ad = a
             if ad["post_type"] == "message" and ad["message_type"] == "group":
-                self.text = strQ2B(ad["message"])
-                self.sender = User(ad["sender"]["user_id"], ad["sender"]["nickname"])
-                self.group = Group(ad["group_id"])
+                # self.text = strQ2B(ad["message"])
+                # self.sender = User(ad["sender"]["user_id"], ad["sender"]["nickname"])
+                # self.group = Group(ad["group_id"])
                 self.id = ad["message_id"]
                 self.text_nocq = re.sub(r"\[CQ:.*]", '', self.text)
                 self.success = True
