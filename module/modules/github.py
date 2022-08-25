@@ -34,19 +34,22 @@ def sch_github_listener():
     
     listener_last_info = requests.get(api).json()['updated_at']
     while bot_state.state:
-        time.sleep(120)
-        # 发送请求，获取数据
-        all_info = requests.get(api).json()
+        time.sleep(90)
+        try:
+            # 发送请求，获取数据
+            all_info = requests.get(api).json()
 
-        # 解析想要的数据，并打印
-        cur_update = all_info['updated_at']
+            # 解析想要的数据，并打印
+            cur_update = all_info['updated_at']
 
-        if str(listener_last_info) != str(cur_update):
-            Message.sendMessage("[WatchDog] " + text1, target_group=1019068934)(f"""[GITHUB] 有新Commit
+            if str(listener_last_info) != str(cur_update):
+                Message.sendMessage("[WatchDog] " + text1(f"""[GITHUB] 有新Commit
 time: {cur_update},
 {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
 """, target_group=1019068934)
-        listener_last_info = str(cur_update)
+            listener_last_info = str(cur_update)
+        except:
+
 
 
 class GitHubController(IModule):
