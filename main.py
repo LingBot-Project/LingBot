@@ -24,9 +24,11 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 import math
 import chinese_sensitive_vocabulary.word_filter
-from events.Events import Event, GroupMessageEvent
+import bot_state
+from events.Events import Event, GroupMessageEvent, BotEnableEvent
 from module.ModulesManager import ModuleManager
 from utils import five_k_utils, tcping
+from module.modules.github import sch_github_listener
 
 hypixel.setKeys(["14741cb9-194f-4c5b-adb2-9490b1240f14", "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"])
 hypixel.setCacheTime(10.0)
@@ -81,7 +83,6 @@ EMAIL_DELAY = {}
 VERIFIED = {}
 VERIFYING = {}
 VERIFY_TIPS = {}
-last_info = ""
 msg_scanner = chinese_sensitive_vocabulary.word_filter.SensitiveWordModel(
     chinese_sensitive_vocabulary.word_filter.word_url)
 moduleManager: ModuleManager = ModuleManager()
@@ -293,6 +294,7 @@ def save_config():
 
 def stop():
     logging.info("Restarting...")
+    bot_state.state = False
     save_config()
     psutil.Process().kill()
 
@@ -414,7 +416,7 @@ def on_message2(ws, message):
         MESSAGE_PRE_MINUTE, ALL_MESSAGE, \
         ALL_AD, FEEDBACKS, \
         spam2_vl_reset_cool_down, SCREENSHOT_CD, \
-        VERIFYING, VERIFIED, VERIFY_TIPS, FOLLOW_MUTE, last_info
+        VERIFYING, VERIFIED, VERIFY_TIPS, FOLLOW_MUTE
 
     a = json.loads(message)
     if "notice_type" in a:
@@ -1449,22 +1451,22 @@ Coins: {coin_purse}
                 msg.fast_reply("请发送QQ号或'me'!!!")
             return
 
-        if command_list[0] == "!git":
-            # 1.Github项目及API接口数据
-            api = 'https://api.github.com/repos/LingBot-Project/LingBot'
-            web_page = "https://github.com/LingBot-Project/LingBot"
+        # if command_list[0] == "!git":
+        #     # 1.Github项目及API接口数据
+        #     api = 'https://api.github.com/repos/LingBot-Project/LingBot'
+        #     web_page = "https://github.com/LingBot-Project/LingBot"
 
-            # 2.发送请求，获取数据
-            all_info = requests.get(api).json()
+        #     # 2.发送请求，获取数据
+        #     all_info = requests.get(api).json()
 
-            # 3.解析想要的数据，并打印
-            cur_update = all_info['updated_at']
+        #     # 3.解析想要的数据，并打印
+        #     cur_update = all_info['updated_at']
 
-            if str(last_info) == str(cur_update):
-                msg.fast_reply("无新Commit")
-            else:
-                msg.fast_reply("有新Commit,time:" + cur_update)
-            last_info = str(cur_update)
+        #     if str(last_info) == str(cur_update):
+        #         msg.fast_reply("无新Commit")
+        #     else:
+        #         msg.fast_reply("有新Commit,time:" + cur_update)
+        #     last_info = str(cur_update)
 
         if command_list[0] == "!info":
             if msg.sender.isadmin:
@@ -1940,9 +1942,9 @@ def goodnig():
 
 def main():
     try:
-        logging.info("Starting... (0/5)")
+        logging.info("Starting... (0/7)")
         read_config()
-        logging.info("Starting... (1/5)")
+        logging.info("Starting... (1/7)")
         ws = websocket.WebSocketApp("ws://" + WSURL + "/all?qq=1643406018",
                                     on_message=on_message,
                                     on_error=on_error,
@@ -1950,24 +1952,28 @@ def main():
                                     )
         t3 = threading.Thread(target=ws.run_forever)
         t3.daemon = True
-        logging.info("Starting... (2/5)")
+        logging.info("Starting... (2/7)")
         sched = BlockingScheduler()
         sched.add_job(goodmor, 'cron', hour=7)
         sched.add_job(goodnig, 'cron', hour=22, minute=30)
         sched.add_job(msg_counter_send, 'cron', hour=0)
         t1 = threading.Thread(target=sched.start)
         t1.deamon = True
-        logging.info("Starting... (3/6)")
+        logging.info("Starting... (3/7)")
         t1.start()
         t1.name = "Scheduler"
-        logging.info("Starting... (4/6)")
+        logging.info("Starting... (4/7)")
         t3.start()
         t3.name = "WebSocket"
-        logging.info("Starting... (5/6)")
+
+        logging.info("Starting... (5/7)")
+        moduleManager.process_event(BotEnableEvent())
+
+        logging.info("Starting... (6/7)")
 
         t4 = threading.Thread(target=watchdog)
         t4.start()
-        logging.info("Starting... (6/6)")
+        logging.info("Starting... (7/7)")
         logging.info("Started")
         t4.name = "WatchDog"
         t4.join()
