@@ -41,13 +41,13 @@ sha: {commit_info[0]["sha"]}
 
 def sch_github_listener():
     global listener_last_info, last_info, api
-    time.sleep(random.randint(500, 1750) / 1000)
+    time.sleep(random.randint(500, 2050) / 1000)
     try:
         last_info = requests.get(api).json()['pushed_at']
         listener_last_info = last_info
     except:
         Message.sendMessage(f"[GitHub commit listener] Exception found while tring synchronizing: {traceback.format_exc()}", target_group=1019068934)
-    time.sleep(random.randint(500, 1750) / 1000)
+    time.sleep(random.randint(600, 1750) / 1000)
     Message.sendMessage(f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}", target_group=1019068934)
     while bot_state.state:
         time.sleep(45)
