@@ -18,7 +18,12 @@ def on_msg(event):
     if event.get_commands()[0] != "!git": return
 
     # 发送请求，获取数据
-    all_info = requests.get(api).json()
+    all_info = requests.get(api)
+    if int(all_info.headers["x-ratelimit-remaining"]) == 0:
+        event.get_message().fast_reply("API rate limit exceeded, please wait for some minutes.")
+        is_in_limit = True
+        return
+    all_info = all_info.json()
 
     # # 解析想要的数据，并打印
     # cur_update = all_info['pushed_at']
@@ -44,14 +49,18 @@ def sch_github_listener():
     global listener_last_info, last_info, api
     time.sleep(random.randint(500, 2050) / 1000)
     try:
+        if int(all_info.headers["x-ratelimit-remaining"]) == 0:
+            is_in_limit = True
+            raise Exception("API rate limit exceeded")
         last_info = requests.get(api).json()['pushed_at']
         listener_last_info = last_info
-    except:
-        Message.sendMessage(f"[GitHub commit listener] Exception found while tring synchronizing: {traceback.format_exc()}", target_group=1019068934)
+    except Exception as e:
+        Message.sendMessage(f"[GitHub commit listener] Exception found while tring synchronizing: {e}", target_group=1019068934)
     time.sleep(random.randint(600, 1500) / 1000)
     Message.sendMessage(f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}", target_group=1019068934, bypass=True)
     while bot_state.state:
         time.sleep(random.randint(40608, 71642) / 1000 + (300 if is_in_limit else 0))
+        is_in_limit = False
         try:
             # 发送请求，获取数据
             all_info = requests.get(api)
