@@ -62,11 +62,12 @@ def sch_github_listener():
     global listener_last_info, last_info, api, is_in_limit, last_message
     time.sleep(random.randint(500, 2050) / 1000)
     try:
-        all_info = requests.get(api)
-        if int(all_info.headers["x-ratelimit-remaining"]) == 0:
+        commit_info = commit_info.json()
+        if int(commit_info.headers["x-ratelimit-remaining"]) == 0:
             is_in_limit = True
             raise Exception("API rate limit exceeded")
-        last_info = all_info.json()['pushed_at']
+        bot_state.cur_git_ver = commit_info[0]["sha"][:7]
+        last_info = commit_info[0]["commit"]["author"]["date"]
         listener_last_info = last_info
     except Exception as e:
         Message.sendMessage(f"[GitHub commit listener] Exception found while tring synchronizing: {e}",
@@ -76,7 +77,7 @@ def sch_github_listener():
         f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}",
         target_group=1019068934, bypass=True)
     commit_info = {}
-    time.sleep(25)
+    time.sleep(30)
     while bot_state.state:
         time.sleep(random.randint(42618, 81642) / 1000 + (600 if is_in_limit else 0))
         is_in_limit = False
@@ -95,7 +96,7 @@ def sch_github_listener():
             cur_update = commit_info[0]["commit"]["author"]["date"]
 
             if str(listener_last_info) != str(cur_update):
-                time.sleep(5)  # wait for pylint's check lol
+                time.sleep(7)  # wait for pylint's check lol
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
                 last_message = f'''commit info: {commit_info[0]["html_url"]},
 time: {cur_update},

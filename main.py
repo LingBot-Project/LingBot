@@ -811,7 +811,8 @@ def on_message2(ws, message):
 
         if msg.text in ["!test", "凌状态"]:
             msg.fast_reply(
-                f"Hello! 已处理 {ALL_MESSAGE} 条消息\n"
+                f"Hello! 当前运行的git版本 {bot_state.cur_git_ver}"
+                f"已处理 {ALL_MESSAGE} 条消息\n"
                 f"已经运行了 {get_runtime()}\n"
                 f"平均每条消息耗时 {timePreMessage} 秒\n"
                 f"拦截了 {ALL_AD} 条广告 占全部处理消息的 {(ALL_AD / ALL_MESSAGE) * 100}%\n"
