@@ -75,7 +75,7 @@ def sch_github_listener():
                             target_group=1019068934)
     time.sleep(random.randint(600, 1500) / 1000)
     Message.sendMessage(
-        f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}",
+        f"[GitHub commit listener] Listener thread is running, currect git version: {bot_state.cur_git_ver}, currect auto-sync commit time: {listener_last_info}",
         target_group=1019068934, bypass=True)
     commit_info = {}
     time.sleep(30)
