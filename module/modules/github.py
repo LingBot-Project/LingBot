@@ -74,6 +74,7 @@ def sch_github_listener():
         f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}",
         target_group=1019068934, bypass=True)
     commit_info = {}
+    time.sleep(25)
     while bot_state.state:
         time.sleep(random.randint(42618, 81642) / 1000 + (600 if is_in_limit else 0))
         is_in_limit = False
@@ -107,6 +108,7 @@ pylint info: {pylint_pass}
                 Message.sendMessage(_tmp_msg, target_group=1019068934)
                 time.sleep(random.randint(200, 2250) / 1000)
                 Message.sendMessage(_tmp_msg, target_group=308089090)
+                time.sleep(30)
             listener_last_info = str(cur_update)
         except Exception as _:
             Message.sendMessage(
