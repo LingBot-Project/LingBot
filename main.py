@@ -1676,9 +1676,10 @@ Coins: {coin_purse}
         msg.fast_reply(
             "很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(
                 text2image(a)))
-        sendMessage(
-            f"我们在执行 {msg.sender.name}({msg.sender.id}) 的指令: [CQ:image,file=base64://{text2image(msg.text)}] 时出了点问题\n[CQ:image,file=base64://{text2image(a)}]",
-            target_group=1019068934)
+        if msg.group.id != 1019068934:
+            sendMessage(
+                f"我们在执行 {msg.sender.name}({msg.sender.id}) 的指令: [CQ:image,file=base64://{text2image(msg.text)}] 时出了点问题\n[CQ:image,file=base64://{text2image(a)}]",
+                target_group=1019068934)
 
 
 def add_achievements(qq, msg, achievements):
