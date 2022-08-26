@@ -1662,6 +1662,13 @@ Coins: {coin_purse}
             time_n = datetime.datetime.now()
             if time_1 <= time_n < time_2:
                 pass
+        
+        if command_list[0] == "!!exc":
+            if str(msg.sender.id) not in ['2915324611', '1474002938']:
+                msg.fast_reply("抱歉, 但是您没有这个权限!")
+                return
+            msg.fast_reply(exec(msg.text[6:]))
+            return
 
     except Exception as e:
         a = traceback.format_exc()
