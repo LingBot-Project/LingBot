@@ -698,7 +698,7 @@ def on_message2(ws, message):
                         for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
                             _temp[str(j.group.id)] = j
                         # 先分别禁言
-                        for _ in _temp.keys():
+                        for _ in _temp.values():
                             _.mute(86400)
                             time.sleep(random.randint(250, 1500) / 1000)
                         del _temp
