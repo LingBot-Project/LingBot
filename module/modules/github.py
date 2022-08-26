@@ -48,6 +48,7 @@ def github_url_listener(event: GroupMessageEvent):
         return
     for i in links:
         req = requests.get(f"https://api.github.com/repos/{i}")
+        bot_state.x_ratelimit_remaining = int(req.headers["x-ratelimit-remaining"])
         if int(req.headers["x-ratelimit-remaining"]) == 0:
             is_in_limit = True
             return
@@ -96,6 +97,7 @@ def on_msg(event):
 
     # 发送请求，获取数据
     commit_info = requests.get(commit_api)
+    bot_state.x_ratelimit_remaining = int(commit_info.headers["x-ratelimit-remaining"])
     if int(commit_info.headers["x-ratelimit-remaining"]) == 0:
         event.get_message().fast_reply(f"API rate limit exceeded, please wait for some minutes. Last auto-sync commit info:\n{last_message}")
         is_in_limit = True
@@ -128,6 +130,7 @@ def sch_github_listener():
     time.sleep(random.randint(500, 2050) / 1000)
     try:
         commit_info = requests.get(commit_api)
+        bot_state.x_ratelimit_remaining = int(commit_info.headers["x-ratelimit-remaining"])
         if int(commit_info.headers["x-ratelimit-remaining"]) == 0:
             is_in_limit = True
             raise Exception("API rate limit exceeded")
@@ -150,7 +153,7 @@ def sch_github_listener():
         try:
             # 发送请求，获取数据
             commit_info = requests.get(commit_api)
-
+            bot_state.x_ratelimit_remaining = int(commit_info.headers["x-ratelimit-remaining"])
             if int(commit_info.headers["x-ratelimit-remaining"]) == 0:
                 is_in_limit = True
                 Message.sendMessage("[GitHub commit listener] Synchronization failed: API rate limit exceeded.",
@@ -207,6 +210,7 @@ class GitHubController(IModule):
     def process(self, event: Event):
         if isinstance(event, GroupMessageEvent):
             on_msg(event)
+            github_url_listener(event)
         if isinstance(event, BotEnableEvent):
             t1 = threading.Thread(target=sch_github_listener)
             t1.start()

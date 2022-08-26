@@ -1481,9 +1481,7 @@ Coins: {coin_purse}
                 rt = threading.enumerate()
                 cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
                 memory_usage = str(psutil.virtual_memory().percent)
-                msg.fast_reply("CPU核心数量:" + str(
-                    psutil.cpu_count()) + "核\n" + "CPU占用率:" + cpu_usage + "%\n内存占用率:" + memory_usage + "%\n运行中的线程:" + str(
-                    len(rt)))
+                msg.fast_reply(f"CPU核心数量:{str(psutil.cpu_count())}核\nCPU占用率:{cpu_usage}%\n内存占用率:{memory_usage}%\n运行中的线程:{str(len(rt))}\nGithub API 当前剩余请求次数: {bot_state.x_ratelimit_remaining}")
                 # msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
             else:
                 msg.fast_reply("您还没有权限哦")
