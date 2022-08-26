@@ -95,8 +95,7 @@ def sch_github_listener():
             cur_update = commit_info[0]["commit"]["author"]["date"]
 
             if str(listener_last_info) != str(cur_update):
-
-                time.sleep(15)  # wait for pylint's check lol
+                time.sleep(5)  # wait for pylint's check lol
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
                 last_message = f'''commit info: {commit_info[0]["html_url"]},
 time: {cur_update},
