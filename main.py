@@ -815,6 +815,7 @@ def on_message2(ws, message):
         if msg.text in ["!test", "凌状态"]:
             msg.fast_reply(
                 f"Hello! 当前运行中的git版本为 {bot_state.cur_git_ver}\n"
+                f"Github API 当前剩余请求次数: {bot_state.x_ratelimit_remaining}\n"
                 f"已处理 {ALL_MESSAGE} 条消息\n"
                 f"已经运行了 {get_runtime()}\n"
                 f"平均每条消息耗时 {timePreMessage} 秒\n"
