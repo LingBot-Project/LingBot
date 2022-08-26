@@ -48,7 +48,7 @@ def sch_github_listener():
     except:
         Message.sendMessage(f"[GitHub commit listener] Exception found while tring synchronizing: {traceback.format_exc()}", target_group=1019068934)
     time.sleep(random.randint(600, 1500) / 1000)
-    Message.sendMessage(f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}", target_group=1019068934)
+    Message.sendMessage(f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}", target_group=1019068934, bypass=True)
     while bot_state.state:
         time.sleep(45)
         try:
@@ -71,7 +71,7 @@ sha: {commit_info[0]["sha"]}
 '''
                 Message.sendMessage(_tmp_msg, target_group=1019068934)
                 time.sleep(random.randint(200, 2250) / 1000)
-                Message.sendMessage(_tmp_msg, target_group=308089090, bypass=True)
+                Message.sendMessage(_tmp_msg, target_group=308089090, bypass=True, bypass_length=15)
             listener_last_info = str(cur_update)
         except Exception as e:
             Message.sendMessage(f"Found an exception when try to auto-sync github commit: {traceback.format_exc()}", target_group=1019068934)

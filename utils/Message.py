@@ -72,7 +72,7 @@ def recall(msg_id):
     post2http(url="/delete_msg", data=data1)
 
 
-def sendMessage(message, target_qq=None, target_group=None, message_id=None, bypass=False):
+def sendMessage(message, target_qq=None, target_group=None, message_id=None, bypass=False, bypass_length=4):
     if target_qq is None and target_group is None:
         raise Exception()
 
@@ -87,9 +87,12 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None, byp
             prefix += "[CQ:reply,id={}]".format(message_id)
 
         if bypass:
+            b_array = ["\u202D"]  # ["\u202D", "", "", "", ""]
+            for i in range(0, bypass_length):
+                b_array.append("")
             nowmsg = ""
             for i2 in list(message):
-                nowmsg += i2 + random.choice(["\u202D", "", "", "", ""])
+                nowmsg += i2 + random.choice(b_array)
             message = nowmsg
         
         # 构建数据
