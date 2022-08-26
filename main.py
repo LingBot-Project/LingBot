@@ -677,7 +677,7 @@ def on_message2(ws, message):
                 SPAM2_VL[msg.sender.id] = 0
             _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
             if _simhash_dis >= 0.836:
-                SPAM2_VL[msg.sender.id] += 12.5 * (_simhash_dis - 0.5) + (len(msg.text) * 0.05)  # :10
+                SPAM2_VL[msg.sender.id] += 12.5 * (_simhash_dis - 0.2) + (len(msg.text) * 0.19)  # :10
                 if _simhash_dis >= 0.99:
                     SPAM2_VL[msg.sender.id] += 10
 
@@ -729,12 +729,12 @@ def on_message2(ws, message):
             else:
                 SPAM2_MSG[msg.sender.id] = msg
                 if SPAM2_VL[msg.sender.id] > 0:
-                    SPAM2_VL[msg.sender.id] -= 2.5 * (0.9 - _simhash_dis)  # :2
+                    SPAM2_VL[msg.sender.id] -= SPAM2_VL[msg.sender.id] / 1337  # 2.5 * (0.9 - _simhash_dis)  # :2
 
             reScan = re.findall(
                 ANTI_AD,
                 msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
-            if len(msg.text) >= 33 and len(reScan) >= 2:
+            if len(msg.text) >= 33 and len(reScan) > 2:
                 SPAM2_VL[msg.sender.id] += 4
                 if msg.sender.isadmin():
                     sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
@@ -795,7 +795,7 @@ def on_message2(ws, message):
                 msg.recall()
                 return
 
-            if msg.text.count("[CQ:image") >= 3:
+            if msg.text.count("[CQ:image") > 3:
                 if msg.sender.isadmin() is False:
                     msg.mute(60).recall().fast_reply("太...太多图片了..", reply=False)
                     return
@@ -1475,7 +1475,7 @@ Coins: {coin_purse}
                 cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
                 memory_usage = str(psutil.virtual_memory().percent)
                 msg.fast_reply("CPU核心数量:" + str(
-                    psutil.cpu_count()) + "核\n" + "CPU占用率:" + cpu_usage + "%\n内存占用率:" + memory_usage + "%\n运行中的Watchdog线程:" + str(
+                    psutil.cpu_count()) + "核\n" + "CPU占用率:" + cpu_usage + "%\n内存占用率:" + memory_usage + "%\n运行中的线程:" + str(
                     len(rt)))
                 # msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
             else:
