@@ -687,20 +687,17 @@ def on_message2(ws, message):
                     #         f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度: {_simhash_dis}\nVL: {SPAM2_VL[msg.sender.id]}",
                     #         target_group=1019068934)
                     # msg.recall()
-                    if SPAM2_VL[msg.sender.id] >= 100:
+                    if SPAM2_VL[msg.sender.id] > 100:
                         msg.recall()
                         # 消息的群组去重
-                        _temp = []
-                        _tmp2 = []
+                        _temp = {}
                         for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
-                            if str(j.group.id) in _tmp2:
-                                continue
-                            _tmp2.append(str(j.group.id))
-                            _temp.append(j)
+                            _temp[str(j.group.id)] = j
                         # 先分别禁言
-                        for _ in _temp:
+                        for _ in _temp.keys():
                             _.mute(86400)
                             time.sleep(random.randint(250, 1500) / 1000)
+                        del _temp
 
                         # 再撤回
                         while len(SPAM2_MESSAGE_LIST[msg.sender.id]) > 0:
@@ -709,7 +706,6 @@ def on_message2(ws, message):
 
                         msg.mute(43199 * 60)  # 43199 * 60 # :259200
                         SPAM2_VL[msg.sender.id] -= 20
-                        del _temp, _tmp2
                         SPAM2_MESSAGE_LIST[msg.sender.id].clear()
                         return
                     # else:

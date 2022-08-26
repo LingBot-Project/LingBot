@@ -61,8 +61,7 @@ def sch_github_listener():
             if str(listener_last_info) != str(cur_update):
                 commit_info = requests.get(commit_api).json()
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
-                _tmp_msg = f'''=======[GitHub commit listener]=======
-有新Commit
+                _tmp_msg = f'''[GitHub] 有新Commit
 repos: {all_info["html_url"]},
 time: {cur_update},
 author: {commit_info[0]["commit"]["author"]["name"]},
@@ -71,7 +70,7 @@ sha: {commit_info[0]["sha"]}
 '''
                 Message.sendMessage(_tmp_msg, target_group=1019068934)
                 time.sleep(random.randint(200, 2250) / 1000)
-                Message.sendMessage(_tmp_msg, target_group=308089090, bypass=True, bypass_length=15)
+                Message.sendMessage(_tmp_msg, target_group=308089090, bypass=True, bypass_length=60)
             listener_last_info = str(cur_update)
         except Exception as e:
             Message.sendMessage(f"Found an exception when try to auto-sync github commit: {traceback.format_exc()}", target_group=1019068934)
