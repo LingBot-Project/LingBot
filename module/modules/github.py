@@ -96,7 +96,7 @@ def sch_github_listener():
 
             if str(listener_last_info) != str(cur_update):
 
-                time.sleep(20)  # wait for pylint's check lol
+                time.sleep(15)  # wait for pylint's check lol
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
                 last_message = f'''commit info: {commit_info[0]["html_url"]},
 time: {cur_update},
@@ -110,7 +110,7 @@ pylint check: {get_pylint_state()}
                 time.sleep(random.randint(200, 2250) / 1000)
                 Message.sendMessage(_tmp_msg, target_group=308089090)
                 listener_last_info = str(cur_update)
-                time.sleep(20)  # cool down
+                time.sleep(10)  # cool down
         except Exception as _:
             Message.sendMessage(
                 f"Found an exception when try to auto-sync github commit: {traceback.format_exc()}, request: {json.dumps(commit_info, sort_keys=True, indent=4, separators=(',', ': '))}",
