@@ -300,8 +300,7 @@ def stop():
         bot_state.state = False
     except:
         pass
-    finally:
-        psutil.Process().kill()
+    psutil.Process().kill()
 
 
 def spammer_checker(msg):
