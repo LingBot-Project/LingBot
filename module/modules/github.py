@@ -44,14 +44,16 @@ def on_msg(event):
     #     event.get_message().fast_reply(f"无新Commit\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
     # else:
     #     event.get_message().fast_reply(f"有新Commit\ntime: {cur_update}\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
-    event.get_message().fast_reply(f'''
+    last_message = f'''
 Latest Commit:
 repos: {commit_info[0]["html_url"]},
 time: {commit_info[0]["commit"]["author"]["date"]},
 author: {commit_info[0]["commit"]["author"]["name"]},
 message: {commit_info[0]["commit"]["message"]},
-sha: {commit_info[0]["sha"]}
-''')
+sha: {commit_info[0]["sha"]},
+pylint check: {get_pylint_state()}
+'''
+    event.get_message().fast_reply(last_message)
 
     # last_info = str(cur_update)
 
@@ -95,15 +97,13 @@ def sch_github_listener():
             if str(listener_last_info) != str(cur_update):
 
                 time.sleep(20)  # wait for pylint's check lol
-                pylint_pass = requests.get('https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml/badge.svg?event=push').content.decode("UTF-8").split("\n")[1].replace("<title>", "").replace("</title>", "").replace(" ", "")  # Shit code lol
-
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
                 last_message = f'''commit info: {commit_info[0]["html_url"]},
 time: {cur_update},
 author: {commit_info[0]["commit"]["author"]["name"]},
 message: {commit_info[0]["commit"]["message"]},
 sha: {commit_info[0]["sha"]},
-pylint check: {pylint_pass}
+pylint check: {get_pylint_state()}
 '''
                 _tmp_msg = f"[GitHub] 有新Commit\n{last_message}"
                 Message.sendMessage(_tmp_msg, target_group=1019068934)
@@ -115,6 +115,10 @@ pylint check: {pylint_pass}
             Message.sendMessage(
                 f"Found an exception when try to auto-sync github commit: {traceback.format_exc()}, request: {json.dumps(commit_info, sort_keys=True, indent=4, separators=(',', ': '))}",
                 target_group=1019068934, bypass=True)
+
+
+def get_pylint_state():
+    return requests.get('https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml/badge.svg?event=push').content.decode("UTF-8").split("\n")[1].replace("<title>", "").replace("</title>", "").replace(" ", "")  # Shit code lol
 
 
 class GitHubController(IModule):
