@@ -86,8 +86,7 @@ def sch_github_listener():
                 is_in_limit = True
                 Message.sendMessage("[GitHub commit listener] Synchronization failed: API rate limit exceeded.",
                                     target_group=1019068934)
-                return
-
+                continue
             commit_info = commit_info.json()
 
             # 解析想要的数据，并打印
@@ -111,7 +110,7 @@ pylint check: {pylint_pass}
                 time.sleep(random.randint(200, 2250) / 1000)
                 Message.sendMessage(_tmp_msg, target_group=308089090)
                 listener_last_info = str(cur_update)
-                time.sleep(20)
+                time.sleep(20)  # cool down
         except Exception as _:
             Message.sendMessage(
                 f"Found an exception when try to auto-sync github commit: {traceback.format_exc()}, request: {json.dumps(commit_info, sort_keys=True, indent=4, separators=(',', ': '))}",
