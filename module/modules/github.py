@@ -122,6 +122,10 @@ def get_pylint_state():
     return requests.get('https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml/badge.svg?event=push').content.decode("UTF-8").split("\n")[1].replace("<title>", "").replace("</title>", "").replace(" ", "")  # Shit code lol
 
 
+def github_url_listener():
+    pass
+
+
 class GitHubController(IModule):
     def process(self, event: Event):
         if isinstance(event, GroupMessageEvent):
