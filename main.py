@@ -1967,8 +1967,10 @@ def main():
         t3.name = "WebSocket"
 
         logging.info("Starting... (5/7)")
-        moduleManager.process_event(BotEnableEvent())
-
+        try:
+            moduleManager.process_event(BotEnableEvent())
+        except:
+            traceback.print_exc()
         logging.info("Starting... (6/7)")
 
         t4 = threading.Thread(target=watchdog)
