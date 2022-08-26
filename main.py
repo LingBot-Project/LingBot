@@ -1112,8 +1112,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                                                                              "base64://") + "]"
                 msg.fast_reply(aaa)
             except:
-                msg.fast_reply("无法获取信息")
-                raise
+                msg.fast_reply(f"无法获取信息 [CQ:image,file=base64://{text2image(traceback.format_exc())}]")
 
         if command_list[0] == "!hypban":
             msg.fast_reply("本功能已经停止使用了")
