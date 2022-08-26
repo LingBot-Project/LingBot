@@ -93,12 +93,15 @@ def sch_github_listener():
             cur_update = commit_info[0]["commit"]["author"]["date"]
 
             if str(listener_last_info) != str(cur_update):
+                pylint_pass = requests.get('https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml/badge.svg?event=push').content.decode("UTF-8").split("\n")[1].replace("<title>", "").replace("</title>", "").replace(" ", "")  # Shit code lol
+
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
                 last_message = f'''commit info: {commit_info[0]["html_url"]},
 time: {cur_update},
 author: {commit_info[0]["commit"]["author"]["name"]},
 message: {commit_info[0]["commit"]["message"]},
-sha: {commit_info[0]["sha"]}
+sha: {commit_info[0]["sha"]},
+pylint info: {pylint_pass}
 '''
                 _tmp_msg = f"[GitHub] 有新Commit\n{last_message}"
                 Message.sendMessage(_tmp_msg, target_group=1019068934)
