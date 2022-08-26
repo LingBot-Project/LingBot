@@ -1113,6 +1113,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply(aaa)
             except:
                 msg.fast_reply("无法获取信息")
+                raise
 
         if command_list[0] == "!hypban":
             msg.fast_reply("本功能已经停止使用了")
