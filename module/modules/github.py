@@ -14,24 +14,25 @@ from module.modules.IModule import IModule
 is_in_limit = False
 listener_last_info = ""
 last_info = ""
+last_message = ""
 api = 'https://api.github.com/repos/LingBot-Project/LingBot'
 commit_api = 'https://api.github.com/repos/LingBot-Project/LingBot/commits'
 web_page = "https://github.com/LingBot-Project/LingBot"
 
 
 def on_msg(event):
-    global last_info, api, web_page, listener_last_info, is_in_limit
+    global last_info, api, web_page, listener_last_info, is_in_limit, last_message
     if event.get_commands()[0] != "!git":
         return
     
     if is_in_limit:
-        event.get_message().fast_reply("API rate limit exceeded, please wait for some minutes.")
+        event.get_message().fast_reply(f"API rate limit exceeded, please wait for some minutes. Last auto-sync commit info:\n{last_message}")
         return
 
     # 发送请求，获取数据
     commit_info = requests.get(commit_api)
     if int(commit_info.headers["x-ratelimit-remaining"]) == 0:
-        event.get_message().fast_reply("API rate limit exceeded, please wait for some minutes.")
+        event.get_message().fast_reply(f"API rate limit exceeded, please wait for some minutes. Last auto-sync commit info:\n{last_message}")
         is_in_limit = True
         return
     commit_info = commit_info.json()
@@ -50,13 +51,13 @@ time: {commit_info[0]["commit"]["author"]["date"]},
 author: {commit_info[0]["commit"]["author"]["name"]},
 message: {commit_info[0]["commit"]["message"]},
 sha: {commit_info[0]["sha"]}
-''', target_group=1019068934)
+''')
 
     # last_info = str(cur_update)
 
 
 def sch_github_listener():
-    global listener_last_info, last_info, api, is_in_limit
+    global listener_last_info, last_info, api, is_in_limit, last_message
     time.sleep(random.randint(500, 2050) / 1000)
     try:
         all_info = requests.get(api)
@@ -93,13 +94,13 @@ def sch_github_listener():
 
             if str(listener_last_info) != str(cur_update):
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
-                _tmp_msg = f'''[GitHub] 有新Commit
-commit info: {commit_info[0]["html_url"]},
+                last_message = f'''commit info: {commit_info[0]["html_url"]},
 time: {cur_update},
 author: {commit_info[0]["commit"]["author"]["name"]},
 message: {commit_info[0]["commit"]["message"]},
 sha: {commit_info[0]["sha"]}
 '''
+                _tmp_msg = f"[GitHub] 有新Commit\n{last_message}"
                 Message.sendMessage(_tmp_msg, target_group=1019068934)
                 time.sleep(random.randint(200, 2250) / 1000)
                 Message.sendMessage(_tmp_msg, target_group=308089090)
