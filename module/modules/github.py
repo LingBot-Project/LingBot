@@ -23,6 +23,10 @@ def on_msg(event):
     global last_info, api, web_page, listener_last_info, is_in_limit
     if event.get_commands()[0] != "!git":
         return
+    
+    if is_in_limit:
+        event.get_message().fast_reply("API rate limit exceeded, please wait for some minutes.")
+        return
 
     # 发送请求，获取数据
     commit_info = requests.get(commit_api)
@@ -70,7 +74,7 @@ def sch_github_listener():
         target_group=1019068934, bypass=True)
     commit_info = {}
     while bot_state.state:
-        time.sleep(random.randint(40608, 71642) / 1000 + (600 if is_in_limit else 0))
+        time.sleep(random.randint(42618, 81642) / 1000 + (600 if is_in_limit else 0))
         is_in_limit = False
         try:
             # 发送请求，获取数据
@@ -98,7 +102,7 @@ sha: {commit_info[0]["sha"]}
 '''
                 Message.sendMessage(_tmp_msg, target_group=1019068934)
                 time.sleep(random.randint(200, 2250) / 1000)
-                Message.sendMessage(_tmp_msg, target_group=308089090, bypass=True, bypass_length=60)
+                Message.sendMessage(_tmp_msg, target_group=308089090)
             listener_last_info = str(cur_update)
         except Exception as _:
             Message.sendMessage(
