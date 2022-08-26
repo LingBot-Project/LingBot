@@ -16,17 +16,27 @@ def on_msg(event):
     global last_info, api, web_page, listener_last_info
     if event.get_commands()[0] != "!git": return
 
-    # 发送请求，获取数据
-    all_info = requests.get(api).json()
+    # # 发送请求，获取数据
+    # all_info = requests.get(api).json()
 
-    # 解析想要的数据，并打印
-    cur_update = all_info['pushed_at']
+    # # 解析想要的数据，并打印
+    # cur_update = all_info['pushed_at']
 
-    if str(last_info) == str(cur_update):
-        event.get_message().fast_reply(f"无新Commit\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
-    else:
-        event.get_message().fast_reply(f"有新Commit\ntime: {cur_update}\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
-    last_info = str(cur_update)
+    # if str(last_info) == str(cur_update):
+    #     event.get_message().fast_reply(f"无新Commit\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
+    # else:
+    #     event.get_message().fast_reply(f"有新Commit\ntime: {cur_update}\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
+    commit_info = requests.get(commit_api).json()
+    event.get_message().fast_reply(f"""
+Latest Commit:
+repos: {all_info['html_url']},
+time: {cur_update},
+author: {commit_info[0]['commit']['author']['name']},
+message: {commit_info[0]['commit']['message']},
+sha: {commit_info[0]['sha']}
+""", target_group=1019068934)
+    
+    # last_info = str(cur_update)
 
 
 def sch_github_listener():
