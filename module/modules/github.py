@@ -41,10 +41,11 @@ sha: {commit_info[0]["sha"]}
 
 def sch_github_listener():
     global listener_last_info, last_info, api
-    
+    time.sleep(random.randint(500, 1750) / 1000)
+    Message.sendMessage(f"[GitHub commit listener] Github Commit Listener synchronizing...", target_group=1019068934)
     last_info = requests.get(api).json()['pushed_at']
     listener_last_info = last_info
-    time.sleep(random.randint(200, 1750) / 1000)
+    time.sleep(random.randint(500, 1750) / 1000)
     Message.sendMessage(f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}", target_group=1019068934)
     while bot_state.state:
         time.sleep(45)
