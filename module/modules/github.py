@@ -102,14 +102,14 @@ time: {cur_update},
 author: {commit_info[0]["commit"]["author"]["name"]},
 message: {commit_info[0]["commit"]["message"]},
 sha: {commit_info[0]["sha"]},
-pylint info: {pylint_pass}
+pylint check: {pylint_pass}
 '''
                 _tmp_msg = f"[GitHub] 有新Commit\n{last_message}"
                 Message.sendMessage(_tmp_msg, target_group=1019068934)
                 time.sleep(random.randint(200, 2250) / 1000)
                 Message.sendMessage(_tmp_msg, target_group=308089090)
-                time.sleep(30)
-            listener_last_info = str(cur_update)
+                listener_last_info = str(cur_update)
+                time.sleep(20)
         except Exception as _:
             Message.sendMessage(
                 f"Found an exception when try to auto-sync github commit: {traceback.format_exc()}, request: {json.dumps(commit_info, sort_keys=True, indent=4, separators=(',', ': '))}",
