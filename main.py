@@ -1391,7 +1391,8 @@ Karma(人品值): {karma}
                 last_login=datetime.datetime.utcfromtimestamp(pI["lastLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 first_login=datetime.datetime.utcfromtimestamp(pI["firstLogin"] / 1000).strftime("%Y-%m-%d %H:%M:%S"),
                 onlineMode=onlineMode,
-                lastLogout=datetime.datetime.utcfromtimestamp(lastLogout / 1000).strftime("%Y-%m-%d %H:%M:%S"))
+                lastLogout=datetime.datetime.utcfromtimestamp(lastLogout / 1000).strftime("%Y-%m-%d %H:%M:%S")
+            )
 
             if playerSkin.status_code == 200:
                 pmsg = "[CQ:image,file=base64://" + base64.b64encode(playerSkin.content).decode() + "]\n" + pmsg
@@ -1490,11 +1491,11 @@ Coins: {coin_purse}
                 else:
                     command_list[1] = int(command_list[1])
                 command_list[2] = int(command_list[2].replace("@", ""))
-            kickdata1 = {
+            kick_data1 = {
                 "group_id": int(command_list[1]),
                 "user_id": int(command_list[2]),
             }
-            post2http(url="/set_group_kick", data=kickdata1)
+            post2http(url="/set_group_kick", data=kick_data1)
             msg.fast_reply("已尝试在" + str(command_list[1]) + "移除" + str(command_list[2]))
 
         if command_list[0] == "!introduce" or command_list[0] == "!介绍":
