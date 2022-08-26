@@ -1667,7 +1667,7 @@ Coins: {coin_purse}
             if str(msg.sender.id) not in ['2915324611', '1474002938']:
                 msg.fast_reply("抱歉, 但是您没有这个权限!")
                 return
-            msg.fast_reply(exec(msg.text[7:]))
+            exec(msg.text[7:])
             return
 
     except Exception as e:
