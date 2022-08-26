@@ -2,7 +2,7 @@ import json
 import random
 import threading
 import traceback
-
+import re
 import requests
 
 import bot_state
@@ -18,6 +18,23 @@ last_message = ""
 api = 'https://api.github.com/repos/LingBot-Project/LingBot'
 commit_api = 'https://api.github.com/repos/LingBot-Project/LingBot/commits'
 web_page = "https://github.com/LingBot-Project/LingBot"
+git_link = re.compile(r'(git|https|git@)(://|)github.com([:/]).*/.*(.git|/| |)')
+github_head = re.compile(r'(git|https|git@)(://|)github.com([:/])')
+
+
+def find_git_link(string: str):
+    return re.findall(git_link, string)
+
+
+def github_url_listener(event: GroupMessageEvent):
+    if is_in_limit:
+        return
+    links = find_git_link(event.get_message().text)
+    if len(links) == 0:
+        return
+    for i in links:
+        pass
+    pass
 
 
 def on_msg(event):
@@ -122,8 +139,19 @@ def get_pylint_state():
     return requests.get('https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml/badge.svg?event=push').content.decode("UTF-8").split("\n")[1].replace("<title>", "").replace("</title>", "").replace(" ", "")  # Shit code lol
 
 
-def github_url_listener():
-    pass
+def parse_ISO_time(t: str):
+    return time.strptime(t, "%Y%Y%Y%Y-%m%m-%d%dT%H%H:%M%M:%S%SZ")
+
+
+def convert_url(s: str) -> str:
+    drop_len = 0
+    if s.endswith("/"):
+        drop_len += 1
+    if s.endswith(".git"):
+        drop_len += 4
+    if s.endswith(" "):
+        drop_len += 1
+    return s[:-drop_len]
 
 
 class GitHubController(IModule):
