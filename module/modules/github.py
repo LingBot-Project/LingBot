@@ -59,26 +59,26 @@ def sch_github_listener():
     time.sleep(random.randint(600, 1500) / 1000)
     Message.sendMessage(f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}", target_group=1019068934, bypass=True)
     while bot_state.state:
-        time.sleep(random.randint(40608, 71642) / 1000 + (300 if is_in_limit else 0))
+        time.sleep(random.randint(40608, 71642) / 1000 + (600 if is_in_limit else 0))
         is_in_limit = False
         try:
             # 发送请求，获取数据
-            all_info = requests.get(api)
+            commit_info = requests.get(commit_api)
 
-            if int(all_info.headers["x-ratelimit-remaining"]) == 0:
+            if int(acommit_info.headers["x-ratelimit-remaining"]) == 0:
                 is_in_limit = True
+                Message.sendMessage("[GitHub commit listener] Synchronization failed: API rate limit exceeded.", target_group=1019068934)
                 return
 
-            all_info = all_info.json()
+            commit_info = commit_info.json()
 
             # 解析想要的数据，并打印
-            cur_update = all_info['pushed_at']
+            cur_update = commit_info[0]["commit"]["author"]["date"]
 
             if str(listener_last_info) != str(cur_update):
-                commit_info = requests.get(commit_api).json()
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
                 _tmp_msg = f'''[GitHub] 有新Commit
-repos: {all_info["html_url"]},
+commit infos: {commit_info[0]["html_url"]},
 time: {cur_update},
 author: {commit_info[0]["commit"]["author"]["name"]},
 message: {commit_info[0]["commit"]["message"]},
