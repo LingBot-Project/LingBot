@@ -76,6 +76,7 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None, byp
     if target_qq is None and target_group is None:
         raise Exception()
 
+    message = str(message)
     if target_group is not None:
         # 消息前缀 通常用于 At 回复消息
         prefix = ""

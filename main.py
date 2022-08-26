@@ -735,7 +735,7 @@ def on_message2(ws, message):
                 if msg.sender.isadmin():
                     sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                                 target_group=1019068934)
-                    return
+                    # return
                 msg.mute(3600).recall()
                 ALL_AD += 1
                 return
@@ -759,7 +759,7 @@ def on_message2(ws, message):
 
             if len(msg.text) > 1500:
                 msg.mute(600).recall().fast_reply("消息太长了哟", reply=False)
-                SPAM2_VL[msg.sender.id] += 3
+                SPAM2_VL[msg.sender.id] += 5
                 return
 
             multiMsg = re.search(r'\[CQ:forward,id=(.*)]', msg.text)
@@ -777,7 +777,7 @@ def on_message2(ws, message):
                 if reScan is not None:
                     msg.fast_reply("您发送的合并转发内容貌似有广告!", reply=False).mute(3600).recall()
                     ALL_AD += 1
-                    SPAM2_VL[msg.sender.id] += 3
+                    SPAM2_VL[msg.sender.id] += 5
                     return
 
             try:
@@ -1356,8 +1356,11 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 pI["lastLogin"] = 0
             if 'karma' not in pI:
                 pI["karma"] = "0"
-            playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
+            # playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
 
+            playerUUID = requests.get(f'https://minecraft-api.com/api/uuid/{command_list[1]}/json').json()["uuid"]
+            playerSkin = requests.get("https://crafatar.com/renders/body/" + playerUUID)
+    
             lastLogout = 0
             if "lastLogout" in player1.JSON:
                 lastLogout = player1.JSON["lastLogout"]
