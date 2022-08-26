@@ -73,7 +73,7 @@ sha: {commit_info[0]["sha"]}
                 Message.sendMessage(_tmp_msg, target_group=308089090, bypass=True, bypass_length=60)
             listener_last_info = str(cur_update)
         except Exception as e:
-            Message.sendMessage(f"Found an exception when try to auto-sync github commit: {traceback.format_exc()}", target_group=1019068934, bypass=True)
+            Message.sendMessage(f"Found an exception when try to auto-sync github commit: {traceback.format_exc()}, request: {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}", target_group=1019068934, bypass=True)
 
 
 class GitHubController(IModule):
