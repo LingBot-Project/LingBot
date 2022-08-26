@@ -16,8 +16,8 @@ def on_msg(event):
     global last_info, api, web_page, listener_last_info
     if event.get_commands()[0] != "!git": return
 
-    # # 发送请求，获取数据
-    # all_info = requests.get(api).json()
+    # 发送请求，获取数据
+    all_info = requests.get(api).json()
 
     # # 解析想要的数据，并打印
     # cur_update = all_info['pushed_at']
@@ -57,14 +57,18 @@ def sch_github_listener():
 
             if str(listener_last_info) != str(cur_update):
                 commit_info = requests.get(commit_api).json()
-                Message.sendMessage(f"""=======[GitHub commit listener]=======
+                # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
+                _tmp_msg = f"""=======[GitHub commit listener]=======
 有新Commit
 repos: {all_info['html_url']},
 time: {cur_update},
 author: {commit_info[0]['commit']['author']['name']},
 message: {commit_info[0]['commit']['message']},
 sha: {commit_info[0]['sha']}
-""", target_group=1019068934)  # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
+"""
+                Message.sendMessage(_tmp_msg, target_group=1019068934)
+                time.sleep(random.randint(200, 2250) / 1000)
+                Message.sendMessage(_tmp_msg, target_group=308089090, bypass=True)
             listener_last_info = str(cur_update)
         except Exception as e:
             Message.sendMessage(f"Found an exception when try to auto-sync github commit: {e}", target_group=1019068934)
