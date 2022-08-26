@@ -55,7 +55,7 @@ sha: {commit_info[0]['sha']}
 """, target_group=1019068934)  # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
             listener_last_info = str(cur_update)
         except Exception as e:
-            Message.sendMessage(f"Found an exception when try to auto-sync github commit: {e}")
+            Message.sendMessage(f"Found an exception when try to auto-sync github commit: {e}", target_group=1019068934)
 
 
 class GitHubController(IModule):
