@@ -12,7 +12,8 @@
 ## 中文
 ### 联系方式
 * LingBot官方群:[Telegram](https://t.me/LingBotProject) [QQ](https://jq.qq.com/?_wv=1027&k=YpmTkCJt)
-* 汐洛:1584784496
+* 汐洛: 1584784496
+* Creeper: 1474002938
 
 ### 开源协议
 * 本开源项目使用AGPL3.0开源协议

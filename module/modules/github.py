@@ -6,7 +6,7 @@ import re
 import requests
 
 import bot_state
-import time
+import time, datetime
 import utils.Message as Message
 from events.Events import *
 from module.modules.IModule import IModule
@@ -20,19 +20,67 @@ commit_api = 'https://api.github.com/repos/LingBot-Project/LingBot/commits'
 web_page = "https://github.com/LingBot-Project/LingBot"
 git_link = re.compile(r'(git|https|git@)(://|)github.com([:/]).*/.*(.git|/| |)')
 github_head = re.compile(r'(git|https|git@)(://|)github.com([:/])')
+s = """[GitHub]
+Repo: {repo}
+Description: {description}
+Owner: {owner_login}
+Default Branch: {branch}
+Language: {lang}
+Last Commit: {last_commit} ({commit_id})
+Create Time: {created_at}
+Update Time: {pushed_at}
+"""  # Thanks lgz-bot
 
 
 def find_git_link(string: str):
-    return re.findall(git_link, string)
+    z = []
+    for i in re.findall(git_link, string):
+        z.append(re.sub(github_head, "", i))
+    return z
 
 
 def github_url_listener(event: GroupMessageEvent):
+    global is_in_limit, s
     if is_in_limit:
         return
     links = find_git_link(event.get_message().text)
     if len(links) == 0:
         return
     for i in links:
+        req = requests.get(f"https://api.github.com/repos/{i}")
+        if int(req.headers["x-ratelimit-remaining"]) == 0:
+            is_in_limit = True
+            return
+        c_req = requests.get(f"https://api.github.com/repos/{i}/commits")
+        if int(c_req.headers["x-ratelimit-remaining"]) == 0:
+            is_in_limit = True
+            last_commit = "Unknown"
+            commit_sha = "Unknown"
+        else:
+            c_req = c_req.json()
+            last_commit = c_req[0]["commit"]["message"]
+            commit_sha = c_req[0]["sha"]
+        rej = req.json()
+        event.reply("""[GitHub]
+Repo: {repo}
+Description: {description}
+Owner: {owner_login}
+Default Branch: {branch}
+Language: {lang}
+Latest Commit: {last_commit} ({commit_sha})
+Create Time: {created_at}
+Update Time: {pushed_at}
+""".format(
+            repo=i,
+            description=rej["description"],
+            owner_login=rej["owner"]["login"],
+            branch=rej["default_branch"],
+            lang="language",
+            last_commit=last_commit,
+            commit_sha=commit_sha,
+            created_at=rej["created_at"],
+            pushed_at=rej["pushed_at"]
+        ))
         pass
     pass
 
@@ -140,7 +188,8 @@ def get_pylint_state():
 
 
 def parse_ISO_time(t: str):
-    return time.strptime(t, "%Y%Y%Y%Y-%m%m-%d%dT%H%H:%M%M:%S%SZ")
+    # time.strptime(t, "%Y%Y%Y%Y-%m%m-%d%dT%H%H:%M%M:%S%SZ")
+    return time.mktime(datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S%z").timetuple())
 
 
 def convert_url(s: str) -> str:
