@@ -1,6 +1,6 @@
 from events.Events import *
 from module.modules.IModule import IModule
-from module.modules import HelloNew, TestHello, is_prime
+from module.modules import HelloNew, TestHello, is_prime, github
 from typing import List
 
 
@@ -10,7 +10,8 @@ class ModuleManager:
         self.register_modules(
             HelloNew.HelloNew(),
             TestHello.TestHello(),
-            is_prime.IsPrime()
+            is_prime.IsPrime(),
+            github.GitHubController()
         )
         pass
 

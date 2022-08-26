@@ -24,11 +24,13 @@ from mcstatus import MinecraftServer
 from simhash import Simhash
 import math
 import chinese_sensitive_vocabulary.word_filter
-from events.Events import Event, GroupMessageEvent
+import bot_state
+from events.Events import Event, GroupMessageEvent, BotEnableEvent
 from module.ModulesManager import ModuleManager
 from utils import five_k_utils, tcping
+from module.modules.github import sch_github_listener
 
-hypixel.setKeys(["bc67e230-01a3-45c6-8177-c9b256b0ef3a", "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"])
+hypixel.setKeys(["14741cb9-194f-4c5b-adb2-9490b1240f14"])  # , "2ca19e21-eb6d-4aaa-9ceb-91f4718c8bd9"
 hypixel.setCacheTime(10.0)
 logging.basicConfig(level=logging.DEBUG, format="[%(asctime)s] [%(levelname)s] %(message)s", datefmt="%H:%M:%S %p")
 
@@ -81,7 +83,6 @@ EMAIL_DELAY = {}
 VERIFIED = {}
 VERIFYING = {}
 VERIFY_TIPS = {}
-last_info = ""
 msg_scanner = chinese_sensitive_vocabulary.word_filter.SensitiveWordModel(
     chinese_sensitive_vocabulary.word_filter.word_url)
 moduleManager: ModuleManager = ModuleManager()
@@ -293,6 +294,7 @@ def save_config():
 
 def stop():
     logging.info("Restarting...")
+    bot_state.state = False
     save_config()
     psutil.Process().kill()
 
@@ -414,7 +416,7 @@ def on_message2(ws, message):
         MESSAGE_PRE_MINUTE, ALL_MESSAGE, \
         ALL_AD, FEEDBACKS, \
         spam2_vl_reset_cool_down, SCREENSHOT_CD, \
-        VERIFYING, VERIFIED, VERIFY_TIPS, FOLLOW_MUTE, last_info
+        VERIFYING, VERIFIED, VERIFY_TIPS, FOLLOW_MUTE
 
     a = json.loads(message)
     if "notice_type" in a:
@@ -507,79 +509,79 @@ def on_message2(ws, message):
             msg.fast_reply(
                 f"请访问: https://lingbot.guimc.ltd/\nLingbot官方群: https://t.me/LingBotProject\n本群验证状态:{msg.group.verify_info()}")
 
-        #         if command_list[0] == "!mail":
-        #             msg.group.id = str(msg.group.id)
-        #             if len(command_list) == 1:
-        #                 msg.fast_reply("""邮箱验证指令:
-        # 开始验证: !mail verify 邮箱地址
-        # 完成验证: !mail code 验证码
-        # 移除验证: !mail reset 本群群号
-        # 查看本群验证状态: !help""")
-        #             if command_list[1] == "verify":
-        #                 if msg.group.id in VERIFIED:
-        #                     msg.fast_reply("本群已经验证过了! 输入 !help 可以查询激活状态")
-        #
-        #                 if msg.group.id not in VERIFYING:
-        #                     VERIFYING[msg.group.id] = {
-        #                         "time": 0,
-        #                         "code": "",
-        #                         "user": 0,
-        #                         "mail": ""
-        #                     }
-        #
-        #                 if time.time() - float(VERIFYING[msg.group.id]["time"]) < 300:
-        #                     msg.fast_reply(
-        #                         "已经有人发起了一个验证消息了! 请等待: {}s".format(300 - (time.time() - float(VERIFYING[msg.group.id]["time"]))))
-        #                     return
-        #
-        #                 print(a["sender"]["role"])
-        #
-        #                 if a["sender"]["role"] == "member" and not msg.sender.isadmin():
-        #                     msg.fast_reply("目前不支持普通群成员发起验证!")
-        #                     return
-        #
-        #                 VERIFYING[msg.group.id]["mail"] = command_list[2]
-        #                 VERIFYING[msg.group.id]["user"] = msg.sender.id
-        #                 VERIFYING[msg.group.id]["code"] = str(random.randint(100000000, 999999999))
-        #                 VERIFYING[msg.group.id]["time"] = time.time()
-        #                 send_email(command_list[2], f"[LingBot Team] 群{msg.group.id} - 激活", f"""您好, {msg.sender.name}:
-        # \t感谢您使用 LingBot 机器人, 您正在尝试给群 {msg.group.id} 激活! 您的验证码是: {VERIFYING[msg.group.id]["code"]}
-        # \t请您在群内使用指令 !mail code {VERIFYING[msg.group.id]["code"]} 来激活
-        # \t此验证码 30 分钟内有效
-        # \t如果您没不知道这是, 请忽略此邮件
-        # """)
-        #                 msg.fast_reply("我们已经尝试发送一封电子邮件到您的邮箱 请按照邮件内容操作")
-        #
-        #             if command_list[1] == "code":
-        #                 if msg.group.id not in VERIFYING:
-        #                     msg.fast_reply("没有查到本群的激活信息!")
-        #                 elif time.time() - VERIFYING[msg.group.id]["time"] >= 1800:
-        #                     msg.fast_reply("""本群的验证码已经过期了!
-        # 邮箱验证指令:
-        # 开始验证: !mail verify 邮箱地址
-        # 完成验证: !mail code 验证码
-        # 查看本群验证状态: !help""")
-        #                 elif str(command_list[2]) == VERIFYING[msg.group.id]["code"]:
-        #                     msg.fast_reply("激活成功!")
-        #                     VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
-        #                     del VERIFYING[msg.group.id]
-        #                 else:
-        #                     msg.fast_reply("我们在处理您的验证时出现了亿点问题 请检查激活码是否正确")
-        #
-        #             if command_list[1] == "reset" and not a["sender"]["role"] == "member":
-        #                 if msg.group.id not in VERIFIED:
-        #                     msg.fast_reply("本群并没有验证过!")
-        #                 try:
-        #                     if command_list[2] + command_list[3] == f"{msg.group.id}{VERIFIED[msg.group.id]}" and command_list[
-        #                         4] == "我知道我在做什么!":
-        #                         del VERIFIED[msg.group.id]
-        #                         msg.fast_reply("本群验证信息已经移除!")
-        #                         return
-        #                     else:
-        #                         msg.fast_reply("你只能移除这个群的验证信息!")
-        #                         return
-        #                 except:
-        #                     msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
+#         if command_list[0] == "!mail":
+#             msg.group.id = str(msg.group.id)
+#             if len(command_list) == 1:
+#                 msg.fast_reply("""邮箱验证指令:
+# 开始验证: !mail verify 邮箱地址
+# 完成验证: !mail code 验证码
+# 移除验证: !mail reset 本群群号
+# 查看本群验证状态: !help""")
+#             if command_list[1] == "verify":
+#                 if msg.group.id in VERIFIED:
+#                     msg.fast_reply("本群已经验证过了! 输入 !help 可以查询激活状态")
+#
+#                 if msg.group.id not in VERIFYING:
+#                     VERIFYING[msg.group.id] = {
+#                         "time": 0,
+#                         "code": "",
+#                         "user": 0,
+#                         "mail": ""
+#                     }
+#
+#                 if time.time() - float(VERIFYING[msg.group.id]["time"]) < 300:
+#                     msg.fast_reply(
+#                         "已经有人发起了一个验证消息了! 请等待: {}s".format(300 - (time.time() - float(VERIFYING[msg.group.id]["time"]))))
+#                     return
+#
+#                 print(a["sender"]["role"])
+#
+#                 if a["sender"]["role"] == "member" and not msg.sender.isadmin():
+#                     msg.fast_reply("目前不支持普通群成员发起验证!")
+#                     return
+#
+#                 VERIFYING[msg.group.id]["mail"] = command_list[2]
+#                 VERIFYING[msg.group.id]["user"] = msg.sender.id
+#                 VERIFYING[msg.group.id]["code"] = str(random.randint(100000000, 999999999))
+#                 VERIFYING[msg.group.id]["time"] = time.time()
+#                 send_email(command_list[2], f"[LingBot Team] 群{msg.group.id} - 激活", f"""您好, {msg.sender.name}:
+# \t感谢您使用 LingBot 机器人, 您正在尝试给群 {msg.group.id} 激活! 您的验证码是: {VERIFYING[msg.group.id]["code"]}
+# \t请您在群内使用指令 !mail code {VERIFYING[msg.group.id]["code"]} 来激活
+# \t此验证码 30 分钟内有效
+# \t如果您没不知道这是, 请忽略此邮件
+# """)
+#                 msg.fast_reply("我们已经尝试发送一封电子邮件到您的邮箱 请按照邮件内容操作")
+#
+#             if command_list[1] == "code":
+#                 if msg.group.id not in VERIFYING:
+#                     msg.fast_reply("没有查到本群的激活信息!")
+#                 elif time.time() - VERIFYING[msg.group.id]["time"] >= 1800:
+#                     msg.fast_reply("""本群的验证码已经过期了!
+# 邮箱验证指令:
+# 开始验证: !mail verify 邮箱地址
+# 完成验证: !mail code 验证码
+# 查看本群验证状态: !help""")
+#                 elif str(command_list[2]) == VERIFYING[msg.group.id]["code"]:
+#                     msg.fast_reply("激活成功!")
+#                     VERIFIED[msg.group.id] = VERIFYING[msg.group.id]["mail"]
+#                     del VERIFYING[msg.group.id]
+#                 else:
+#                     msg.fast_reply("我们在处理您的验证时出现了亿点问题 请检查激活码是否正确")
+#
+#             if command_list[1] == "reset" and not a["sender"]["role"] == "member":
+#                 if msg.group.id not in VERIFIED:
+#                     msg.fast_reply("本群并没有验证过!")
+#                 try:
+#                     if command_list[2] + command_list[3] == f"{msg.group.id}{VERIFIED[msg.group.id]}" and command_list[
+#                         4] == "我知道我在做什么!":
+#                         del VERIFIED[msg.group.id]
+#                         msg.fast_reply("本群验证信息已经移除!")
+#                         return
+#                     else:
+#                         msg.fast_reply("你只能移除这个群的验证信息!")
+#                         return
+#                 except:
+#                     msg.fast_reply("请正确使用!mail reset <当前群号> <当前验证邮箱> 我知道我在做什么! 来移除本群的验证信息!")
 
         if command_list[0] == "!leave":
             try:
@@ -675,7 +677,7 @@ def on_message2(ws, message):
                 SPAM2_VL[msg.sender.id] = 0
             _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
             if _simhash_dis >= 0.836:
-                SPAM2_VL[msg.sender.id] += 12.5 * (_simhash_dis - 0.5) + (len(msg.text) * 0.05)  # :10
+                SPAM2_VL[msg.sender.id] += 12.5 * (_simhash_dis - 0.2) + (len(msg.text) * 0.19)  # :10
                 if _simhash_dis >= 0.99:
                     SPAM2_VL[msg.sender.id] += 10
 
@@ -685,20 +687,17 @@ def on_message2(ws, message):
                     #         f"{msg.sender.id}发送的一条消息疑似重复, 且此人在超管名单内\n上一条内容: \n {SPAM2_MSG[msg.sender.id]}\n内容:\n{msg.text}\n相似度: {_simhash_dis}\nVL: {SPAM2_VL[msg.sender.id]}",
                     #         target_group=1019068934)
                     # msg.recall()
-                    if SPAM2_VL[msg.sender.id] >= 100:
+                    if SPAM2_VL[msg.sender.id] > 100:
                         msg.recall()
                         # 消息的群组去重
-                        _temp = []
-                        _tmp2 = []
+                        _temp = {}
                         for j in SPAM2_MESSAGE_LIST[msg.sender.id]:
-                            if str(j.group.id) in _tmp2:
-                                continue
-                            _tmp2.append(str(j.group.id))
-                            _temp.append(j)
+                            _temp[str(j.group.id)] = j
                         # 先分别禁言
-                        for _ in _temp:
+                        for _ in _temp.keys():
                             _.mute(86400)
                             time.sleep(random.randint(250, 1500) / 1000)
+                        del _temp
 
                         # 再撤回
                         while len(SPAM2_MESSAGE_LIST[msg.sender.id]) > 0:
@@ -707,7 +706,6 @@ def on_message2(ws, message):
 
                         msg.mute(43199 * 60)  # 43199 * 60 # :259200
                         SPAM2_VL[msg.sender.id] -= 20
-                        del _temp, _tmp2
                         SPAM2_MESSAGE_LIST[msg.sender.id].clear()
                         return
                     # else:
@@ -727,17 +725,17 @@ def on_message2(ws, message):
             else:
                 SPAM2_MSG[msg.sender.id] = msg
                 if SPAM2_VL[msg.sender.id] > 0:
-                    SPAM2_VL[msg.sender.id] -= 2.5 * (0.9 - _simhash_dis)  # :2
+                    SPAM2_VL[msg.sender.id] -= SPAM2_VL[msg.sender.id] / 1337  # 2.5 * (0.9 - _simhash_dis)  # :2
 
             reScan = re.findall(
                 ANTI_AD,
                 msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
-            if len(msg.text) >= 33 and len(reScan) >= 2:
+            if len(msg.text) >= 33 and len(reScan) > 2:
                 SPAM2_VL[msg.sender.id] += 4
                 if msg.sender.isadmin():
                     sendMessage("{}发送的一条消息触发了正则 并且此人在超管名单内\n内容:\n{}".format(msg.sender.id, msg.text),
                                 target_group=1019068934)
-                    return
+                    # return
                 msg.mute(3600).recall()
                 ALL_AD += 1
                 return
@@ -761,7 +759,7 @@ def on_message2(ws, message):
 
             if len(msg.text) > 1500:
                 msg.mute(600).recall().fast_reply("消息太长了哟", reply=False)
-                SPAM2_VL[msg.sender.id] += 3
+                SPAM2_VL[msg.sender.id] += 5
                 return
 
             multiMsg = re.search(r'\[CQ:forward,id=(.*)]', msg.text)
@@ -779,7 +777,7 @@ def on_message2(ws, message):
                 if reScan is not None:
                     msg.fast_reply("您发送的合并转发内容貌似有广告!", reply=False).mute(3600).recall()
                     ALL_AD += 1
-                    SPAM2_VL[msg.sender.id] += 3
+                    SPAM2_VL[msg.sender.id] += 5
                     return
 
             try:
@@ -793,7 +791,7 @@ def on_message2(ws, message):
                 msg.recall()
                 return
 
-            if msg.text.count("[CQ:image") >= 3:
+            if msg.text.count("[CQ:image") > 3:
                 if msg.sender.isadmin() is False:
                     msg.mute(60).recall().fast_reply("太...太多图片了..", reply=False)
                     return
@@ -1358,8 +1356,11 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 pI["lastLogin"] = 0
             if 'karma' not in pI:
                 pI["karma"] = "0"
-            playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
+            # playerSkin = requests.get("https://crafatar.com/renders/body/" + pI["uuid"])
 
+            playerUUID = requests.get(f'https://minecraft-api.com/api/uuid/{command_list[1]}/json').json()["uuid"]
+            playerSkin = requests.get("https://crafatar.com/renders/body/" + playerUUID)
+    
             lastLogout = 0
             if "lastLogout" in player1.JSON:
                 lastLogout = player1.JSON["lastLogout"]
@@ -1450,22 +1451,22 @@ Coins: {coin_purse}
                 msg.fast_reply("请发送QQ号或'me'!!!")
             return
 
-        if command_list[0] == "!git":
-            # 1.Github项目及API接口数据
-            api = 'https://api.github.com/repos/LingBot-Project/LingBot'
-            web_page = "https://github.com/LingBot-Project/LingBot"
+        # if command_list[0] == "!git":
+        #     # 1.Github项目及API接口数据
+        #     api = 'https://api.github.com/repos/LingBot-Project/LingBot'
+        #     web_page = "https://github.com/LingBot-Project/LingBot"
 
-            # 2.发送请求，获取数据
-            all_info = requests.get(api).json()
+        #     # 2.发送请求，获取数据
+        #     all_info = requests.get(api).json()
 
-            # 3.解析想要的数据，并打印
-            cur_update = all_info['updated_at']
+        #     # 3.解析想要的数据，并打印
+        #     cur_update = all_info['updated_at']
 
-            if str(last_info) == str(cur_update):
-                msg.fast_reply("无新Commit")
-            else:
-                msg.fast_reply("有新Commit,time:" + cur_update)
-            last_info = str(cur_update)
+        #     if str(last_info) == str(cur_update):
+        #         msg.fast_reply("无新Commit")
+        #     else:
+        #         msg.fast_reply("有新Commit,time:" + cur_update)
+        #     last_info = str(cur_update)
 
         if command_list[0] == "!info":
             if msg.sender.isadmin:
@@ -1474,7 +1475,7 @@ Coins: {coin_purse}
                 cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
                 memory_usage = str(psutil.virtual_memory().percent)
                 msg.fast_reply("CPU核心数量:" + str(
-                    psutil.cpu_count()) + "核\n" + "CPU占用率:" + cpu_usage + "%\n内存占用率:" + memory_usage + "%\n运行中的Watchdog线程:" + str(
+                    psutil.cpu_count()) + "核\n" + "CPU占用率:" + cpu_usage + "%\n内存占用率:" + memory_usage + "%\n运行中的线程:" + str(
                     len(rt)))
                 # msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
             else:
@@ -1661,6 +1662,7 @@ Coins: {coin_purse}
         msg.fast_reply(
             "很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(
                 text2image(a)))
+        sendMessage(f"我们在执行 {msg.sender.name}({msg.sender.id}) 的指令: [CQ:image,file=base64://{text2image(msg.text)}] 时出了点问题\n[CQ:image,file=base64://{text2image(a)}]", target_group=1019068934)
 
 
 def add_achievements(qq, msg, achievements):
@@ -1940,9 +1942,9 @@ def goodnig():
 
 def main():
     try:
-        logging.info("Starting... (0/5)")
+        logging.info("Starting... (0/7)")
         read_config()
-        logging.info("Starting... (1/5)")
+        logging.info("Starting... (1/7)")
         ws = websocket.WebSocketApp("ws://" + WSURL + "/all?qq=1643406018",
                                     on_message=on_message,
                                     on_error=on_error,
@@ -1950,24 +1952,30 @@ def main():
                                     )
         t3 = threading.Thread(target=ws.run_forever)
         t3.daemon = True
-        logging.info("Starting... (2/5)")
+        logging.info("Starting... (2/7)")
         sched = BlockingScheduler()
         sched.add_job(goodmor, 'cron', hour=7)
         sched.add_job(goodnig, 'cron', hour=22, minute=30)
         sched.add_job(msg_counter_send, 'cron', hour=0)
         t1 = threading.Thread(target=sched.start)
         t1.deamon = True
-        logging.info("Starting... (3/6)")
+        logging.info("Starting... (3/7)")
         t1.start()
         t1.name = "Scheduler"
-        logging.info("Starting... (4/6)")
+        logging.info("Starting... (4/7)")
         t3.start()
         t3.name = "WebSocket"
-        logging.info("Starting... (5/6)")
+
+        logging.info("Starting... (5/7)")
+        try:
+            moduleManager.process_event(BotEnableEvent())
+        except:
+            traceback.print_exc()
+        logging.info("Starting... (6/7)")
 
         t4 = threading.Thread(target=watchdog)
         t4.start()
-        logging.info("Starting... (6/6)")
+        logging.info("Starting... (7/7)")
         logging.info("Started")
         t4.name = "WatchDog"
         t4.join()

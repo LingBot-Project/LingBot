@@ -24,6 +24,14 @@ class GroupMessageEvent(CancelableEvent):
 
     def get_message(self):
         return self._message
+    
+    def get_commands(self):
+        return self.command_list
 
     def reply(self, message: str, at: bool = True, reply: bool = True):
         self._message.fast_reply(message, at, reply)
+
+
+class BotEnableEvent(Event):
+    def __init__(self):
+        pass

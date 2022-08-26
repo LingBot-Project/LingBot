@@ -1,9 +1,9 @@
-import json
+import json, random
 import re
 
 import requests
 
-from main import HTTPURL, strQ2B, Group, User
+# from main import HTTPURL, strQ2B, Group, User
 
 
 # 先分类吧
@@ -18,9 +18,9 @@ class Message:
             a = json.loads(json2msg)
             ad = a
             if ad["post_type"] == "message" and ad["message_type"] == "group":
-                self.text = strQ2B(ad["message"])
-                self.sender = User(ad["sender"]["user_id"], ad["sender"]["nickname"])
-                self.group = Group(ad["group_id"])
+                # self.text = strQ2B(ad["message"])
+                # self.sender = User(ad["sender"]["user_id"], ad["sender"]["nickname"])
+                # self.group = Group(ad["group_id"])
                 self.id = ad["message_id"]
                 self.text_nocq = re.sub(r"\[CQ:.*]", '', self.text)
                 self.success = True
@@ -72,10 +72,11 @@ def recall(msg_id):
     post2http(url="/delete_msg", data=data1)
 
 
-def sendMessage(message, target_qq=None, target_group=None, message_id=None):
+def sendMessage(message, target_qq=None, target_group=None, message_id=None, bypass=False, bypass_length=4):
     if target_qq is None and target_group is None:
         raise Exception()
 
+    message = str(message)
     if target_group is not None:
         # 消息前缀 通常用于 At 回复消息
         prefix = ""
@@ -86,6 +87,15 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None):
         if message_id is not None:
             prefix += "[CQ:reply,id={}]".format(message_id)
 
+        if bypass:
+            b_array = ["\u202D"]  # ["\u202D", "", "", "", ""]
+            for i in range(0, bypass_length):
+                b_array.append("")
+            nowmsg = ""
+            for i2 in list(message):
+                nowmsg += i2 + random.choice(b_array)
+            message = nowmsg
+        
         # 构建数据
         data1 = {
             "group_id": int(target_group),
@@ -102,6 +112,6 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None):
         # logging.warning("目前暂时不支持发送私聊消息")
 
 
-def post2http(url, server_addr=HTTPURL, data=None):
+def post2http(url, server_addr='127.0.0.1:10500', data=None):
     return requests.post(f"http://{server_addr}{url}", data=data)
 
