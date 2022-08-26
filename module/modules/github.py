@@ -2,7 +2,7 @@ from events.Events import *
 from module.modules.IModule import IModule
 import json
 import requests
-import threading
+import threading, random
 import bot_state, time
 import utils.Message as Message
 
@@ -23,9 +23,9 @@ def on_msg(event):
     cur_update = all_info['pushed_at']
 
     if str(last_info) == str(cur_update):
-        event.get_message().fast_reply(f"无新Commit\n last commit: {last_info}\n last auto-sync commit: {listener_last_info}")
+        event.get_message().fast_reply(f"无新Commit\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
     else:
-        event.get_message().fast_reply(f"有新Commit, time: {cur_update}\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
+        event.get_message().fast_reply(f"有新Commit\ntime: {cur_update}\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
     last_info = str(cur_update)
 
 
@@ -34,6 +34,8 @@ def sch_github_listener():
     
     last_info = requests.get(api).json()['pushed_at']
     listener_last_info = last_info
+    time.sleep(random.randint(1, 5))
+    Message.sendMessage(f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}", target_group=1019068934)
     while bot_state.state:
         time.sleep(45)
         try:
