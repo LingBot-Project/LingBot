@@ -2,7 +2,7 @@ from events.Events import *
 from module.modules.IModule import IModule
 import json
 import requests
-import threading, random
+import threading, random, traceback
 import bot_state, time
 import utils.Message as Message
 
@@ -27,14 +27,14 @@ def on_msg(event):
     # else:
     #     event.get_message().fast_reply(f"有新Commit\ntime: {cur_update}\nlast commit: {last_info}\nlast auto-sync commit: {listener_last_info}")
     commit_info = requests.get(commit_api).json()
-    event.get_message().fast_reply(f"""
+    event.get_message().fast_reply(f'''
 Latest Commit:
-repos: {all_info['html_url']},
+repos: {all_info["html_url"]},
 time: {cur_update},
-author: {commit_info[0]['commit']['author']['name']},
-message: {commit_info[0]['commit']['message']},
-sha: {commit_info[0]['sha']}
-""", target_group=1019068934)
+author: {commit_info[0]["commit"]["author"]["name"]},
+message: {commit_info[0]["commit"]["message"]},
+sha: {commit_info[0]["sha"]}
+''', target_group=1019068934)
     
     # last_info = str(cur_update)
 
@@ -58,20 +58,20 @@ def sch_github_listener():
             if str(listener_last_info) != str(cur_update):
                 commit_info = requests.get(commit_api).json()
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
-                _tmp_msg = f"""=======[GitHub commit listener]=======
+                _tmp_msg = f'''=======[GitHub commit listener]=======
 有新Commit
-repos: {all_info['html_url']},
+repos: {all_info["html_url"]},
 time: {cur_update},
-author: {commit_info[0]['commit']['author']['name']},
-message: {commit_info[0]['commit']['message']},
-sha: {commit_info[0]['sha']}
-"""
+author: {commit_info[0]["commit"]["author"]["name"]},
+message: {commit_info[0]["commit"]["message"]},
+sha: {commit_info[0]["sha"]}
+'''
                 Message.sendMessage(_tmp_msg, target_group=1019068934)
                 time.sleep(random.randint(200, 2250) / 1000)
                 Message.sendMessage(_tmp_msg, target_group=308089090, bypass=True)
             listener_last_info = str(cur_update)
         except Exception as e:
-            Message.sendMessage(f"Found an exception when try to auto-sync github commit: {e}", target_group=1019068934)
+            Message.sendMessage(f"Found an exception when try to auto-sync github commit: {traceback.format_exc()}", target_group=1019068934)
 
 
 class GitHubController(IModule):
