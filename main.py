@@ -20,7 +20,8 @@ import requests
 import websocket
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from apscheduler.schedulers.blocking import BlockingScheduler
-from mcstatus import MinecraftServer
+# from mcstatus import MinecraftServer
+import mcstatus
 from simhash import Simhash
 import math
 import chinese_sensitive_vocabulary.word_filter
@@ -1096,7 +1097,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 
         if command_list[0] == "!mcping":
             try:
-                server = MinecraftServer.lookup(command_list[1]).status()
+                server = mcstatus.MinecraftServer.lookup(command_list[1]).status()
                 aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
                     re.sub(MC_MOTD_COLORFUL, "", server.description),
                     server.players.online,

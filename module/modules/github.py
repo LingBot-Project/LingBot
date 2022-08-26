@@ -94,6 +94,8 @@ def sch_github_listener():
             cur_update = commit_info[0]["commit"]["author"]["date"]
 
             if str(listener_last_info) != str(cur_update):
+
+                time.sleep(20)  # wait for pylint's check lol
                 pylint_pass = requests.get('https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml/badge.svg?event=push').content.decode("UTF-8").split("\n")[1].replace("<title>", "").replace("</title>", "").replace(" ", "")  # Shit code lol
 
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
