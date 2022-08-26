@@ -34,4 +34,4 @@ class GroupMessageEvent(CancelableEvent):
 
 class BotEnableEvent(Event):
     def __init__(self):
-        pass
+        super().__init__()
