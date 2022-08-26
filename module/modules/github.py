@@ -33,57 +33,54 @@ Update Time: {pushed_at}
 
 
 def find_git_link(string: str):
-    z = []
-    for i in re.findall(git_link, string):
-        z.append(re.sub(github_head, "", i))
-    return z
+    a = re.search(git_link, string).span()
+    return convert_url(re.sub(github_head, "", string[a[0]: a[1]]))
 
 
 def github_url_listener(event: GroupMessageEvent):
     global is_in_limit, s
     if is_in_limit:
         return
-    links = find_git_link(event.get_message().text)
-    if len(links) == 0:
+    i = find_git_link(event.get_message().text)
+    req = requests.get(f"https://api.github.com/repos/{i}")
+    bot_state.x_ratelimit_remaining = int(req.headers["x-ratelimit-remaining"])
+    if int(req.headers["x-ratelimit-remaining"]) == 0:
+        is_in_limit = True
         return
-    for i in links:
-        req = requests.get(f"https://api.github.com/repos/{i}")
-        bot_state.x_ratelimit_remaining = int(req.headers["x-ratelimit-remaining"])
-        if int(req.headers["x-ratelimit-remaining"]) == 0:
-            is_in_limit = True
-            return
-        c_req = requests.get(f"https://api.github.com/repos/{i}/commits")
-        if int(c_req.headers["x-ratelimit-remaining"]) == 0:
-            is_in_limit = True
-            last_commit = "Unknown"
-            commit_sha = "Unknown"
-        else:
-            c_req = c_req.json()
-            last_commit = c_req[0]["commit"]["message"]
-            commit_sha = c_req[0]["sha"]
-        rej = req.json()
-        event.reply("""[GitHub]
-Repo: {repo}
-Description: {description}
-Owner: {owner_login}
-Default Branch: {branch}
-Language: {lang}
-Latest Commit: {last_commit} ({commit_sha})
-Create Time: {created_at}
-Update Time: {pushed_at}
-""".format(
-            repo=i,
-            description=rej["description"],
-            owner_login=rej["owner"]["login"],
-            branch=rej["default_branch"],
-            lang="language",
-            last_commit=last_commit,
-            commit_sha=commit_sha,
-            created_at=rej["created_at"],
-            pushed_at=rej["pushed_at"]
-        ))
-        pass
+    c_req = requests.get(f"https://api.github.com/repos/{i}/commits")
+    if int(c_req.headers["x-ratelimit-remaining"]) == 0:
+        is_in_limit = True
+        last_commit = "Unknown"
+        commit_sha = "Unknown"
+    else:
+        c_req = c_req.json()
+        last_commit = c_req[0]["commit"]["message"]
+        commit_sha = c_req[0]["sha"]
+    rej = req.json()
+    event.reply("""[GitHub]
+    Repo: {repo}
+    Description: {description}
+    Owner: {owner_login}
+    Default Branch: {branch}
+    Language: {lang}
+    Latest Commit: {last_commit} ({commit_sha})
+    Create Time: {created_at}
+    Update Time: {pushed_at}
+    """.format(
+        repo=i,
+        description=rej["description"],
+        owner_login=rej["owner"]["login"],
+        branch=rej["default_branch"],
+        lang="language",
+        last_commit=last_commit,
+        commit_sha=commit_sha,
+        created_at=rej["created_at"],
+        pushed_at=rej["pushed_at"]
+    ))
     pass
+
+
+pass
 
 
 def on_msg(event):
@@ -215,3 +212,7 @@ class GitHubController(IModule):
             t1 = threading.Thread(target=sch_github_listener)
             t1.start()
             t1.name = "GithubCommitListener"
+
+
+if __name__ == '__main__':
+    print(find_git_link("https://github.com/guimc233/lgz-bot.git"))
