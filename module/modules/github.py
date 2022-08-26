@@ -6,6 +6,7 @@ import threading, random, traceback
 import bot_state, time
 import utils.Message as Message
 
+is_in_limit = False
 listener_last_info = ""
 last_info = ""
 api = 'https://api.github.com/repos/LingBot-Project/LingBot'
@@ -50,10 +51,16 @@ def sch_github_listener():
     time.sleep(random.randint(600, 1500) / 1000)
     Message.sendMessage(f"[GitHub commit listener] Listener thread is running, currect auto-sync commit time: {listener_last_info}", target_group=1019068934, bypass=True)
     while bot_state.state:
-        time.sleep(random.randint(40608, 71642) / 1000)
+        time.sleep(random.randint(40608, 71642) / 1000 + (300 if is_in_limit else 0))
         try:
             # 发送请求，获取数据
-            all_info = requests.get(api).json()
+            all_info = requests.get(api)
+
+            if int(all_info.headers["x-ratelimit-remaining"]) == 0:
+                is_in_limit = True
+                return
+
+            all_info = all_info.json()
 
             # 解析想要的数据，并打印
             cur_update = all_info['pushed_at']
