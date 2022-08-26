@@ -66,6 +66,7 @@ def sch_github_listener():
         if int(commit_info.headers["x-ratelimit-remaining"]) == 0:
             is_in_limit = True
             raise Exception("API rate limit exceeded")
+        commit_info = commit_info.json()
         bot_state.cur_git_ver = commit_info[0]["sha"][:7]
         last_info = commit_info[0]["commit"]["author"]["date"]
         listener_last_info = last_info
