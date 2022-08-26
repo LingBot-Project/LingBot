@@ -62,7 +62,7 @@ def sch_github_listener():
     global listener_last_info, last_info, api, is_in_limit, last_message
     time.sleep(random.randint(500, 2050) / 1000)
     try:
-        commit_info = commit_info.json()
+        commit_info = requests.get(commit_api)
         if int(commit_info.headers["x-ratelimit-remaining"]) == 0:
             is_in_limit = True
             raise Exception("API rate limit exceeded")
