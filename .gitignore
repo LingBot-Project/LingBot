@@ -3,3 +3,5 @@
 /feedback.ini
 *.bak
 /venv/
+*/__pycache__/
+*.pyc
