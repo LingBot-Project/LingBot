@@ -30,7 +30,7 @@ class SensitiveWordModel(object):
                 self.spam.add(_[0])
 
     def __get_words_local(self):
-        with open("cn_stopwords.txt", "r+", encoding="UTF-8") as f:
+        with open("words.txt", "r+", encoding="UTF-8") as f:
             for s in f.read().split("\n"):
                 _ = s.split('\t')
                 if _[1] == '0':
