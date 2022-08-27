@@ -158,6 +158,9 @@ def sch_github_listener():
                 Message.sendMessage("[GitHub commit listener] Synchronization failed: API rate limit exceeded.",
                                     target_group=1019068934)
                 continue
+            
+            if int(commit_info.headers["x-ratelimit-remaining"]) <= 5:
+                is_in_limit = True
             commit_info = commit_info.json()
 
             # 解析想要的数据，并打印
