@@ -34,7 +34,7 @@ Update Time: {pushed_at}
 
 def find_git_link(string: str):
     a = re.search(git_link, string).span()
-    return convert_url(re.sub(github_head, "", string[a[0]: a[1]]))
+    return re.sub(github_head, "", convert_url(string[a[0]: a[1]]))
 
 
 def github_url_listener(event: GroupMessageEvent):
@@ -200,7 +200,7 @@ def convert_url(s: str) -> str:
         drop_len += 4
     if s.endswith(" "):
         drop_len += 1
-    return s[:-drop_len]
+    return s[:-drop_len] if drop_len > 0 else s
 
 
 class GitHubController(IModule):
@@ -215,4 +215,11 @@ class GitHubController(IModule):
 
 
 if __name__ == '__main__':
-    print(find_git_link("https://github.com/guimc233/lgz-bot.git"))
+    link = "https://github.com/LingBot-Project/LingBot"
+    sp = re.search(git_link, link).span()
+    print(link[sp[0]:sp[1]])
+    print(find_git_link(link))
+    print(re.sub(github_head, "", link))
+    print("A?")
+    print(convert_url(link))
+    print(convert_url(re.sub(github_head, "", link)))
