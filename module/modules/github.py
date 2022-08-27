@@ -42,6 +42,8 @@ def github_url_listener(event: GroupMessageEvent):
     if is_in_limit:
         return
     i = find_git_link(event.get_message().text)
+    if i == "":
+        return
     req = requests.get(f"https://api.github.com/repos/{i}")
     bot_state.x_ratelimit_remaining = int(req.headers["x-ratelimit-remaining"])
     if int(req.headers["x-ratelimit-remaining"]) == 0:
