@@ -11,7 +11,8 @@ class SensitiveWordModel(object):
         self.word_url = word_url
         self.spam = set()
         self.nospam = {}
-        self.__get_words_info()
+        # self.__get_words_info()
+        self.__get_words_local()
         self.word_filter = flashtext.KeywordProcessor()
         self.word_filter.add_keywords_from_list(list(self.spam))
 
@@ -27,6 +28,15 @@ class SensitiveWordModel(object):
                 self.nospam[_[0]] = np.asarray(_[2:], float).sum()
             else:
                 self.spam.add(_[0])
+
+    def __get_words_local(self):
+        with open("cn_stopwords.txt", "r+", encoding="UTF-8") as f:
+            for s in f.read().split("\n"):
+                _ = s.split('\t')
+                if _[1] == '0':
+                    self.nospam[_[0]] = np.asarray(_[2:], float).sum()
+                else:
+                    self.spam.add(_[0])
 
 
 if __name__ == '__main__':
