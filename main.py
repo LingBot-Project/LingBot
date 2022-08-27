@@ -66,6 +66,7 @@ ALL_MESSAGE = 0
 MESSAGE_PRE_MINUTE = [0, 0]
 ALL_AD = 0
 BILI_BV_RE = re.compile(r"BV([a-zA-Z\d]{10})")
+timeCaches = []
 timePreMessage = 0
 recordTime = int(time.time())
 isChatBypassOpened = False
@@ -1812,10 +1813,16 @@ def temps_message(ws, message):
         pass
     b = time.time()
     sfl_time = b - a
+    timeCaches.append(sfl_time)
     if timePreMessage == 0:
         timePreMessage = sfl_time
     else:
-        timePreMessage = (timePreMessage + sfl_time) / 2
+        c = 0
+        for i in timeCaches:
+            c += i
+        timePreMessage = c / len(timeCaches)  # (timePreMessage + sfl_time) / 2
+        if len(timeCaches) > 1000:
+            timeCaches.pop(0)
 
 
 # def send_email(mail, title, text):
