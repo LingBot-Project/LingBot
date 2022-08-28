@@ -150,7 +150,7 @@ def sch_github_listener():
     commit_info = {}
     time.sleep(30)
     while bot_state.state:
-        time.sleep(random.randint(42618, 81642) / 1000 + (600 if is_in_limit else 0))
+        time.sleep(random.randint(50000, 81642) / 1000 + (600 if is_in_limit else 0))
         is_in_limit = False
         try:
             # 发送请求，获取数据
