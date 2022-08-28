@@ -299,6 +299,7 @@ def stop():
     try:
         save_config()
         bot_state.state = False
+        os.system("rm -rf *.cache.png")
     except:
         pass
     psutil.Process().kill()
@@ -1991,7 +1992,6 @@ def main():
         logging.info("Starting... (5/7)")
         try:
             moduleManager.process_event(BotEnableEvent())
-            os.system("rm -rf *.cache.png")
         except:
             traceback.print_exc()
         logging.info("Starting... (6/7)")
