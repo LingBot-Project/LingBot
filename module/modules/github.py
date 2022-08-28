@@ -42,7 +42,7 @@ def find_git_link(string: str):
 
 def github_url_listener(event: GroupMessageEvent):
     global is_in_limit, s
-    if is_in_limit:
+    if bot_state.x_ratelimit_remaining = int(req.headers["x-ratelimit-remaining"]) == 0:
         return
     i = find_git_link(event.get_message().text)
     if i == "":
