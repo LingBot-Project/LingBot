@@ -397,6 +397,31 @@ def text2image(text, default_uid=None):
         return base64.b64encode(f.read()).decode()
 
 
+def text2image_colorful(text, default_uid=None, bg_color=(255, 255, 255)):  # TODO
+    if default_uid is not None:
+        image_uid = default_uid
+    else:
+        image_uid = uuid.uuid4().__str__()
+    font_size = 22
+    max_w = 0
+    lines = text.split('\n')
+    # print(len(lines))
+    font_path = r"a.ttf"
+    font = ImageFont.truetype(font_path, font_size)
+    for i in lines:
+        try:
+            if max_w <= font.getmask(i).getbbox()[2]:
+                max_w = font.getmask(i).getbbox()[2]
+        except:
+            pass
+    im = Image.new("RGB", (max_w + 11, len(lines) * (font_size + 8)), bg_color)
+    dr = ImageDraw.Draw(im)
+    dr.text((1, 1), text, font=font, fill="#000000")
+    im.save(image_uid + ".cache.png")
+    with open(image_uid + ".cache.png", "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+
 def strQ2B(ustring):
     rstring = ""
     for uchar in ustring:
@@ -516,7 +541,7 @@ def on_message2(ws, message):
 
         if msg.text in ["!help", "菜单"]:
             msg.fast_reply(
-                f"[CQ:image,file=base64://{text2image(bot_state.command_usage, default_uid='HELP-IMAGE')}] \nLingbot官方群: 308089090\ntg: https://t.me/LingBotProject \n本群验证状态:{msg.group.verify_info()}")
+                f"[CQ:image,file=base64://{text2image(bot_state.command_usage, default_uid='HELP-IMAGE')}]Lingbot官方群: 308089090\ntg: https://t.me/LingBotProject \n本群验证状态:{msg.group.verify_info()}")
 
         #         if command_list[0] == "!mail":
         #             msg.group.id = str(msg.group.id)
@@ -1105,26 +1130,23 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("操作成功")
 
         if command_list[0] == "!mcping":
-            # msg.fast_reply("暂停使用")
-            try:
-                server = mcstatus.JavaServer.lookup(command_list[1]).status()
-                aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
-                    re.sub(MC_MOTD_COLORFUL, "", server.description),
-                    server.players.online,
-                    server.players.max,
-                    server.latency,
-                    re.sub(MC_MOTD_COLORFUL, "", server.version.name),
-                    server.version.protocol
-                )
-                aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
-                aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
-                if server.favicon is not None:
-                    aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,",
-                                                                             "base64://") + "]"
-                msg.fast_reply(aaa)
-                return
-            except:
-                msg.fast_reply(f"无法获取信息 [CQ:image,file=base64://{text2image(traceback.format_exc())}]")
+            msg.fast_reply("暂停使用")
+#             try:
+#                 server = mcstatus.JavaServer.lookup(command_list[1]).status()
+#                 aaa = f"""§rMotd:
+# §r{server.description}
+# §r在线人数:{server.players.online}/{server.players.max}
+# Ping:{server.latency}
+# Version:{server.version.name} (protocol:{server.version.protocol})"""
+#                 aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
+#                 aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
+#                 if server.favicon is not None:
+#                     aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,",
+#                                                                              "base64://") + "]"
+#                 msg.fast_reply(aaa)
+#                 return
+#             except:
+#                 msg.fast_reply(f"无法获取信息 [CQ:image,file=base64://{text2image(traceback.format_exc())}]")
 
         if command_list[0] == "!hypban":
             msg.fast_reply("本功能已经停止使用了")
