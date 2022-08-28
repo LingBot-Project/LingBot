@@ -5,12 +5,14 @@ import requests
 
 # from main import HTTPURL, strQ2B, Group, User
 
+DEV_GROUP = 1019068934
+
 
 # 先分类吧
 class Message:
     def __init__(self, json2msg=None):
         self.id = 0
-        self.text = 0
+        self.text = ""
         self.sender = None
         self.group = None
         self.JSON = json2msg
