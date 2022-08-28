@@ -32,3 +32,29 @@ command_usage = """帮助 - 指令用法
 !git <- 获取机器人的github仓库当前的状态
 !feedback <info> <- 向开发者反馈信息(我们需要您的帮助以提升机器人的使用体验!)
 """
+colorful_motd_mapping = {
+    "0": "black",
+    "1": "dark_blue",
+    "2": "dark_green",
+    "3": "dark_aqua",
+    "4": "dark_red",
+    "5": "dark_purple",
+    "6": "gold",
+    "7": "gray",
+    "8": "dark_gray",
+    "9": "blue",
+    "a": "green",
+    "b": "aqua",
+    "c": "red",
+    "d": "light_purple",
+    "e": "yellow",
+    "f": "white",
+    "g": "minecon_gold",
+    # formatting
+    "u": "underline",
+    "l": "bold",
+    "o": "italic",
+    "m": "strikethrough",
+    "k": "hex",
+    "r": "reset"
+}
