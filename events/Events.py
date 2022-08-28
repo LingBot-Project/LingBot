@@ -1,4 +1,4 @@
-#import main as _instance
+# import main as _instance
 class Event:
     def __init__(self): ...
 
@@ -20,12 +20,12 @@ class GroupMessageEvent(CancelableEvent):
     def __init__(self, message):
         super().__init__()
         self._message = message
-        self.command_list = message.text.split(" ")
+        self.command_list: list = message.text.split(" ")
 
     def get_message(self):
         return self._message
     
-    def get_commands(self):
+    def get_commands(self) -> list:
         return self.command_list
 
     def reply(self, message: str, at: bool = True, reply: bool = True):

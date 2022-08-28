@@ -1,6 +1,6 @@
 from events.Events import *
 from module.modules.IModule import IModule
-from module.modules import HelloNew, TestHello, is_prime, github
+from module.modules import HelloNew, TestHello, is_prime, github, feedback
 from typing import List
 
 
@@ -11,7 +11,8 @@ class ModuleManager:
             HelloNew.HelloNew(),
             TestHello.TestHello(),
             is_prime.IsPrime(),
-            github.GitHubController()
+            github.GitHubController(),
+            feedback.Feedback()
         )
         pass
 
@@ -30,3 +31,6 @@ class ModuleManager:
         if isinstance(event, CancelableEvent):
             return event.is_canceled()
         return False
+
+    def get_modules(self) -> list:
+        return self._modules

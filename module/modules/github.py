@@ -33,7 +33,10 @@ Update Time: {pushed_at}
 
 
 def find_git_link(string: str):
-    a = re.search(git_link, string).span()
+    a = re.search(git_link, string)
+    if a is None:
+        return ""
+    a= a.span()
     return re.sub(github_head, "", convert_url(string[a[0]: a[1]]))
 
 
@@ -60,15 +63,15 @@ def github_url_listener(event: GroupMessageEvent):
         commit_sha = c_req[0]["sha"]
     rej = req.json()
     event.reply("""[GitHub]
-    Repo: {repo}
-    Description: {description}
-    Owner: {owner_login}
-    Default Branch: {branch}
-    Language: {lang}
-    Latest Commit: {last_commit} ({commit_sha})
-    Create Time: {created_at}
-    Update Time: {pushed_at}
-    """.format(
+Repo: {repo}
+Description: {description}
+Owner: {owner_login}
+Default Branch: {branch}
+Language: {lang}
+Latest Commit: {last_commit} ({commit_sha})
+Create Time: {created_at}
+Update Time: {pushed_at}
+""".format(
         repo=i,
         description=rej["description"],
         owner_login=rej["owner"]["login"],
