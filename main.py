@@ -299,7 +299,6 @@ def stop():
     try:
         save_config()
         bot_state.state = False
-        os.system("rm -rf *.cache.png")
     except:
         pass
     psutil.Process().kill()
@@ -1999,6 +1998,7 @@ def main():
         t4 = threading.Thread(target=watchdog)
         t4.start()
         logging.info("Starting... (7/7)")
+        os.system("rm -rf *.cache.png")
         logging.info("Started")
         t4.name = "WatchDog"
         t4.join()
