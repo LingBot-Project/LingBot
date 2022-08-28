@@ -902,8 +902,7 @@ def on_message2(ws, message):
                                 re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace(
                                     "&#44;", ","))[
                                              "meta"]["news"]["jumpUrl"]).text)[0].replace(
-                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
-                        :-3])).json()
+                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
                 except KeyError:
                     str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
                         re.findall(
@@ -1104,7 +1103,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
         if command_list[0] == "!mcping":
             # msg.fast_reply("暂停使用")
             try:
-                server = mcstatus.MinecraftServer.lookup(command_list[1]).status()
+                server = mcstatus.JavaServer.lookup(command_list[1]).status()
                 aaa = "Motd:\n{0}\n在线人数:{1}/{2}\nPing:{3}\nVersion:{4} (protocol:{5})".format(
                     re.sub(MC_MOTD_COLORFUL, "", server.description),
                     server.players.online,
