@@ -215,7 +215,10 @@ class GitHubController(IModule):
     def process(self, event: Event):
         if isinstance(event, GroupMessageEvent):
             on_msg(event)
-            github_url_listener(event)
+            try:
+                github_url_listener(event)
+            except:
+                pass
         if isinstance(event, BotEnableEvent):
             t1 = threading.Thread(target=sch_github_listener)
             t1.start()
