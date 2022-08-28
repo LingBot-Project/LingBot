@@ -2,3 +2,22 @@
 state = True
 cur_git_ver = "0000000"
 x_ratelimit_remaining = 60  # github
+
+command_usage = """[ 帮助 - 指令用法 ]
+!help <- 查看机器人的指令用法
+!test / 凌状态 <- 获取机器人当前的状态信息
+一语 / 一英 / 二次元 / 必应壁纸 / 一话 <- 获取对应内容
+<!plus / !subtract / !multiply / !divide> <number> <number> <- 加减乘除指定的两个数字
+!testzb <- 获取每日早报
+!丢 <target user> <- 丢出指定用户!
+!music <song> <- 搜索音乐
+!5k <string> <string> <- 制作5k图片
+!random <- 获取从 0 ~ 100 之间的随机数
+!hyp players <- 获取Hypixel当前所有游戏的玩家数量
+!hyp <player> <- 获取指定玩家在Hypixel的大致信息
+!tcping <IP>[:port(default: 80)] <- tcp请求方式获取对应的地址的延迟等信息
+!mcping <IP>[:port(default: 25565)] <- 获取对应服务器的图标, motd, 延迟, 在线人数, 版本等信息
+!我要自闭 <- 字面意思(笑) 具体用法请使用「!我要自闭 help」查阅
+!introduce / !介绍 <- 具体用法请使用「!introduce help / !介绍 help」查阅
+!achievements / !成就 <- 具体用法请使用「!achievements help / !成就 help」查阅
+"""

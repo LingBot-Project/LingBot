@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import random
+import uuid
 import re
 import threading
 import time
@@ -371,8 +372,11 @@ def get_runtime():
     return get_lapsetime(nowtime, recordTime)
 
 
-def text2image(text):
-    imageuid = str(random.randint(10000000, 9999999999))
+def text2image(text, default_uid=None):
+    if default_uid is not None:
+        image_uid = default_uid
+    else:
+        image_uid = uuid.uuid4().__str__()
     font_size = 22
     max_w = 0
     lines = text.split('\n')
@@ -388,8 +392,8 @@ def text2image(text):
     im = Image.new("RGB", (max_w + 11, len(lines) * (font_size + 8)), (255, 255, 255))
     dr = ImageDraw.Draw(im)
     dr.text((1, 1), text, font=font, fill="#000000")
-    im.save(imageuid + ".cache.png")
-    with open(imageuid + ".cache.png", "rb") as f:
+    im.save(image_uid + ".cache.png")
+    with open(image_uid + ".cache.png", "rb") as f:
         return base64.b64encode(f.read()).decode()
 
 
@@ -512,7 +516,7 @@ def on_message2(ws, message):
 
         if msg.text in ["!help", "菜单"]:
             msg.fast_reply(
-                f"请访问: https://lingbot.guimc.ltd/ \nLingbot官方群: 308089090\ntg: https://t.me/LingBotProject \n本群验证状态:{msg.group.verify_info()}")
+                f"[CQ:image,file=base64://{text2image(bot_state.command_usage, default_uid='HELP-IMAGE')}] \nLingbot官方群: 308089090\ntg: https://t.me/LingBotProject \n本群验证状态:{msg.group.verify_info()}")
 
         #         if command_list[0] == "!mail":
         #             msg.group.id = str(msg.group.id)
@@ -598,7 +602,7 @@ def on_message2(ws, message):
             except:
                 msg.fast_reply("Error")
 
-        if command_list[0] == "!invitations" or command_list[0] == "!invi":
+        if command_list[0] in ("!invitations", "!invi"):
             if msg.sender.isadmin():
                 if command_list[1] == "group":
                     if command_list[2] == "agree":
@@ -1155,7 +1159,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 if command_list[1] == "all":
                     s = getGroups()
                     msg.fast_reply("正在群发... 目标:{}个群".format(len(s)))
-                    _prefix = "(由 {}({}) 发起的群发消息)\n".format(msg.sender.name, msg.sender.id)
+                    _prefix = "[ 由 {}({}) 发起的群发消息 ]\n".format(msg.sender.name, msg.sender.id)
                     for i in s:
                         if i not in IGNORE_GROUP:
                             nowmsg = ""
