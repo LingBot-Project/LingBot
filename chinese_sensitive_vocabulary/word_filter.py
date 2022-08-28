@@ -11,8 +11,8 @@ class SensitiveWordModel(object):
         self.word_url = word_url
         self.spam = set()
         self.nospam = {}
-        # self.__get_words_info()
-        self.__get_words_local()
+        self.__get_words_info()
+        # self.__get_words_local()
         self.word_filter = flashtext.KeywordProcessor()
         self.word_filter.add_keywords_from_list(list(self.spam))
 
