@@ -12,7 +12,7 @@
 
 ## 中文
 ### 联系方式
-* LingBot官方群:[Telegram](https://t.me/LingBotProject) [QQ](https://jq.qq.com/?_wv=1027&k=YpmTkCJt)
+* LingBot官方群:[Telegram](https://t.me/LingBotProject) [QQ群聊](https://jq.qq.com/?_wv=1027&k=YpmTkCJt)
 * 汐洛: 1584784496
 * Creeper: 1474002938
 
