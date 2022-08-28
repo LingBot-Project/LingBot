@@ -76,7 +76,7 @@ Update Time: {pushed_at}
         description=rej["description"],
         owner_login=rej["owner"]["login"],
         branch=rej["default_branch"],
-        lang="language",
+        lang=rej["language"],
         last_commit=last_commit,
         commit_sha=commit_sha,
         created_at=rej["created_at"],
