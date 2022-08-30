@@ -42,7 +42,7 @@ def find_git_link(string: str):
 
 def github_url_listener(event: GroupMessageEvent):
     global is_in_limit, s
-    if bot_state.x_ratelimit_remaining == int(req.headers["x-ratelimit-remaining"]) == 0:
+    if bot_state.x_ratelimit_remaining == 0:
         return
     i = find_git_link(event.get_message().text)
     if i == "":
@@ -55,8 +55,8 @@ def github_url_listener(event: GroupMessageEvent):
     c_req = requests.get(f"https://api.github.com/repos/{i}/commits")
     if int(c_req.headers["x-ratelimit-remaining"]) == 0:
         is_in_limit = True
-        last_commit = "Unknown"
-        commit_sha = "Unknown"
+        last_commit = "undefind"
+        commit_sha = "undefind"
     else:
         c_req = c_req.json()
         last_commit = c_req[0]["commit"]["message"]
