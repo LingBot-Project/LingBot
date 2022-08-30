@@ -790,7 +790,7 @@ def on_message2(ws, message):
                 if scan_lv >= 0.9:
                     msg.recall().mute(600)
 
-            if len(msg.text) > 1500:
+            if len(msg.text_nocq) > 1500:
                 msg.mute(600).recall().fast_reply("消息太长了哟", reply=False)
                 SPAM2_VL[msg.sender.id] += 5
                 return
