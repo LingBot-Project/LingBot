@@ -99,17 +99,19 @@ def on_msg(event):
         for i in range(1, len(event.get_commands())):
             if not is_in_limit:
                 
-                github_url_listener(GroupMessageEvent(Message.Message(json.dumps(({
-                    "post_type": "message",
-                    "message_type": "group",
-                    "message": event.get_commands()[i],
-                    "sender": {
-                        "user_id": event.get_message().sender.id,
-                        "nick_name": event.get_message().sender.name
-                    },
-                    "group_id": event.get_message().group,
-                    "message_id": event.get_message().id
-                })))))
+                github_url_listener(GroupMessageEvent(Message.Message(json.dumps((
+                    {  # 构建数据 (草 我为什么要自己构建)
+                        "post_type": "message",
+                        "message_type": "group",
+                        "message": event.get_commands()[i],
+                        "sender": {
+                            "user_id": event.get_message().sender.id,
+                            "nick_name": event.get_message().sender.name
+                        },
+                        "group_id": event.get_message().group,
+                        "message_id": event.get_message().id
+                    }
+                )))))
                 time.sleep(random.randint(1000, 5000) / 1000)  # sb Tencent, why you blocked bot?
             else:
                 break
