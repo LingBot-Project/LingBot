@@ -543,7 +543,7 @@ def on_message2(ws, message):
 
         if msg.text in ["!help", "菜单"]:
             msg.fast_reply(
-                f"[CQ:image,file=base64://{text2image(bot_state.command_usage, default_uid='HELP-IMAGE')}]Lingbot官方群: 308089090\ntg: https://t.me/LingBotProject \n本群验证状态:{msg.group.verify_info()}")
+                f"[CQ:image,file=base64://{text2image(bot_state.command_usage, default_uid='HELP-IMAGE')}]Lingbot官方群: 308089090\ntg: https://t.me/LingBotProject") # removed ' \n本群验证状态:{msg.group.verify_info()}' in the end
 
         #         if command_list[0] == "!mail":
         #             msg.group.id = str(msg.group.id)
@@ -1700,8 +1700,8 @@ Coins: {coin_purse}
     except Exception as e:
         a = traceback.format_exc()
         logging.error(a)
-        msg.fast_reply(
-            "很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/\n[CQ:image,file=base64://{}]".format(
+        msg.fast_reply(  # 很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/
+            "很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请使用!help指令查看 [CQ:image,file=base64://{}]如果问题持续发生, 请在github提交issue或者使用!feedback指令反馈问题!".format(
                 text2image(a)))
         if msg.group.id != 1019068934:
             sendMessage(
