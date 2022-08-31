@@ -22,7 +22,7 @@ class Feedback(IModule):
             cur_time = time.time()
             if cd is not None:
                 if cd > cur_time:
-                    event.reply("抱歉, 但是反馈功能还在冷却中")
+                    event.reply("抱歉, 但是您的反馈还在冷却中")
                     return
                 # end if
             # end if

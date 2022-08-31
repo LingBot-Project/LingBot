@@ -85,17 +85,26 @@ Update Time: {pushed_at}
     pass
 
 
-pass
-
 
 def on_msg(event):
     global last_info, api, web_page, listener_last_info, is_in_limit, last_message
     if event.get_commands()[0] != "!git":
         return
     
-    if is_in_limit:
+    if is_in_limit and len(event.get_commands()) == 1:
         event.get_message().fast_reply(f"API rate limit exceeded, please wait for some minutes. Last auto-sync commit info:\n{last_message}")
         return
+    
+    if len(event.get_commands()) > 1:
+        for i in range(1, len(event.get_commands())):
+            if not is_in_limit:
+                github_url_listener(event.get_commands()[i])
+                time.sleep(random.randint(1000, 5000) / 1000)  # sb Tencent, why you blocked bot?
+            else:
+                break
+            # end if
+        # end for
+    # end if
 
     # 发送请求，获取数据
     commit_info = requests.get(commit_api)
