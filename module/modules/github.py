@@ -115,6 +115,7 @@ def on_msg(event):
                 break
             # end if
         # end for
+        return
     # end if
 
     # 发送请求，获取数据
