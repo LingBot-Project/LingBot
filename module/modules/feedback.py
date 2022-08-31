@@ -12,8 +12,13 @@ class Feedback(IModule):
             global feed_back_cooldown
             if event.get_commands()[0] != "!feedback":
                 return
-            sender = feed_back_cooldown.get(event.get_message().sender.id)
-            cd = feed_back_cooldown.get(sender)
+            # end if
+            if len(event.get_commands()) < 2:
+                event.reply("这里貌似没有任何东西呢 = =")
+                return
+            # end if
+            sender = event.get_message().sender
+            cd = feed_back_cooldown.get(sender.id)
             cur_time = time.time()
             if cd is not None:
                 if cd > cur_time:
@@ -21,12 +26,8 @@ class Feedback(IModule):
                     return
                 # end if
             # end if
-            if len(event.get_commands()) < 2:
-                event.reply("这里貌似没有任何东西呢 = =")
-                return
-            # end if
-            feed_back_cooldown[sender] = cur_time + 300
-            Message.sendMessage(f"用户 {sender}() 提交了反馈: \n{event.get_message().text[10:]}", target_group=Message.DEV_GROUP)
+            feed_back_cooldown[sender.id] = cur_time + 300
+            Message.sendMessage(f"用户 {sender} 提交了反馈: \n{event.get_message().text[10:]}", target_group=Message.DEV_GROUP)
             event.reply("提交成功! ")
         # end if
     # end def

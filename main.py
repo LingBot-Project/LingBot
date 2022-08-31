@@ -144,6 +144,9 @@ class User:
     def remove4admin(self):
         if self.id != 1584784496:
             ADMIN_LIST.remove(self.id)
+    
+    def __str__(self):
+        return f"{self.name}({self.id})"
 
 
 class Message:
