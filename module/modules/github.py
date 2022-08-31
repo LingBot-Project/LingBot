@@ -224,6 +224,8 @@ class GitHubController(IModule):
     def process(self, event: Event):
         if isinstance(event, GroupMessageEvent):
             on_msg(event)
+            if event.get_commands()[0] == "!git":
+                return
             try:
                 github_url_listener(event)
             except:
