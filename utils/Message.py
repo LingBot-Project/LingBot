@@ -1,7 +1,11 @@
-import json, random
+import json
+import random
 import re
 
 import requests
+
+from utils.User import User
+from utils.Group import Group
 
 # from main import HTTPURL, strQ2B, Group, User
 
@@ -112,6 +116,19 @@ def sendMessage(message, target_qq=None, target_group=None, message_id=None, byp
     else:
         ...
         # logging.warning("目前暂时不支持发送私聊消息")
+
+
+def strQ2B(ustring):
+    rstring = ""
+    for uchar in ustring:
+        inside_code = ord(uchar)
+        if inside_code == 12288:
+            inside_code = 32
+        elif 65281 <= inside_code <= 65374:
+            inside_code -= 65248
+
+        rstring += chr(inside_code)
+    return rstring
 
 
 def post2http(url, server_addr='127.0.0.1:10500', data=None):
