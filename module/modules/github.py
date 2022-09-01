@@ -111,7 +111,7 @@ def on_msg(event):
                         "message_id": event.get_message().id
                     }
                 ))))
-                time.sleep(random.randint(1000, 5000) / 1000)  # sb Tencent, why you blocked bot?
+                time.sleep(random.randint(2000, 10000) / 1000)  # why Tencent blocked bot?
             else:
                 break
             # end if
@@ -165,14 +165,14 @@ def sch_github_listener():
     except Exception as e:
         Message.sendMessage(f"[GitHub commit listener] Exception found while trying synchronizing: {e}",
                             target_group=1019068934)
-    time.sleep(random.randint(600, 1500) / 1000)
+    time.sleep(random.randint(750, 1500) / 1000)
     Message.sendMessage(
         f"[GitHub commit listener] Listener thread is running, current git version: {bot_state.cur_git_ver}, current auto-sync commit time: {parse_ISO_time(listener_last_info)}",
         target_group=1019068934, bypass=True)
     commit_info = {}
-    time.sleep(30)
-    while bot_state.state:
-        time.sleep(random.randint(50000, 81642) / 1000 + (600 if is_in_limit else 0))
+    time.sleep(40)
+    while bot_state.state:  # while true like
+        time.sleep(random.randint(50000, 80000) / 1000 + (600 if is_in_limit else 0))
         is_in_limit = False
         try:
             # 发送请求，获取数据
@@ -203,7 +203,7 @@ pylint check: {get_pylint_state()}
 '''
                 _tmp_msg = f"[GitHub] 有新Commit\n{last_message}"
                 Message.sendMessage(_tmp_msg, target_group=1019068934)
-                time.sleep(random.randint(200, 2250) / 1000)
+                time.sleep(random.randint(1000, 3250) / 1000)
                 Message.sendMessage(_tmp_msg, target_group=308089090)
                 listener_last_info = str(cur_update)
                 time.sleep(10)  # cool down
@@ -219,7 +219,7 @@ def get_pylint_state():
 
 def parse_ISO_time(t: str):
     # time.strptime(t, "%Y%Y%Y%Y-%m%m-%d%dT%H%H:%M%M:%S%SZ")
-    return time.asctime(time.localtime(time.mktime(datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S%z").timetuple())+28800))
+    return time.asctime(time.localtime(time.mktime(datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S%z").timetuple()) + 28800))  # 28800: 8hours
 
 
 def convert_url(s: str) -> str:
