@@ -85,7 +85,6 @@ Update Time: {pushed_at}
     pass
 
 
-
 def on_msg(event):
     global last_info, api, web_page, listener_last_info, is_in_limit, last_message
     if event.get_commands()[0] != "!git":
@@ -99,7 +98,7 @@ def on_msg(event):
         for i in range(1, len(event.get_commands())):
             if not is_in_limit:
                 
-                github_url_listener(GroupMessageEvent(Message.Message(json.dumps((
+                github_url_listener(GroupMessageEvent(Message.Message(json.dumps(
                     {  # 构建数据 (草 我为什么要自己构建)
                         "post_type": "message",
                         "message_type": "group",
@@ -111,7 +110,7 @@ def on_msg(event):
                         "group_id": event.get_message().group.id,
                         "message_id": event.get_message().id
                     }
-                )))))
+                ))))
                 time.sleep(random.randint(1000, 5000) / 1000)  # sb Tencent, why you blocked bot?
             else:
                 break
