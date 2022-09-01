@@ -219,7 +219,7 @@ def get_pylint_state():
 
 def parse_ISO_time(t: str):
     # time.strptime(t, "%Y%Y%Y%Y-%m%m-%d%dT%H%H:%M%M:%S%SZ")
-    return time.asctime(datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S%z").timetuple())
+    return time.asctime(time.localtime(time.mktime(datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S%z").timetuple())+28800))
 
 
 def convert_url(s: str) -> str:
