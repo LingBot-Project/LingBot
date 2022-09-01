@@ -66,14 +66,14 @@ def github_url_listener(event: GroupMessageEvent):
     if rej["lincense"] is None:
         lic = "None"
     else:
-        lic = rej["lincense"]["name"]
+        lic = rej["license"]["name"]
     event.reply("""[GitHub]
 Repo: {repo}
 Description: {description}
 Owner: {owner_login}
 Default Branch: {branch}
 Language: {lang}
-Lincense: {lincense}
+license: {license}
 Latest Commit: {last_commit} ({commit_sha})
 Create Time: {created_at}
 Update Time: {pushed_at}
@@ -83,7 +83,7 @@ Update Time: {pushed_at}
         owner_login=rej["owner"]["login"],
         branch=rej["default_branch"],
         lang=rej["language"],
-        lincense=lic,
+        license=lic,
         last_commit=last_commit,
         commit_sha=commit_sha,
         created_at=parse_ISO_time(rej["created_at"]),
