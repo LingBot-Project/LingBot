@@ -106,7 +106,7 @@ def on_msg(event):
                         "message": event.get_commands()[i],
                         "sender": {
                             "user_id": event.get_message().sender.id,
-                            "nick_name": event.get_message().sender.name
+                            "nickname": event.get_message().sender.name
                         },
                         "group_id": event.get_message().group.id,
                         "message_id": event.get_message().id
