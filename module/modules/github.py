@@ -63,7 +63,7 @@ def github_url_listener(event: GroupMessageEvent):
         commit_sha = c_req[0]["sha"]
     rej = req.json()
     lic = "undefined"
-    if rej["lincense"] is None:
+    if rej["license"] is None:
         lic = "None"
     else:
         lic = rej["license"]["name"]
