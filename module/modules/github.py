@@ -55,8 +55,8 @@ def github_url_listener(event: GroupMessageEvent):
     c_req = requests.get(f"https://api.github.com/repos/{i}/commits")
     if int(c_req.headers["x-ratelimit-remaining"]) == 0:
         is_in_limit = True
-        last_commit = "undefind"
-        commit_sha = "undefind"
+        last_commit = "undefined"
+        commit_sha = "undefined"
     else:
         c_req = c_req.json()
         last_commit = c_req[0]["commit"]["message"]
@@ -79,8 +79,8 @@ Update Time: {pushed_at}
         lang=rej["language"],
         last_commit=last_commit,
         commit_sha=commit_sha,
-        created_at=rej["created_at"],
-        pushed_at=rej["pushed_at"]
+        created_at=parse_ISO_time(rej["created_at"]),
+        pushed_at=parse_ISO_time(rej["pushed_at"])
     ))
     pass
 
@@ -138,7 +138,7 @@ def on_msg(event):
     last_message = f'''
 Latest Commit:
 repos: {commit_info[0]["html_url"]},
-time: {commit_info[0]["commit"]["author"]["date"]},
+time: {parse_ISO_time(commit_info[0]["commit"]["author"]["date"])},
 author: {commit_info[0]["commit"]["author"]["name"]},
 message: {commit_info[0]["commit"]["message"]},
 sha: {commit_info[0]["sha"]},
@@ -163,11 +163,11 @@ def sch_github_listener():
         last_info = commit_info[0]["commit"]["author"]["date"]
         listener_last_info = last_info
     except Exception as e:
-        Message.sendMessage(f"[GitHub commit listener] Exception found while tring synchronizing: {e}",
+        Message.sendMessage(f"[GitHub commit listener] Exception found while trying synchronizing: {e}",
                             target_group=1019068934)
     time.sleep(random.randint(600, 1500) / 1000)
     Message.sendMessage(
-        f"[GitHub commit listener] Listener thread is running, currect git version: {bot_state.cur_git_ver}, currect auto-sync commit time: {listener_last_info}",
+        f"[GitHub commit listener] Listener thread is running, current git version: {bot_state.cur_git_ver}, current auto-sync commit time: {parse_ISO_time(listener_last_info)}",
         target_group=1019068934, bypass=True)
     commit_info = {}
     time.sleep(30)
@@ -195,7 +195,7 @@ def sch_github_listener():
                 time.sleep(7)  # wait for pylint's check lol
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
                 last_message = f'''commit info: {commit_info[0]["html_url"]}
-time: {cur_update}
+time: {parse_ISO_time(cur_update)}
 author: {commit_info[0]["commit"]["author"]["name"]}
 message: {commit_info[0]["commit"]["message"]}
 sha: {commit_info[0]["sha"]}
@@ -219,7 +219,7 @@ def get_pylint_state():
 
 def parse_ISO_time(t: str):
     # time.strptime(t, "%Y%Y%Y%Y-%m%m-%d%dT%H%H:%M%M:%S%SZ")
-    return time.mktime(datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S%z").timetuple())
+    return time.asctime(datetime.datetime.strptime(t, "%Y-%m-%dT%H:%M:%S%z").timetuple())
 
 
 def convert_url(s: str) -> str:
@@ -250,11 +250,12 @@ class GitHubController(IModule):
 
 
 if __name__ == '__main__':
-    link = "https://github.com/LingBot-Project/LingBot"
-    sp = re.search(git_link, link).span()
-    print(link[sp[0]:sp[1]])
-    print(find_git_link(link))
-    print(re.sub(github_head, "", link))
-    print("A?")
-    print(convert_url(link))
-    print(convert_url(re.sub(github_head, "", link)))
+    # link = "https://github.com/LingBot-Project/LingBot"
+    # sp = re.search(git_link, link).span()
+    # print(link[sp[0]:sp[1]])
+    # print(find_git_link(link))
+    # print(re.sub(github_head, "", link))
+    # print("A?")
+    # print(convert_url(link))
+    # print(convert_url(re.sub(github_head, "", link)))
+    print(parse_ISO_time("2022-01-30T09:39:31Z"))
