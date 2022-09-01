@@ -195,11 +195,11 @@ def sch_github_listener():
             if str(listener_last_info) != str(cur_update):
                 time.sleep(7)  # wait for pylint's check lol
                 # {json.dumps(all_info, sort_keys=True, indent=4, separators=(',', ': '))}
-                last_message = f'''commit info: {commit_info[0]["html_url"]},
-time: {cur_update},
-author: {commit_info[0]["commit"]["author"]["name"]},
-message: {commit_info[0]["commit"]["message"]},
-sha: {commit_info[0]["sha"]},
+                last_message = f'''commit info: {commit_info[0]["html_url"]}
+time: {cur_update}
+author: {commit_info[0]["commit"]["author"]["name"]}
+message: {commit_info[0]["commit"]["message"]}
+sha: {commit_info[0]["sha"]}
 pylint check: {get_pylint_state()}
 '''
                 _tmp_msg = f"[GitHub] 有新Commit\n{last_message}"
