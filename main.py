@@ -144,7 +144,7 @@ class User:
     def remove4admin(self):
         if self.id != 1584784496:
             ADMIN_LIST.remove(self.id)
-    
+
     def __str__(self):
         return f"{self.name}({self.id})"
 
@@ -543,7 +543,7 @@ def on_message2(ws, message):
 
         if msg.text in ["!help", "菜单"]:
             msg.fast_reply(
-                f"[CQ:image,file=base64://{text2image(bot_state.command_usage, default_uid='HELP-IMAGE')}]Lingbot官方群: 308089090\ntg: https://t.me/LingBotProject") # removed ' \n本群验证状态:{msg.group.verify_info()}' in the end
+                f"[CQ:image,file=base64://{text2image(bot_state.command_usage, default_uid='HELP-IMAGE')}]Lingbot官方群: 308089090\ntg: https://t.me/LingBotProject")  # removed ' \n本群验证状态:{msg.group.verify_info()}' in the end
 
         #         if command_list[0] == "!mail":
         #             msg.group.id = str(msg.group.id)
@@ -917,9 +917,11 @@ def on_message2(ws, message):
         if command_list[0] == "!testchrome" and msg.sender.id == 1584784496:
             msg.fast_reply("Trying...") \
                 .fast_reply("[CQ:image,file=base64://{}]".format(
-                requests.post(url="http://localhost:25666/url2base64",
-                              data={"url": " ".join(command_list[1:])}).text.replace("\n", "")
-            )
+                    requests.post(
+                        url="http://localhost:25666/url2base64",
+                        data={"url": " ".join(command_list[1:])}
+                    ).text.replace("\n", "")
+                )
             )
 
         if msg.text.find("[CQ:json,data=") != -1:
@@ -933,7 +935,8 @@ def on_message2(ws, message):
                                 re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace(
                                     "&#44;", ","))[
                                              "meta"]["news"]["jumpUrl"]).text)[0].replace(
-                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
+                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
+                        :-3])).json()
                 except KeyError:
                     str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
                         re.findall(
@@ -942,8 +945,7 @@ def on_message2(ws, message):
                                 re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace(
                                     "&#44;", ","))[
                                              "meta"]["detail_1"]["qqdocurl"]).text)[0].replace(
-                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
-                        :-3])).json()
+                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
 
                 if str1["code"] != 0:
                     logging.warning("查询失败")
@@ -1197,11 +1199,13 @@ Version:{server.version.name} (protocol:{server.version.protocol})"""
             else:
                 msg.fast_reply("你的权限不足!")
 
-        if command_list[0] == "!reply":
+        if command_list[0] in ["!reply", "!reply-with-format"]:
             if not msg.sender.isadmin():
                 msg.fast_reply("您的权限不足!")
                 return
             msg1 = " ".join(command_list[3:])
+            if command_list[0] == "!reply-with-format":
+                msg1 = f"{msg.sender.name} 的回复:\n{msg1}"
             sendMessage(msg1, target_group=command_list[1], message_id=int(command_list[2]))
             msg.fast_reply("回复成功!")
             return
@@ -1496,30 +1500,14 @@ Coins: {coin_purse}
                 msg.fast_reply("请发送QQ号或'me'!!!")
             return
 
-        # if command_list[0] == "!git":
-        #     # 1.Github项目及API接口数据
-        #     api = 'https://api.github.com/repos/LingBot-Project/LingBot'
-        #     web_page = "https://github.com/LingBot-Project/LingBot"
-
-        #     # 2.发送请求，获取数据
-        #     all_info = requests.get(api).json()
-
-        #     # 3.解析想要的数据，并打印
-        #     cur_update = all_info['updated_at']
-
-        #     if str(last_info) == str(cur_update):
-        #         msg.fast_reply("无新Commit")
-        #     else:
-        #         msg.fast_reply("有新Commit,time:" + cur_update)
-        #     last_info = str(cur_update)
-
         if command_list[0] == "!info":
             if msg.sender.isadmin:
 
                 rt = threading.enumerate()
                 cpu_usage = str(psutil.cpu_times_percent().user + psutil.cpu_times_percent().system)
                 memory_usage = str(psutil.virtual_memory().percent)
-                msg.fast_reply(f"CPU核心数量:{str(psutil.cpu_count())}核\nCPU占用率:{cpu_usage}%\n内存占用率:{memory_usage}%\n运行中的线程:{str(len(rt))}\nGithub API 当前剩余请求次数: {bot_state.x_ratelimit_remaining}")
+                msg.fast_reply(
+                    f"CPU核心数量:{str(psutil.cpu_count())}核\nCPU占用率:{cpu_usage}%\n内存占用率:{memory_usage}%\n运行中的线程:{str(len(rt))}\nGithub API 当前剩余请求次数: {bot_state.x_ratelimit_remaining}")
                 # msg.fast_reply("当前机器人运行状态:\nCPU: "+cpu_usage+"%\nMemory: "+memory_usage+"%\nRunning Threads: "+str(len(rt)))
             else:
                 msg.fast_reply("您还没有权限哦")
