@@ -30,7 +30,7 @@ command_usage = """帮助 - 指令用法
 !achievements / !成就 <- 具体用法请使用「!achievements help / !成就 help」查阅
 
 !git <- 获取机器人的github仓库当前的状态
-!feedback <info> <- 向开发者反馈信息(我们需要您的帮助以提升机器人的使用体验!)
+!feedback <- 向开发者反馈信息(我们需要您的帮助以提升机器人的使用体验!)
 """
 colorful_motd_mapping = {
     "0": "black",

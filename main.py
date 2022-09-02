@@ -1132,23 +1132,23 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                 msg.fast_reply("操作成功")
 
         if command_list[0] == "!mcping":
-            msg.fast_reply("暂停使用")
-#             try:
-#                 server = mcstatus.JavaServer.lookup(command_list[1]).status()
-#                 aaa = f"""§rMotd:
-# §r{server.description}
-# §r在线人数:{server.players.online}/{server.players.max}
-# Ping:{server.latency}
-# Version:{server.version.name} (protocol:{server.version.protocol})"""
-#                 aaa = aaa.replace("Hypixel Network", "嘉心糖 Network")
-#                 aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
-#                 if server.favicon is not None:
-#                     aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,",
-#                                                                              "base64://") + "]"
-#                 msg.fast_reply(aaa)
-#                 return
-#             except:
-#                 msg.fast_reply(f"无法获取信息 [CQ:image,file=base64://{text2image(traceback.format_exc())}]")
+            # msg.fast_reply("暂停使用")
+            try:
+                server = mcstatus.JavaServer.lookup(command_list[1]).status()
+                aaa = f"""§rMotd:
+§r{server.description}
+§r在线人数:{server.players.online}/{server.players.max}
+Ping:{server.latency}
+Version:{server.version.name} (protocol:{server.version.protocol})"""
+                aaa = re.sub(MC_MOTD_COLORFUL, "", aaa.replace("Hypixel Network", "嘉心糖 Network"))
+                aaa = "[CQ:image,file=base64://{}]".format(text2image(aaa))
+                if server.favicon is not None:
+                    aaa = aaa + "\n[CQ:image,file=" + server.favicon.replace("data:image/png;base64,",
+                                                                             "base64://") + "]"
+                msg.fast_reply(aaa)
+                return
+            except:
+                msg.fast_reply(f"无法获取信息 [CQ:image,file=base64://{text2image(traceback.format_exc())}]")
 
         if command_list[0] == "!hypban":
             msg.fast_reply("本功能已经停止使用了")
@@ -1196,6 +1196,15 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
                     sendMessage(msg1, target_group=command_list[1])
             else:
                 msg.fast_reply("你的权限不足!")
+
+        if command_list[0] == "!reply":
+            if not msg.sender.isadmin():
+                msg.fast_reply("您的权限不足!")
+                return
+            msg1 = " ".join(command_list[3:])
+            sendMessage(msg1, target_group=command_list[1], message_id=int(command_list[2]))
+            msg.fast_reply("回复成功!")
+            return
 
         if command_list[0] == "!mute":
             if msg.sender.isadmin():
