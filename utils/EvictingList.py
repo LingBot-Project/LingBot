@@ -23,3 +23,6 @@ class EvictingList:
 
     def get_max_size(self):
         return self.max_size
+
+    def clear(self):
+        self._queue.clear()
