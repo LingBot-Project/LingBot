@@ -36,9 +36,10 @@ class AntiSpam(IModule):
                 delta_time = 0.0
                 for i in e_list.get_list():
                     delta_time += i
-                avg_time = delta_time / e_list.get_max_size()
+                divisor = delta_time / e_list.get_max_size() / 20
+
                 e: EvictingList = avg_samples[msg.sender.id]
-                e.add(avg_time)
+                e.add(1 / divisor)
 
                 if mathUtils.stdev(e.get_list()) < 0.05 and e.size() >= e.get_max_size():
                     event.get_message().mute(86400)
