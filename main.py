@@ -713,7 +713,7 @@ def on_message2(ws, message):
                 SPAM2_VL[msg.sender.id] = 0
             _simhash_dis = simhash_similarity(str(SPAM2_MSG[msg.sender.id].text).lower(), msg.text.lower())
             if _simhash_dis >= 0.836:
-                SPAM2_VL[msg.sender.id] += 12.5 * (_simhash_dis - 0.2) + (len(msg.text) * 0.19)  # :10
+                SPAM2_VL[msg.sender.id] += 10 * (_simhash_dis - 0.2) * min(len(msg.text) * 0.19 + 0.7, 1.0)  # :10
                 if _simhash_dis >= 0.99:
                     SPAM2_VL[msg.sender.id] += 10
 
@@ -761,7 +761,7 @@ def on_message2(ws, message):
             else:
                 SPAM2_MSG[msg.sender.id] = msg
                 if SPAM2_VL[msg.sender.id] > 0:
-                    SPAM2_VL[msg.sender.id] -= SPAM2_VL[msg.sender.id] / 1337  # 2.5 * (0.9 - _simhash_dis)  # :2
+                    SPAM2_VL[msg.sender.id] -= SPAM2_VL[msg.sender.id] / 133.7  # 2.5 * (0.9 - _simhash_dis)  # :2
 
             reScan = re.findall(
                 ANTI_AD,

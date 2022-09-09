@@ -14,3 +14,12 @@ class EvictingList:
             return self._queue[index]
         except Exception:
             return None
+
+    def get_list(self):
+        return self._queue.copy()
+
+    def size(self):
+        return len(self._queue)
+
+    def get_max_size(self):
+        return self.max_size

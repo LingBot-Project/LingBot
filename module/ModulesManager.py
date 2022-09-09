@@ -1,6 +1,6 @@
 from events.Events import *
 from module.modules.IModule import IModule
-from module.modules import HelloNew, TestHello, is_prime, github, feedback
+from module.modules import HelloNew, TestHello, is_prime, github, feedback, antiSpamA2
 from typing import List
 
 
@@ -12,7 +12,8 @@ class ModuleManager:
             TestHello.TestHello(),
             is_prime.IsPrime(),
             github.GitHubController(),
-            feedback.Feedback()
+            feedback.Feedback(),
+            antiSpamA2.AntiSpam()
         )
         pass
 
