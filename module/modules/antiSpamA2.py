@@ -43,4 +43,5 @@ class AntiSpam(IModule):
 
                 if mathUtils.stdev(e.get_list()) < 0.05 and e.size() >= e.get_max_size():
                     event.get_message().mute(86400)
+                    event.reply("您因为 SPAM-A2 被禁言了, 如果有任何意义请使用!feedback 和开发者对线(划掉) 向开发者反馈",reply=False)
                     e.clear()
