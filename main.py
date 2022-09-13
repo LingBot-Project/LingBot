@@ -640,6 +640,7 @@ def on_message2(ws, message):
                                 "approve": True
                             }
                             post2http("/set_group_add_request", data=data1)
+                            msg.fast_reply("同意成功")  # 单纯为了给管理员一个结果而已, 不然容易让人以为机器人寄了 或者避免重复同意之类的
                         except:
                             msg.fast_reply("无flag")
                     if command_list[2] == "refuse":
@@ -649,6 +650,7 @@ def on_message2(ws, message):
                                 "type": "invite",
                                 "approve": False
                             }
+                            msg.fast_reply("拒绝... 诶你写拒绝了吗?")
                         except:
                             msg.fast_reply("无flag")
                 if command_list[1] == "friend":
@@ -659,6 +661,7 @@ def on_message2(ws, message):
                                 "approve": True
                             }
                             post2http("/set_friend_add_request", data=data1)
+                            msg.fast_reply("同意成功")
                         except:
                             msg.fast_reply("无flag")
                     if command_list[2] == "refuse":
@@ -669,10 +672,12 @@ def on_message2(ws, message):
                                     "approve": False
                                 }
                                 post2http("/set_friend_add_request", data=data1)
+                                msg.fast_reply("同意成功")
                             except:
                                 msg.fast_reply("无flag")
             else:
                 msg.fast_reply("您还没有权限做这件事哦")
+                return
 
         if command_list[0] == "!runas":
             if msg.sender.isadmin():
