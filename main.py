@@ -640,7 +640,7 @@ def on_message2(ws, message):
                                 "approve": True
                             }
                             post2http("/set_group_add_request", data=data1)
-                            msg.fast_reply("同意成功")  # 单纯为了给管理员一个结果而已, 不然容易让人以为机器人寄了 或者避免重复同意之类的
+                            msg.fast_reply("同意... 成功?")  # 单纯为了给管理员一个结果而已, 不然容易让人以为机器人寄了 或者避免重复同意之类的
                         except:
                             msg.fast_reply("无flag")
                     if command_list[2] == "refuse":
@@ -650,7 +650,8 @@ def on_message2(ws, message):
                                 "type": "invite",
                                 "approve": False
                             }
-                            msg.fast_reply("拒绝... 诶你写拒绝了吗?")
+                            post2http("/set_group_add_request", data=data1)
+                            msg.fast_reply("拒绝... 成功?")
                         except:
                             msg.fast_reply("无flag")
                 if command_list[1] == "friend":
