@@ -1,5 +1,5 @@
 from typing import List
-import math
+from math import *
 
 
 def stdev(data: List[float]) -> float:
@@ -7,7 +7,7 @@ def stdev(data: List[float]) -> float:
     dividend = 0.0
     for i in data:
         dividend += pow(i - m, 2)
-    return math.sqrt(dividend)
+    return sqrt(dividend)
 
 
 def average(data: List[float]) -> float:
