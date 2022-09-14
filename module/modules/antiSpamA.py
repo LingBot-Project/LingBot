@@ -37,7 +37,7 @@ class AntiSpam(IModule):
                 delta_time = 0.0
                 for i in e_list.get_list():
                     delta_time += i
-                divisor = delta_time / e_list.get_max_size() / 10
+                divisor = delta_time / e_list.get_max_size() / 2
 
                 e: EvictingList = avg_samples[msg.sender.id]
                 e.add(1 / divisor)
@@ -52,4 +52,4 @@ def prediction(msg):
 
 
 def get_cur_time():
-    return mathUtils.floor((time.time() - init_time) * 10)
+    return mathUtils.floor((time.time() - init_time) * 2)
