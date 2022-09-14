@@ -23,7 +23,7 @@ class AntiSpam(IModule):
             if msg.group.id not in times:
                 times[msg.group.id] = {}
             if msg.sender.id not in avg_samples:
-                avg_samples[msg.sender.id] = EvictingList(10)
+                avg_samples[msg.sender.id] = EvictingList(7)
 
             if msg.sender.id not in times[msg.group.id]:
                 times[msg.group.id][msg.sender.id] = get_cur_time()
