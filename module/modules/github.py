@@ -36,7 +36,7 @@ def find_git_link(string: str):
     a = re.search(git_link, string)
     if a is None:
         return ""
-    a= a.span()
+    a = a.span()
     return re.sub(github_head, "", convert_url(string[a[0]: a[1]]))
 
 
@@ -62,10 +62,8 @@ def github_url_listener(event: GroupMessageEvent):
         last_commit = c_req[0]["commit"]["message"]
         commit_sha = c_req[0]["sha"]
     rej = req.json()
-    lic = "undefined"
-    if rej["license"] is None:
-        lic = "None"
-    else:
+    lic = "None (no license maybe)"
+    if rej["license"] is not None:
         lic = rej["license"]["name"]
     event.reply("""[GitHub]
 Repo: {repo}
@@ -104,7 +102,6 @@ def on_msg(event):
     if len(event.get_commands()) > 1:
         for i in range(1, len(event.get_commands())):
             if not is_in_limit:
-                
                 github_url_listener(GroupMessageEvent(Message.Message(json.dumps(
                     {  # 构建数据 (草 我为什么要自己构建)
                         "post_type": "message",
@@ -225,6 +222,7 @@ def get_pylint_state():
         return requests.get('https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml/badge.svg?event=push').content.decode("UTF-8").split("\n")[1].replace("<title>", "").replace("</title>", "").replace(" ", "")  # Shit code lol
     except Exception as e:
         return f"load failed: {e}"
+
 
 def parse_ISO_time(t: str):
     # time.strptime(t, "%Y%Y%Y%Y-%m%m-%d%dT%H%H:%M%M:%S%SZ")
