@@ -42,7 +42,7 @@ class AntiSpam(IModule):
                 e: EvictingList = avg_samples[msg.sender.id]
                 e.add(1 / divisor)
                 std = mathUtils.stdev(e.get_list())
-                if std < 0.009 and e.size() >= e.get_max_size():
+                if std < 0.045 and e.size() >= e.get_max_size():
                     event.get_message().mute(86400, r=f"spam-A2, flag(d: {std})")
                     e.clear()
 
