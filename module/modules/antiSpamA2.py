@@ -36,7 +36,7 @@ class AntiSpam(IModule):
                 delta_time = 0.0
                 for i in e_list.get_list():
                     delta_time += i
-                divisor = delta_time / e_list.get_max_size() / 20
+                divisor = delta_time / e_list.get_max_size() / 2
 
                 e: EvictingList = avg_samples[msg.sender.id]
                 e.add(1 / divisor)
@@ -45,3 +45,7 @@ class AntiSpam(IModule):
                     event.get_message().mute(86400)
                     event.reply("您因为 SPAM-A2 被禁言了, 如果有任何意义请使用!feedback 和开发者对线(划掉) 向开发者反馈",reply=False)
                     e.clear()
+
+
+def get_cur_time():
+    return  # todo
