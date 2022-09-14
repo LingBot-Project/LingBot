@@ -169,8 +169,10 @@ class Message:
             else:
                 raise Exception()
 
-    def mute(self, _time):
+    def mute(self, _time, r: str=""):
         self.group.mute(self.sender, _time)
+        if r != "":
+            self.fast_reply(f"您因为 {r} 被禁言了, 如果有任何异议请使用!feedback 和开发者对线(划掉) 向开发者反馈", reply=False)
         return self
 
     def recall(self):
