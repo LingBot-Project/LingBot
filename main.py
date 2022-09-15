@@ -169,7 +169,7 @@ class Message:
             else:
                 raise Exception()
 
-    def mute(self, _time, r: str=""):
+    def mute(self, _time, r: str = ""):
         self.group.mute(self.sender, _time)
         if r != "":
             self.fast_reply(f"您因为 {r} 被禁言了, 如果有任何异议请使用!feedback 和开发者对线(划掉) 向开发者反馈", reply=False)
@@ -348,27 +348,27 @@ def simhash_similarity(text1: str, text2: str) -> float:
     return similar
 
 
-def get_lapsetime(atime, btime=0) -> str:
+def get_lapsetime(time_a, time_b=0) -> str:
     """
-    :param atime: 时间1
-    :param btime: 时间2
+    :param time_a: 时间1
+    :param time_b: 时间2
     :return: 返回时间差
     """
-    timex = round(atime - btime)
+    timex = round(time_a - time_b)
     if timex < 60:
         return f"{timex}秒"
     elif timex < 3600:
-        mtime = int((timex - (timex % 60)) / 60)
-        return f"{mtime}分{(timex % 60)}秒"
+        time_m = int((timex - (timex % 60)) / 60)
+        return f"{time_m}分{(timex % 60)}秒"
     elif timex < 86400:
         htime = int((timex - (timex % 3600)) / 3600)
-        mtime = int((timex - (timex % 60) - (htime * 3600)) / 60)
-        return f"{htime}时{mtime}分{(timex % 60)}秒"
+        time_m = int((timex - (timex % 60) - (htime * 3600)) / 60)
+        return f"{htime}时{time_m}分{(timex % 60)}秒"
     else:
         dtime = int((timex - (timex % 86400)) / 86400)
         htime = int((timex - (timex % 3600) - (timex - (timex % 86400))) / 3600)
-        mtime = int((timex - (timex % 60) - (htime * 3600) - (dtime * 86400)) / 60)
-        return f"{dtime}天{htime}时{mtime}分{(timex % 60)}秒"
+        time_m = int((timex - (timex % 60) - (htime * 3600) - (dtime * 86400)) / 60)
+        return f"{dtime}天{htime}时{time_m}分{(timex % 60)}秒"
 
 
 def get_runtime():
@@ -444,7 +444,7 @@ def acg_img():
         a = "https://img.xjh.me/random_img.php?return=json"
         a1 = requests.get(url=a).json()
         return base64.b64encode(requests.get(url='https:' + a1["img"]).content).decode()
-    except Exception as e:
+    except Exception as _:
         return text2image("获取图片失败\n" + traceback.format_exc())
 
 
@@ -642,7 +642,7 @@ def on_message2(ws, message):
                                 "approve": True
                             }
                             post2http("/set_group_add_request", data=data1)
-                            msg.fast_reply("同意... 成功?")  # 单纯为了给管理员一个结果而已, 不然容易让人以为机器人寄了 或者避免重复同意之类的
+                            msg.fast_reply("同意成功")  # 单纯为了给管理员一个结果而已, 不然容易让人以为机器人寄了 或者避免重复同意之类的
                         except:
                             msg.fast_reply("无flag")
                     if command_list[2] == "refuse":
@@ -773,7 +773,7 @@ def on_message2(ws, message):
 
             reScan = re.findall(
                 ANTI_AD,
-                msg.text.replace(" ", "").replace(".", "").replace("\n", "").lower())
+                msg.text.replace(" ", "").replace(",", "").replace(".", "").replace("!", "").replace("?", "").replace(";", "").replace(":", "").replace("\"", "").replace("'", "").replace("“", "").replace("”", "").replace("‘", "").replace("’", "").replace("<", "").replace(">", "").replace("(", "").replace(")", "").replace("內", "内").lower())
             if len(msg.text) >= 33 and len(reScan) > 2:
                 SPAM2_VL[msg.sender.id] += 4
                 if msg.sender.isadmin():
@@ -808,10 +808,9 @@ def on_message2(ws, message):
 
             multiMsg = re.search(r'\[CQ:forward,id=(.*)]', msg.text)
             if multiMsg is not None:
-                a = \
-                    requests.get(
-                        url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()[
-                        "data"]["messages"]
+                a = requests.get(
+                    url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()[
+                    "data"]["messages"]
                 multiMsg_raw = ""
                 for i in a:
                     multiMsg_raw += i["content"]
@@ -923,14 +922,12 @@ def on_message2(ws, message):
             return
 
         if command_list[0] == "!testchrome" and msg.sender.id == 1584784496:
-            msg.fast_reply("Trying...") \
-                .fast_reply("[CQ:image,file=base64://{}]".format(
-                    requests.post(
-                        url="http://localhost:25666/url2base64",
-                        data={"url": " ".join(command_list[1:])}
-                    ).text.replace("\n", "")
-                )
-            )
+            msg.fast_reply("Trying...").fast_reply("[CQ:image,file=base64://{}]".format(
+                requests.post(
+                    url="http://localhost:25666/url2base64",
+                    data={"url": " ".join(command_list[1:])}
+                ).text.replace("\n", "")
+            ))
 
         if msg.text.find("[CQ:json,data=") != -1:
             msg.text = msg.text.replace("\\", "")
@@ -939,12 +936,11 @@ def on_message2(ws, message):
                     str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
                         re.findall(
                             r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/.*/">',
-                            requests.get(json.loads(
-                                re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace(
-                                    "&#44;", ","))[
-                                             "meta"]["news"]["jumpUrl"]).text)[0].replace(
-                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[
-                        :-3])).json()
+                            requests.get(
+                                json.loads(re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace("&#44;", ","))["meta"]["news"]["jumpUrl"]
+                            ).text
+                        )[0].replace(r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3]
+                    )).json()
                 except KeyError:
                     str1 = requests.get(url="https://api.bilibili.com/x/web-interface/view?bvid={}".format(
                         re.findall(
@@ -952,8 +948,11 @@ def on_message2(ws, message):
                             requests.get(json.loads(
                                 re.search(r"\[CQ:json,data=(.*)]", msg.text).group(1).replace("&amp;", "&").replace(
                                     "&#44;", ","))[
-                                             "meta"]["detail_1"]["qqdocurl"]).text)[0].replace(
-                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', "")[:-3])).json()
+                                             "meta"]["detail_1"]["qqdocurl"]).text
+                        )[0].replace(
+                            r'<link data-vue-meta="true" rel="canonical" href="https://www.bilibili.com/video/', ""
+                        )[:-3]
+                    )).json()
 
                 if str1["code"] != 0:
                     logging.warning("查询失败")
@@ -965,7 +964,6 @@ def on_message2(ws, message):
                 imageuid = str(random.randint(10000000, 9999999999))
                 fontSize = 22
                 max_w = 0
-                s = ""
                 if str1["copyright"] == 1:
                     s = "自制"
                 elif str1["copyright"] == 2:
@@ -1110,7 +1108,7 @@ UP主: {str1["owner"]["name"]} ({str1["owner"]["mid"]})
 
         if command_list[0] == "!blacklist":
             if command_list[1] == "list":
-                msg.fast_reply(", ".join('%s' % id for id in BLACK_LIST))
+                msg.fast_reply(", ".join('%s' % _id for _id in BLACK_LIST))
             elif not msg.sender.isadmin():
                 msg.fast_reply("你的权限不足!")
                 return
@@ -1702,7 +1700,7 @@ Coins: {coin_purse}
             exec(msg.text[7:])
             return
 
-    except Exception as e:
+    except Exception as _:
         a = traceback.format_exc()
         logging.error(a)
         msg.fast_reply(  # 很抱歉，我们在执行你的指令时出现了一个问题 =_=\n各指令用法请查看 https://lingbot.guimc.ltd/
@@ -1786,7 +1784,7 @@ def urlget(url):
 
 def sendTempMsg(target1, target2, text):
     # 会风控
-    logging.info(text)
+    logging.info(f"st msg {target1} {target2} {text}")
 
 
 def getGroupUser(groupID: int):
@@ -1813,6 +1811,7 @@ def getGroups():
 
 
 def permCheck(groupID, target):
+    logging.info(f"pc {groupID}, {target}")
     return True
 
 
@@ -1890,7 +1889,7 @@ def on_error(_, error):
 
 
 # 定义一个用来处理关闭连接的方法
-def on_close(_, a, b):
+def on_close(_, __, ___):
     logging.error("-------连接已关闭------")
     stop()
 
@@ -1983,7 +1982,7 @@ def watchdog():
         except KeyboardInterrupt:
             infoMsg("Watchdog Thread is stopping")
             return
-        except BaseException as e:
+        except BaseException as _:
             infoMsg(f"警告: WatchDog线程出现错误!!\n[CQ:image,file=base64://{text2image(traceback.format_exc())}]")
 
 
