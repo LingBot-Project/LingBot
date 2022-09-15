@@ -1,9 +1,13 @@
-# 一个新文件 跟配置文件差不多但又不完全一样(更准确地来说就是个临时存东西的 所有地方都能读的那种 防止循环导入(笑))
+# 一个新文件 跟配置文件差不多但又不完全一样(更准确地来说就是个临时存东西的 所有地方都能读的那种 不导入任何项目文件防止循环导入(笑))
 state = True
-cur_git_ver = "0000000"
-x_ratelimit_remaining = 60  # github
 
-command_usage = """帮助 - 指令用法
+# github public variable
+cur_git_ver = "0000000"
+x_ratelimit_remaining = 60
+
+# help
+command_usage = """
+帮助 - 指令用法
 
 !help <- 查看机器人的指令用法
 !test / 凌状态 <- 获取机器人当前的状态信息
@@ -32,6 +36,8 @@ command_usage = """帮助 - 指令用法
 !git <- 获取机器人的github仓库当前的状态
 !feedback <- 向开发者反馈信息(我们需要您的帮助以提升机器人的使用体验!)
 """
+
+# Minecraft
 colorful_motd_mapping = {
     "0": "black",
     "1": "dark_blue",
