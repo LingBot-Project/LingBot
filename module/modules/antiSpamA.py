@@ -19,7 +19,7 @@ class AntiSpam(IModule):
             if msg.group.id not in TIME_SAMPLES:
                 TIME_SAMPLES[msg.group.id] = {}
             if msg.sender.id not in TIME_SAMPLES[msg.group.id]:
-                TIME_SAMPLES[msg.group.id][msg.sender.id] = EvictingList(20)
+                TIME_SAMPLES[msg.group.id][msg.sender.id] = EvictingList(5)
             if msg.group.id not in times:
                 times[msg.group.id] = {}
             if msg.sender.id not in avg_samples:
@@ -37,12 +37,12 @@ class AntiSpam(IModule):
                 delta_time = 0.0
                 for i in e_list.get_list():
                     delta_time += i
-                divisor = delta_time / e_list.get_max_size() / 2
+                divisor = delta_time / e_list.get_max_size() / 5
 
                 e: EvictingList = avg_samples[msg.sender.id]
                 e.add(1 / divisor)
                 std = mathUtils.stdev(e.get_list())
-                if std < 0.03 and e.size() >= e.get_max_size():
+                if std < 0.0001 and e.size() >= e.get_max_size():
                     event.get_message().mute(86400, r=f"spam-A2, flag(d: {std})")
                     e.clear()
 
@@ -52,4 +52,4 @@ def prediction(msg):
 
 
 def get_cur_time():
-    return mathUtils.floor((time.time() - init_time) * 2)
+    return mathUtils.floor((time.time() - init_time) * 5)
