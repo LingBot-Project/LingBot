@@ -12,7 +12,7 @@ class ModuleManager:
             TestHello.TestHello(),
             is_prime.IsPrime(),
             github.GitHubController(),
-            feedback.Feedback(),
+            feedback.Feedback()
             # antiSpamA.AntiSpam()
         )
         pass
