@@ -13,7 +13,7 @@ class ModuleManager:
             is_prime.IsPrime(),
             github.GitHubController(),
             feedback.Feedback(),
-            antiSpamA.AntiSpam()
+            # antiSpamA.AntiSpam()
         )
         pass
 
