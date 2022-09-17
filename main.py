@@ -808,9 +808,10 @@ def on_message2(ws, message):
 
             multiMsg = re.search(r'\[CQ:forward,id=(.*)]', msg.text)
             if multiMsg is not None:
-                a = requests.get(
-                    url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()[
-                    "data"]["messages"]
+                try:
+                    a = requests.get(url="http://" + HTTPURL + "/get_forward_msg?message_id=" + str(multiMsg.group(1))).json()["data"]["messages"]
+                except:
+                    return
                 multiMsg_raw = ""
                 for i in a:
                     multiMsg_raw += i["content"]
