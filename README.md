@@ -2,7 +2,6 @@
 [![Pylint](https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml/badge.svg?event=push)](https://github.com/LingBot-Project/LingBot/actions/workflows/pylint.yml)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FLingBot-Project%2FLingBot.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FLingBot-Project%2FLingBot?ref=badge_shield)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6d2b5a0aa71843bd8e4812ec8b56926b)](https://www.codacy.com/gh/LingBot-Project/LingBot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LingBot-Project/LingBot&amp;utm_campaign=Badge_Grade)
- * 机器人使用说明请移步 [Here](https://lingbot.guimc.ltd)
  * 本项目基于 [go-cqhttp](https://github.com/Mrs4s/go-cqhttp) 开发
 
 
@@ -12,8 +11,6 @@
 
 ## 中文
 ### 联系方式
-* LingBot官方群:[Telegram](https://t.me/LingBotProject) [QQ群聊](https://jq.qq.com/?_wv=1027&k=YpmTkCJt)
-* 汐洛: 1584784496
 * Creeper: 1474002938
 
 ### 开源协议
@@ -31,8 +28,7 @@
 
 ## English
 ### Contact us
-* Group：[Telegram](https://t.me/LingBotProject) [QQ](https://jq.qq.com/?_wv=1027&k=YpmTkCJt)
-* Guimc：1584784496(QQ)
+* Creeper: 1474002938
 
 ### Open source protocol
 * This open source project uses the AGPL3.0 open source license
