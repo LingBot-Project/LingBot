@@ -51,7 +51,7 @@ ACCOMPLISHMENT = {"qq": {}, "ACCOMPLISHMENT": {
                                             "Remember to go to bed early")
 }}
 # https://minecraft-api.com/achivements/blocks/
-SERVER_ADDR = "127.0.0.1"
+SERVER_ADDR = "0.0.0.0"
 ADMIN_LIST = []
 HYPBAN_COOKIE = None
 SEND_AD_LIST = {}
